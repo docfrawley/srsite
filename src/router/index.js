@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import Login from '../views/auth/Login.vue'
 import Signup from '../views/auth/Signup.vue'
 import CourseView from '../views/CourseView.vue'
+import VideoAdmin from '../views/VideoAdmin.vue'
 import { auth } from '@/firebase/config'
 
 const requireAuth = (to, from, next) => {
