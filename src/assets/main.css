@@ -1,0 +1,164 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;700;800;900&display=swap');
+
+/* variables */
+:root {
+  --primary: #4f515a;
+  --secondary: #ebebeb;
+  --warning: #da0f41;
+}
+
+/* base styles  */
+* {
+  margin: 0;
+  padding: 0;
+  font-family: 'Nunito', sans-serif;
+  color: var(--primary);
+}
+body {
+  background: #fafafa;
+}
+a {
+  text-decoration: none;
+}
+
+/* buttons */
+button, .btn { 
+  background: var(--secondary);
+  border-radius: 8px;
+  border: 0;
+  padding: 8px 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-block;
+}
+button:hover, .btn:hover {
+  background: var(--primary);
+  color: white;
+}
+button:disabled {
+  opacity: 0.5;
+  color: var(--primary);
+  background: var(--secondary);
+  cursor: not-allowed;
+}
+
+.course {
+    background: var(--secondary);
+      border-radius: 8px;
+      border: 0;
+      padding: 8px 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-block;
+      font-size: 35px;
+  }
+
+  .course:hover{
+    background: var(--primary);
+      color: white;
+  }
+
+/* forms */
+form {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 1px 2px 3px rgba(50,50,50,0.05);
+  border: 1px solid  var(--secondary);
+  background: white;
+}
+input, textarea {
+  border: 0;
+  border-bottom: 1px solid var(--secondary);
+  padding: 10px;
+  outline: none;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 20px auto;
+}
+
+/* error text */
+.error {
+  color: var(--warning);
+  font-size: 14px;
+  margin: 16px 0;
+}
+
+.video-responsive {
+    margin-top: 100px;
+    margin-left: 100px;
+  position: relative;
+  display: block;
+  width: 600px;
+  overflow: hidden;
+}
+
+
+.video-responsive::before {
+  display: block;
+  content: "";
+  padding-top: 56.25%;
+}
+
+.video-responsive-item {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: 10px;
+}
+
+.home svg{
+  height: 50px;
+  width:50px;
+  transition: fill 1s;
+  cursor: pointer;
+}
+
+.home svg:hover {
+  fill:grey;
+}
+
+.module-view {
+  background-color: #fff;
+  padding: 20px;
+  margin-bottom: 10px;
+  width:540px;
+  border-radius: 4px;
+}
+
+.show-vid-details{
+  border-bottom: solid black 2px;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+    width: 500px;
+    
+
+}
+
+.show-vid-details p {
+  transition: all 1s;
+}
+
+.show-vid-details p:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.show-vid-details svg{
+  height: 30px;
+  width:30px;
+  transition: fill 1s;
+  cursor: pointer;
+  padding-left:10px;
+}
+
+.show-vid-details svg:hover {
+  fill:grey;
+}

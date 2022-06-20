@@ -1,0 +1,47 @@
+<template>
+  <div class="show-vid-details">
+    
+
+    <p @click="sendInfo">#{{ video.order }}, {{ video.title }}: {{ video.description }} </p>
+    <svg @click="sendInfo" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+      xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 209.231 201.538"
+      enable-background="new 0 0 209.231 201.538" xml:space="preserve">
+      <g>
+        <g>
+          <path d="M102.308,195.769c-52.383,0-95-42.617-95-95s42.617-95,95-95c52.383,0,95,42.617,95,95S154.691,195.769,102.308,195.769z
+			 M102.308,15.769c-46.869,0-85,38.131-85,85s38.131,85,85,85s85-38.131,85-85S149.177,15.769,102.308,15.769z" />
+        </g>
+        <g>
+          <polygon points="171.59,100.769 67.667,40.769 67.667,160.769 		" />
+          <path
+            d="M62.667,169.43V32.109l118.923,68.66L62.667,169.43z M72.667,49.43v102.68l88.923-51.34L72.667,49.43z" />
+        </g>
+      </g>
+    </svg>
+    <!-- <div class="video-responsive" v-html="video.iframe"></div> -->
+  </div>
+</template>
+
+<script>
+export default {
+    props: ['video'],
+    setup(props, context){
+        const videoLink = props.video.iframe
+        
+
+
+        const sendInfo = () =>{
+          context.emit('logInfo', {'vidinfo':props.video})
+          
+        }
+        return { videoLink, sendInfo}
+    }
+
+}
+
+
+</script>
+
+<style>
+
+</style>
