@@ -1,10 +1,15 @@
 <template>
   <div class="navbar">
     <nav>
-      <h1><router-link :to="{ name: 'home' }">Self-Relationality</router-link></h1>
+      <h1>
+        <router-link :to="{ name: 'home' }">Self-Relationality</router-link>
+      </h1>
       <div class="links">
         <div v-if="user">
-        <span> Hi there, {{ user.displayName }}</span>
+          <div v-if="isAdmin" class="video-admin">
+            <router-link class="btn" :to="{ name: 'VideoAdmin' }">Video Admin</router-link>
+          </div>
+          <span> Hi there, {{ user.displayName }}</span>
           <button @click="handleClick">Logout</button>
         </div>
         <div v-else>
@@ -20,12 +25,14 @@
 import useLogout from '../composables/useLogout'
 import { useRouter} from 'vue-router'
 import getUser from '@/composables/getUser'
+import { ref } from '@vue/reactivity'
 
 export default {
     setup(props, context) {
       const { user } = getUser()
         const {logout, error } = useLogout()
         const router = useRouter()
+        const isAdmin = ref(true)
 
         
         
@@ -38,7 +45,11 @@ export default {
             }
         }
 
-        return { handleClick, user }
+    const goVideoAdmin = () => {
+      router.push({ name: 'VideoAdmin' })
+    }
+
+        return { handleClick, user, isAdmin }
     }
 }
 </script>
@@ -74,5 +85,9 @@ export default {
     margin-left: 16px;
     padding-left: 16px;
     border-left: 1px solid #eee;
+  }
+
+  .video-admin{
+    display: inline;
   }
 </style>
