@@ -40,7 +40,6 @@ const getOrderDocs = (c, keyField, fieldValue) => {
     documents.value = null
     error.value = 'could not fetch the data'
   })
-  
   return { error, documents }
 }
 

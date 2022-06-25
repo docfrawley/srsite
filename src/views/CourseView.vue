@@ -83,7 +83,7 @@ export default {
     .module-list{
         display:flex;
         flex-direction: row;
-        justify-content: space-around;
+        justify-content: space-between;
     }
     .ind-mod {
         display: inline-block;
