@@ -1,23 +1,23 @@
 <template>
     <div @click="returnToAll" class="course">
-        Course View: {{whichcourse}}
+        Course View: {{whichVid.course}}
     </div>
-
 
 
     <div v-if="whichVid.module">
         <div class="module-list">
             <div v-for="document in documents" :key="document.id">
-                <span class="ind-mod" @click="moveModule(document.module)">{{document.title}} </span>
+                <span class="ind-mod" @click="moveModule(document.modnumb)">{{document.title}} </span>
             </div>
         </div>
-        <div v-if="whichVid.iframe">
-            <SingleModel :specifics="whichVid" />
-        </div>
+        <SingleModel :specifics="whichVid" :key="componentKey" />
 
         <div class="next-previous">
-            <div class="np-module" v-if="whichVid.module>1" @click="moveModule(whichVid.module-1)">Previous Module</div>
-            <div class="np-module" v-if="whichVid.module<documents.length" @click="moveModule(whichVid.module+1)">Next
+            <div class="np-module" v-if="whichVid.module>1" @click="moveModule(whichVid.module-1)">Previous Module
+            </div>
+
+            <div class="np-module" v-if="whichVid.module<documents.length" @click="moveModule(whichVid.module+1)">
+                Next
                 Module</div>
         </div>
 
@@ -34,8 +34,7 @@
 <script>
 import ShowModule from '@/components/ShowModule.vue'
 import getOrderDocs from '@/composables/getOrderDocs'
-import getLesson from '@/composables/getLesson'
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 import SingleModel from '@/components/SingleModel.vue'
 
 export default {
@@ -44,37 +43,34 @@ export default {
     props: ['course'],
     setup(props) {
         const { error, documents } = getOrderDocs('course-modules', 'course', props.course)
-        
-        const whichcourse = ref(props.course)
-        const whichVid = ref({})
+        const whichVid= reactive({
+            course:props.course,
+            module: null,
+            order: null
+        })
+        const componentKey = ref(0)
 
-        whichVid.value.iframe=''
-        whichVid.value.module=null
-        whichVid.value.course = whichcourse
-
-        const showvidInfo = (video) =>{
-            whichVid.value.iframe = video.iframe
-            whichVid.value.module = video.module
-           
+        const showvidInfo= (video) =>{
+            whichVid.module = video.module
+            whichVid.order=video.order
+            componentKey.value++
         }
 
-        const moveModule = async (theMod)=>{
-            whichVid.value.iframe  = await getLesson(whichcourse.value, theMod, 1)
-            whichVid.value.module = theMod
+        const moveModule = async(theMod)=>{
+           whichVid.module=theMod
+           whichVid.order=1
+            componentKey.value++
         }
-
-        
 
         const returnToAll=()=>{
-            whichVid.value.iframe = ''
-            whichVid.value.module = null
-            whichVid.value.course = whichcourse
-            
+            whichVid.module = null
+            whichVid.order = null
+            componentKey.value = 0
         }
 
         
 
-        return { whichcourse, error, documents, showvidInfo, whichVid, returnToAll, moveModule}
+        return { documents, showvidInfo, whichVid, returnToAll, moveModule, componentKey}
     }
 }
 </script>

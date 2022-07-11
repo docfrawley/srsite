@@ -16,7 +16,7 @@ const useCollection = (c) => {
     isPending.value = true
 
     try {
-      await addDoc(colRef, doc)
+      const res = await addDoc(colRef, doc)
       isPending.value = false
       return res
     }

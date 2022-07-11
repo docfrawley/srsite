@@ -18,7 +18,7 @@ export default {
     props: ['document'],
     components: { ShowVidDetails },
     setup(props, context) {
-        const {error, documents: videos}  = getOrderDocs(props.document.course, 'module', props.document.module)
+        const {error, documents: videos}  = getOrderDocs(props.document.course, 'module', props.document.modnumb)
 
         const logInfo =(video)=>{
             context.emit('vidInfo', { ...video.vidinfo })

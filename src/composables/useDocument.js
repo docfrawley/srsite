@@ -30,7 +30,6 @@ const useDocument = (c, id) => {
     try {
       await updateDoc(docRef, updates)
       isPending.value = false
-      return res
     }
     catch(err) {
       console.log(err.message)

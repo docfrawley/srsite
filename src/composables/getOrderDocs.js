@@ -5,7 +5,6 @@ import { collection, onSnapshot, query, where } from 'firebase/firestore'
 const getOrderDocs = (c, keyField, fieldValue) => {
 
   const documents = ref(null)
-  const error = ref(null)
 
   // register the firestore collection reference
   let colRef = collection(db, c)
@@ -26,21 +25,14 @@ const getOrderDocs = (c, keyField, fieldValue) => {
     // update values
     documents.value = results
     
-    // update values
     if (keyField==='course') {
-      documents.value.sort((a, b) => (a.module > b.module) ? 1 : -1)
+      documents.value.sort((a, b) => (a.modnumb > b.modnumb) ? 1 : -1)
     } else {
       documents.value.sort((a, b) => (a.order > b.order) ? 1 : -1)
     }
     
-    
-    error.value = null
-  }, err => {
-    console.log(err.message)
-    documents.value = null
-    error.value = 'could not fetch the data'
   })
-  return { error, documents }
+  return { documents }
 }
 
 export default getOrderDocs
