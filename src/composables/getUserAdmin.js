@@ -2,35 +2,44 @@ import { ref } from 'vue'
 import { db } from '../firebase/config'
 import { collection, onSnapshot, query, where } from 'firebase/firestore'
 
-const getUserAdmin = (c, id) => {
+const getUserAdmin = async (c, id) => {
 
   const document = ref(null)
   const error = ref(null)
 
   // register the firestore collection reference
-  let documentRef = collection(c)
-  documentRef = query(documentRef, where("id", "==", id))
+  let documentRef = collection(db, c)
 
-  const unsub = onSnapshot(doc => {
+
+  documentRef = await query(documentRef, where("id", "==", id))
+ 
+
+  await onSnapshot(documentRef, snap => {
+    let results = []
+    snap.docs.forEach(doc => {
+      // must wait for the server to create the timestamp & send it back
+      results.push({...doc.data(), id: doc.id})
+    });
     
-    if (doc.data()){
-        document.value = {...doc.data(), id:doc.id}
-        error.value = null
+    // update values
+   
+    if (results){
+      document.value = results[0].admin
     } else {
-        error.value = 'that document does not exist'
+      document.value = false
     }
+    
+    
+    error.value = null
   }, err => {
     console.log(err.message)
-    error.value = 'could not fetch the document'
+    document.value = null
+    error.value = 'could not fetch the data'
   })
 
-  watchEffect((onInvalidate) => {
-    onInvalidate(() => unsub());
-  });
 
-  const userValid = ref(document[0])
-
-  return { error, userValid }
+  
+  return document
 }
 
 export default getUserAdmin

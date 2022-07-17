@@ -3,13 +3,12 @@
   <div v-if="edVid">
     <form @submit.prevent="handleSubmit">
       <h4>Add/Edit Video</h4>
-      <label>title</label><input type="text" required placeholder="title" v-model="edVid.title">
-      <label>length</label><input type="text" required placeholder="length" v-model="edVid.length">
-      <label>module</label><input type="text" required placeholder="modnumb" v-model="edVid.module">
-      <label>order</label><input type="text" required placeholder="title" v-model="edVid.order">
+      <label>title</label><input type="text" required placeholder="title" v-model="edVid.title"/>
+      <label>length</label><input type="text" required placeholder="length" v-model="edVid.length"/>
+      <label>module</label><input type="text" required placeholder="modnumb" v-model="edVid.module"/>
+      <label>order</label><input type="text" required placeholder="title" v-model="edVid.order"/>
       <label>description</label><textarea required placeholder="description" v-model="edVid.description"></textarea>
-      <p>make sure to add 'class="video-responsive-item"'<br/>And remove any vimeo styles</p>
-      <label>iframe</label><textarea required placeholder="iframe" v-model="edVid.iframe"></textarea>
+      <label>iframe</label><input type="text" required placeholder="iframe id" v-model="edVid.iframe"/>
       <!-- <div class="error">{{ fileError }}</div> -->
 
       <button v-if="!isPending">UPDATE</button>

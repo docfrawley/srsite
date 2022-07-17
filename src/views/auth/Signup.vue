@@ -28,7 +28,7 @@ export default {
     const handleSubmit = async () => {
       const res = await signup(email.value, password.value, displayName.value)
       if (!error.value) {
-        router.push({ name: 'home' })
+        await router.push({ name: 'home' })
       }
     }
     return { email, password, displayName, handleSubmit, error, isPending }

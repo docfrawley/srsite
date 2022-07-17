@@ -18,7 +18,7 @@ const requireAuth = (to, from, next) => {
 const requireAdmin = (to, from, next) => {
   let user = auth.currentUser
   if (!user){
-    next({ name: 'Login'})
+    next({ name: 'HomeView'})
   } else {
     next()
   }
@@ -52,7 +52,7 @@ const routes = [
     path: '/videoadmin',
     name: 'VideoAdmin',
     component: VideoAdmin,
-    beforeEnter: requireAuth,
+    beforeEnter: requireAdmin,
     props:true
   }
 ]

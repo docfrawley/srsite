@@ -5,11 +5,14 @@
         <router-link :to="{ name: 'home' }">Self-Relationality</router-link>
       </h1>
       <div class="links">
-        <div v-if="user">
+        <div v-if="user" class="nav_row">
           <div v-if="isAdmin" class="video-admin">
             <router-link class="btn" :to="{ name: 'VideoAdmin' }">Video Admin</router-link>
           </div>
-          <span> Hi there, {{ user.displayName }}</span>
+          <div v-if="user.displayName">
+            <span> Hi there, {{ user.displayName }}</span>
+          </div>
+
           <button @click="handleClick">Logout</button>
         </div>
         <div v-else>
@@ -26,16 +29,16 @@ import useLogout from '../composables/useLogout'
 import { useRouter} from 'vue-router'
 import getUser from '@/composables/getUser'
 import { ref } from '@vue/reactivity'
+import getUserAdmin from '@/composables/getUserAdmin'
 
 export default {
     setup(props, context) {
       const { user } = getUser()
         const {logout, error } = useLogout()
         const router = useRouter()
-        const isAdmin = ref(true)
+        const isAdmin = getUserAdmin('users', user.value.uid)
+        console.log(isAdmin)
 
-        
-        
         const handleClick =async () => {
             await logout()
             if (!error.value){
@@ -49,7 +52,7 @@ export default {
       router.push({ name: 'VideoAdmin' })
     }
 
-        return { handleClick, user, isAdmin }
+    return { handleClick, user, isAdmin }
     }
 }
 </script>
@@ -65,6 +68,10 @@ export default {
     align-items: center;
     max-width: 1200px;
     margin: 0 auto;
+  }
+
+  .nav_row{
+    display: flex;
   }
   nav img {
     max-height: 60px;

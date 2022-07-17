@@ -2,10 +2,9 @@
     this is the add video form:
     <form @submit.prevent="handleSubmit">
         <h4>Add Video Form for the Col_name: {{course}} and module # {{module}} with order # of {{order+1}}</h4>
-        <label>Title</label><input type="text" required placeholder="title" v-model="title">
-        <label>Length</label><input type="text" required placeholder="length" v-model="length">
-        <p>make sure to add 'class="video-responsive-item"'<br />And remove any vimeo styles</p>
-        <label>iframe</label><textarea required placeholder="iframe" v-model="iframe"></textarea>
+        <label>Title</label><input type="text" required placeholder="title" v-model="title"/>
+        <label>Length</label><input type="text" required placeholder="length" v-model="length"/>
+        <label>iframe</label><input type="text" required placeholder="iframe id" v-model="iframe"/>
         <label>Description</label><textarea required placeholder="Description" v-model="description"></textarea>
         <!-- <div class="error">{{ fileError }}</div> -->
 
