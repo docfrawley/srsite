@@ -1,22 +1,27 @@
 <template>
-    <div v-if="theVideo">
-        <div class="video-responsive">
-            <vue-vimeo-player class="video-responsive-item" :video-id="theVideo.iframe" :options="{ responsive: true }"
-                :events-to-emit="['ended','progress']" @progress="CheckProgress" @ended="NowEnded" @pause="WhenPaused"/>
-        </div>
-        <p>{{theVideo.title}}</p>
-        <p>{{theVideo.description}}</p>
-        <p>{{theVideo.length}}</p>
-    </div>
-
-    <div class=" module-view">
-
-
-
-        <div v-for="video in videos" :key="video.id">
-            <ShowVidDetails :video="video" @logInfo="newVideo" /> <br /><br />
+    <div class="smcontainer">
+        <div v-if="theVideo">
+            <div class="video-responsive">
+                <vue-vimeo-player class="video-responsive-item" :video-id="theVideo.iframe"
+                    :options="{ responsive: true }" :events-to-emit="['ended','progress']" @progress="CheckProgress"
+                    @ended="NowEnded" @pause="WhenPaused" />
+            </div>
+            <p>{{theVideo.title}}</p>
+            <p>{{theVideo.description}}</p>
+            <p>{{theVideo.length}}</p>
         </div>
 
+        <div class=" module-view">
+
+
+
+            <div v-for="video in videos" :key="video.id">
+                <ShowVidDetails :video="video" :order="theVideo.order" :percent="percentVid" @logInfo="newVideo"
+                    :key="percentVid" />
+                <br /><br />
+            </div>
+
+        </div>
     </div>
 </template>
 
@@ -35,16 +40,16 @@ export default {
         const { error, documents: videos } = getOrderDocs(props.specifics.course, 'module', props.specifics.module)
         const ElementNum = ref(0)
         const percentVid = ref(0)
+        const componentKey = ref(0)
 
         const newVideo =(specs) => {
             theVideo.value = specs.vidinfo
             ElementNum.value = theVideo.value.order - 1
-            console.log("what was percent: ", percentVid.value)
+            componentKey.value++
         }
 
         const CheckProgress = (e, d, p)=>{
             percentVid.value=e.percent
-            console.log("check progress: ",e)
         }
 
        
@@ -55,19 +60,23 @@ export default {
                     ElementNum.value = 0
                 }
                 theVideo.value =videos.value[ElementNum.value]
+            componentKey.value++
         }
 
         const WhenPaused = () => {
             console.log('on pause: ')
         }
 
-        return { theVideo, videos, newVideo, CheckProgress, NowEnded, WhenPaused }
+        return { theVideo, videos, componentKey, percentVid, newVideo, CheckProgress, NowEnded, WhenPaused }
     }
 
 }
 </script>
 
 <style>
+.smcontainer{
+    display: flex;
+}
 .video-responsive {
     position: relative;
     display: block;

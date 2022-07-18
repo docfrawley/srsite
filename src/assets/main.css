@@ -107,15 +107,7 @@ input, textarea {
   border-radius: 4px;
 }
 
-.show-vid-details{
-  border-bottom: solid black 2px;
-  padding: 10px;
-  display: flex;
-  justify-content: space-between;
-    width: 500px;
-    
 
-}
 
 .show-vid-details p {
   transition: all 1s;
