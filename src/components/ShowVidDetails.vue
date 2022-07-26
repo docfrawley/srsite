@@ -1,5 +1,5 @@
 <template>
-  <div class="show-vid-details" @click="sendInfo">
+  <div class="show-vid-details" @click="setVideo">
 
 
 
@@ -26,9 +26,12 @@
 
 <script>
 import { ref } from '@vue/reactivity'
+import { coursesStore } from '@/store/coursesStore'
+
 export default {
-    props: ['video', 'order', 'percent'],
-    setup(props, context){
+    props: ['theMod', 'video', 'order', 'percent'],
+    setup(props){
+      const cstore=coursesStore()
       const video = ref(props.video)
       let minutes = Math.floor(parseInt(video.value.length)/60)
       let seconds = parseInt(video.value.length) - minutes*60
@@ -47,11 +50,13 @@ export default {
       }
       
 
-        const sendInfo = () =>{
-          context.emit('logInfo', {'vidinfo':props.video})
+        const setVideo = () =>{
+          cstore.setCurrentVideo(props.video)
+          cstore.setCurrentModule(props.theMod)
+          // context.emit('logInfo', {'vidinfo':props.video})
           
         }
-      return { video, sendInfo, vidLength, percentage, showProgress, isComplete }
+      return { video, setVideo, vidLength, percentage, showProgress, isComplete }
     }
 
 }

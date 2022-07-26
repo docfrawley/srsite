@@ -1,9 +1,9 @@
 <template>
   <form @submit.prevent="handleSubmit">
     <h3>Sign up</h3>
-    <input type="text" placeholder="Display name" v-model="displayName">
-    <input type="email" placeholder="Email" v-model="email">
-    <input type="password" placeholder="Password" v-model="password">
+    <input type="text" required placeholder="Display name" v-model="displayName">
+    <input type="email" required placeholder="Email" v-model="email">
+    <input type="password" required placeholder="Password" v-model="password">
     <div v-if="error" class="error">{{ error }}</div>
     <button v-if="!isPending">Sign up</button>
     <button v-if="isPending" disabled>Loading</button>
@@ -15,21 +15,25 @@
 import useSignup from '@/composables/useSignup'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { userStore } from '@/store/userStore'
+import { coursesStore } from '@/store/coursesStore'
 
 export default {
   setup() {
     const { error, signup, isPending } = useSignup()
-
+    const store = userStore()
     const email = ref('')
     const password = ref('')
     const displayName = ref('')
     const router = useRouter()
+    const cstore = coursesStore()
 
     const handleSubmit = async () => {
-      const res = await signup(email.value, password.value, displayName.value)
-      if (!error.value) {
-        await router.push({ name: 'home' })
-      }
+      isPending.value = true
+      await store.signup(email.value, password.value, displayName.value)
+      cstore.setCourses()
+      isPending.value = false
+      router.push({ name: 'home' })
     }
     return { email, password, displayName, handleSubmit, error, isPending }
   }

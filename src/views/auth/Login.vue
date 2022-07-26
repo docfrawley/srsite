@@ -14,6 +14,8 @@
 import useLogin from '@/composables/useLogin'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { userStore } from '@/store/userStore'
+import { coursesStore } from '@/store/coursesStore'
 
 
 export default {
@@ -22,12 +24,14 @@ export default {
     const email = ref('')
     const password = ref('')
     const router = useRouter()
-
+    const store = userStore()
+    const cstore = coursesStore()
+    
+ 
     const handleSubmit = async () => {
-      const res = await login(email.value, password.value)
-      if (!error.value) {
-        router.push({ name: 'home' })
-      }
+      await store.login(email.value, password.value)
+       cstore.setCourses()
+      router.push({ name: 'home' })
     }
     return { email, password, handleSubmit, error, isPending }
   }

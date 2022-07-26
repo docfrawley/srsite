@@ -1,30 +1,41 @@
 <template>
 
-    <div class="module-view">
-        <p>MODULE: {{ document.module }} {{ document.title}}</p>
-        <p>{{ document.description }}</p>
+    <div class="module-view" >
+        <p>MODULE: {{ theModule.module }} {{ theModule.title}}</p>
+        <p>{{ theModule.description }}</p>
 
-        <div v-for="video in videos" :key="video.id">
-            <ShowVidDetails :video="video" @logInfo="logInfo"/> <br /><br />
+        <div v-for="video in theModule.videos" :key="video.id">
+            <ShowVidDetails :theMod="theModule" :video="video" :order="video.order" :percent="0" /> <br /><br />
         </div>
     </div>
 </template>
 
 <script>
-import getOrderDocs from '@/composables/getOrderDocs'
 import ShowVidDetails from '@/components/ShowVidDetails.vue'
+import { coursesStore } from '@/store/coursesStore'
+import { ref, watch } from 'vue'
+
 
 export default {
-    props: ['document'],
+    props: ['theModule'],
     components: { ShowVidDetails },
-    setup(props, context) {
-        const {error, documents: videos}  = getOrderDocs(props.document.course, 'module', props.document.modnumb)
+    setup(props) {
+        const cstore = coursesStore()
+        const theModule = ref(props.theModule)
+        const currentVid = ref(cstore.currentVideo)
 
-        const logInfo =(video)=>{
-            context.emit('vidInfo', { ...video.vidinfo })
-        }
+        watch(cstore.currentVideo, ()=>{
+            currentVid.value = cstore.currentVideo
+            if (cstore.currentVideo.module == document.modnumb){
+                cstore.currentModule = document
+            }
+        })
+        // const {error, documents: videos}  = getOrderDocs(props.document.course, 'module', props.document.modnumb)
+        // const logInfo =(video)=>{
+        //     context.emit('vidInfo', { ...video.vidinfo })
+        // }
 
-        return {error, videos, logInfo}
+        return { currentVid, theModule }
     }
 }
 

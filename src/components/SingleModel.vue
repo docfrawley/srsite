@@ -1,24 +1,27 @@
 <template>
     <div class="smcontainer">
-        <div v-if="theVideo">
+        <div v-if="currentVideo.iframe">
             <div class="video-responsive">
-                <vue-vimeo-player class="video-responsive-item" :video-id="theVideo.iframe"
+                <vue-vimeo-player class="video-responsive-item" :video-id="currentVideo.iframe"
                     :options="{ responsive: true }" :events-to-emit="['ended','progress']" @progress="CheckProgress"
                     @ended="NowEnded" @pause="WhenPaused" />
             </div>
-            <p>{{theVideo.title}}</p>
-            <p>{{theVideo.description}}</p>
-            <p>{{theVideo.length}}</p>
+            <p>{{ currentVideo.title}}</p>
+            <p>{{ currentVideo.description}}</p>
+            <p>{{ currentVideo.length}}</p>
         </div>
 
         <div class=" module-view">
 
 
 
-            <div v-for="video in videos" :key="video.id">
-                <ShowVidDetails :video="video" :order="theVideo.order" :percent="percentVid" @logInfo="newVideo"
-                    :key="percentVid" />
-                <br /><br />
+            <div v-for="video in currentModule.videos" :key="video.id">
+                <div @click="newVideo(video)">
+                    <ShowVidDetails :theMod="currentModule" :video="video" :order="video.order" :percent="0"
+                        :key="componentKey" />
+                    <br /><br />
+                </div>
+
             </div>
 
         </div>
@@ -29,23 +32,35 @@
 import getOrderDocs from '@/composables/getOrderDocs'
 import getLesson from '@/composables/getLesson'
 import ShowVidDetails from '@/components/ShowVidDetails.vue'
-import { ref } from '@vue/reactivity'
+import { ref, watchEffect } from '@vue/reactivity'
 import { vueVimeoPlayer } from 'vue-vimeo-player'
+import { coursesStore } from '@/store/coursesStore'
 
 export default {
-    props: ['specifics'],
     components: { ShowVidDetails, vueVimeoPlayer },
-    setup(props){
-        const theVideo =  getLesson(props.specifics.course, props.specifics.module, props.specifics.order)
-        const { error, documents: videos } = getOrderDocs(props.specifics.course, 'module', props.specifics.module)
+    setup(){
+        const cstore = coursesStore()
+        // const theVideo =  getLesson(props.specifics.course, props.specifics.module, props.specifics.order)
+        // const { error, documents: videos } = getOrderDocs(props.specifics.course, 'module', props.specifics.module)
         const ElementNum = ref(0)
         const percentVid = ref(0)
         const componentKey = ref(0)
+        const currentModule = ref()
+        const currentVideo = ref()
+
+        currentVideo.value = cstore.currentVideo
+        currentModule.value = cstore.currentModule
+
+        // watchEffect(() => {
+        //     currentVideo.value = cstore.currentVideo
+        //     currentModule.value = cstore.currentModule
+        // })
 
         const newVideo =(specs) => {
-            theVideo.value = specs.vidinfo
-            ElementNum.value = theVideo.value.order - 1
+            currentVideo.value = specs
+            cstore.setCurrentVideo(specs)
             componentKey.value++
+            console.log('got here: ', cstore.currentVideo)
         }
 
         const CheckProgress = (e, d, p)=>{
@@ -67,7 +82,7 @@ export default {
             console.log('on pause: ')
         }
 
-        return { theVideo, videos, componentKey, percentVid, newVideo, CheckProgress, NowEnded, WhenPaused }
+        return { currentVideo, currentModule, componentKey, percentVid, newVideo, CheckProgress, NowEnded, WhenPaused }
     }
 
 }

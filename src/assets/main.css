@@ -42,21 +42,7 @@ button:disabled {
   cursor: not-allowed;
 }
 
-.course {
-    background: var(--secondary);
-      border-radius: 8px;
-      border: 0;
-      padding: 8px 12px;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-block;
-      font-size: 35px;
-  }
 
-  .course:hover{
-    background: var(--primary);
-      color: white;
-  }
 
 /* forms */
 form {

@@ -5,13 +5,11 @@
         <router-link :to="{ name: 'home' }">Self-Relationality</router-link>
       </h1>
       <div class="links">
-        <div v-if="user" class="nav_row">
+        <div v-if="displayName" class="nav_row">
           <div v-if="isAdmin" class="video-admin">
             <router-link class="btn" :to="{ name: 'VideoAdmin' }">Video Admin</router-link>
           </div>
-          <div v-if="user.displayName">
-            <span> Hi there, {{ user.displayName }}</span>
-          </div>
+            <span> Hi there, {{ displayName }}</span>
 
           <button @click="handleClick">Logout</button>
         </div>
@@ -28,31 +26,39 @@
 import useLogout from '../composables/useLogout'
 import { useRouter} from 'vue-router'
 import getUser from '@/composables/getUser'
-import { ref } from '@vue/reactivity'
-import getUserAdmin from '@/composables/getUserAdmin'
+import { ref} from '@vue/reactivity'
+import { userStore } from '@/store/userStore'
+import { coursesStore } from '@/store/coursesStore'
 
 export default {
     setup(props, context) {
-      const { user } = getUser()
+      const store = userStore()
+      const cstore = coursesStore()
         const {logout, error } = useLogout()
         const router = useRouter()
-        const isAdmin = getUserAdmin('users', user.value.uid)
-        console.log(isAdmin)
+        const isAdmin = ref()
+        const displayName = ref()
+
+        store.$subscribe((login, state)=>{
+          displayName.value = store.displayName
+          isAdmin.value = store.admin
+        })
+
+        
 
         const handleClick =async () => {
+            store.$reset()
+            cstore.$reset()
             await logout()
-            if (!error.value){
-                console.log('user logged out')
-                // context.emit('logout')
-                router.push({ name: 'Login'})
-            }
+            router.push({ name: 'Login'})
         }
 
     const goVideoAdmin = () => {
       router.push({ name: 'VideoAdmin' })
     }
 
-    return { handleClick, user, isAdmin }
+
+    return { handleClick, isAdmin, displayName }
     }
 }
 </script>
