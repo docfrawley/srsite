@@ -39,7 +39,7 @@ export default {
       const percentage = ref(props.percent*100)
       const isComplete = ref(false)
       const showProgress = ref(false)
-        if (video.value.order == props.order){
+        if (video.value.order == cstore.currentVideo.order){
           vidLength.value = "Now Playing"
           showProgress.value = true
           

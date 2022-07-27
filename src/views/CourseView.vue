@@ -13,21 +13,23 @@
 
 
     <div v-if="currentVideo.iframe">
-        <!-- <div class="module-list">
-            <div v-for="document in documents" :key="document.id">
-                <span class="ind-mod" @click="moveModule(document.modnumb)">{{document.title}} </span>
+        <div class="module-list">
+            <div v-for="mod in fullCourse" :key="mod.id">
+                <span class="ind-mod" @click="moveModule(mod.modnumb)">{{mod.title}} </span>
             </div>
-        </div> -->
+        </div>
         <SingleModel :key="componentKey" />
 
-        <!-- <div class="next-previous">
-            <div class="np-module" v-if="whichVid.module>1" @click="moveModule(whichVid.module-1)">Previous Module
+        <div class="next-previous">
+            <div class="np-module" v-if="currentModule.modnumb>1" @click="moveModule(currentModule.modnumb -1)">Previous
+                Module
             </div>
 
-            <div class="np-module" v-if="whichVid.module<documents.length" @click="moveModule(whichVid.module+1)">
+            <div class="np-module" v-if="currentModule.modnumb < numbModules"
+                @click="moveModule(currentModule.modnumb +1)">
                 Next
                 Module</div>
-        </div> -->
+        </div>
     </div>
 
     <!-- <div v-else>
@@ -47,8 +49,7 @@
 
 <script>
 import ShowModule from '@/components/ShowModule.vue'
-import getOrderDocs from '@/composables/getOrderDocs'
-import { ref, reactive, watchEffect, watch } from 'vue'
+import { ref, reactive, watchEffect } from 'vue'
 import SingleModel from '@/components/SingleModel.vue'
 import { coursesStore } from '@/store/coursesStore'
 
@@ -64,12 +65,14 @@ export default {
         //     module: null,
         //     order: null
         // })
+        
         const componentKey = ref(0)
         const cstore = coursesStore()
         const fullCourse = ref()
         const currentCourse = ref(cstore.currentCourse)
         const currentModule = ref()
         const currentVideo = ref()
+        const numbModules = ref(cstore.courseAll.length)
 
         currentModule.value = cstore.currentModule
         currentVideo.value = cstore.currentVideo        
@@ -87,10 +90,14 @@ export default {
             // componentKey.value++
         }
 
-        const moveModule = async(theMod)=>{
-        //    whichVid.module=theMod
-        //    whichVid.order=1
-        //     componentKey.value++
+        const moveModule=(theMod)=>{
+            let whichElement = theMod - 1
+
+            currentModule.value = cstore.courseAll[whichElement]
+            currentVideo.value = currentModule.value.videos[0]
+            cstore.setCurrentVideo(currentVideo.value)
+            cstore.setCurrentModule(currentModule.value)
+            componentKey.value++
         }
 
         const returnToAll=()=>{
@@ -101,7 +108,7 @@ export default {
 
         
 
-        return {currentCourse, showvidInfo, returnToAll, moveModule, componentKey, fullCourse, currentModule, currentVideo}
+        return { currentCourse, showvidInfo, returnToAll, moveModule, componentKey, fullCourse, currentModule, currentVideo, numbModules}
     }
 }
 </script>
