@@ -36,13 +36,13 @@ export default {
       let minutes = Math.floor(parseInt(video.value.length)/60)
       let seconds = parseInt(video.value.length) - minutes*60
       const vidLength = ref(minutes +':'+seconds)
-      const percentage = ref(props.percent*100)
+      const percentage = ref(0)
       const isComplete = ref(false)
       const showProgress = ref(false)
         if (video.value.order == cstore.currentVideo.order){
           vidLength.value = "Now Playing"
           showProgress.value = true
-          
+          percentage.value = props.percent*100
         }
       if (percentage.value >= 100){
         isComplete.value = true
@@ -53,6 +53,7 @@ export default {
         const setVideo = () =>{
           cstore.setCurrentVideo(props.video)
           cstore.setCurrentModule(props.theMod)
+          percentage.value = 0
           // context.emit('logInfo', {'vidinfo':props.video})
           
         }
@@ -80,7 +81,7 @@ export default {
   position: relative;
   width: 400px;
   height: 20px;
-  border-radius: 8px;
+  border-radius: 18px;
   overflow: hidden;
   border-bottom: 1px solid #ddd;
   box-shadow: inset 0 1px 2px rgba( #000, .4),

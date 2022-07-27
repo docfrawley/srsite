@@ -17,7 +17,7 @@
 
             <div v-for="video in currentModule.videos" :key="video.id">
                 <div @click="newVideo(video)">
-                    <ShowVidDetails :theMod="currentModule" :video="video" :order="video.order" :percent="0"
+                    <ShowVidDetails :theMod="currentModule" :video="video" :order="video.order" :percent="percentVid"
                         :key="componentKey" />
                     <br /><br />
                 </div>
@@ -59,12 +59,13 @@ export default {
         const newVideo =(specs) => {
             currentVideo.value = specs
             cstore.setCurrentVideo(specs)
+            percentVid.value = 0
             componentKey.value++
-            console.log('got here: ', cstore.currentVideo)
         }
 
         const CheckProgress = (e, d, p)=>{
             percentVid.value=e.percent
+            componentKey.value++
         }
 
        
