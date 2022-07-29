@@ -1,5 +1,5 @@
 import {defineStore} from "pinia"
-import { ref } from 'vue'
+import { watchEffect } from 'vue'
 
 // firebase imports
 import { auth } from '../firebase/config'
@@ -15,7 +15,8 @@ export const userStore  = defineStore("user", {
         displayName: "",
         admin:null,
         email:"",
-        userID:""
+        userID:"",
+        coursePercentages: []
         }
     },
     getters: {
@@ -69,6 +70,21 @@ export const userStore  = defineStore("user", {
             catch(err) {
             console.log(err.message)
             }
+        },
+        async setCoursePercentages(course){
+            let colRef = collection(db, 'percentages')
+            colRef =  await query(colRef, where("uid", "==", this.userID), where("col_name", "==", course.col_name))
+            const unsub = onSnapshot(colRef, snapshot => {
+                let results = []
+                snapshot.docs.forEach(doc => {
+                results.push({ ...doc.data(), id: doc.id })
+                })
+            this.coursePercentages = results
+            })
+
+            watchEffect((onInvalidate) => {
+                onInvalidate(() => unsub());
+            });
         }
     }
 });

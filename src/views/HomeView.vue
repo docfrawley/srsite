@@ -29,7 +29,7 @@ export default {
   name: 'HomeView',
   
   setup() {
-    const store = userStore()
+    const ustore = userStore()
     const cstore = coursesStore()
     const router = useRouter()
     const allCourses = ref(null)
@@ -39,9 +39,10 @@ export default {
       allCourses.value = cstore.allCourses
     })
     
-    const sendview = (course) => {
-      cstore.setCourseAll(course)
-      cstore.setCurrentCourse(course)
+    const sendview = async (course) => {
+        await cstore.setCourseAll(course)
+        await cstore.setCurrentCourse(course)
+        await ustore.setCoursePercentages(course)
       router.push({ name: 'CourseView', params: { course: course.col_name } })
     }
     return {sendview, allCourses}

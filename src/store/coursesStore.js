@@ -1,6 +1,7 @@
 import {defineStore} from "pinia"
-import { ref, watchEffect } from 'vue'
+import {  ref, watchEffect } from 'vue'
 import { db } from '../firebase/config'
+import { userStore } from "./userStore"
 import { collection, onSnapshot, query, where, addDoc } from 'firebase/firestore'
 
 
@@ -36,6 +37,8 @@ export const coursesStore  = defineStore("courses", {
             let results = []
             let vidResults = []
             this.currentCourse = course
+            const ustore = userStore()
+            const userID = ref(ustore.userID)
             let colRef = collection(db, 'course-modules')
             colRef =  await query(colRef, where("course", "==", course.col_name))
             
@@ -53,6 +56,19 @@ export const coursesStore  = defineStore("courses", {
                 for (var i = 0; i < results.length; i++) {
                     const modVids = vidResults.filter(vid => vid.module == results[i].modnumb);
                     modVids.sort((a, b) => (a.order > b.order) ? 1 : -1);
+                    modVids.forEach( video => {
+                        const percentage = ref(0)
+                        if (video.percentages){
+                            for (let [key, value] of Object.entries(video.percentages)){
+                                if (key == userID.value){ percentage.value = value}
+                                console.log('key: ', key)
+                            }
+                            console.log('percentage: ', percentage.value, userID.value)
+                        //     let percentage = video.percentages.filter(what => Object.keys(what) == userID)
+                        // console.log('percent = ', percentage)
+                        }
+                        
+                    });
                     results[i].videos = modVids;
                 }
                 this.courseAll = results
