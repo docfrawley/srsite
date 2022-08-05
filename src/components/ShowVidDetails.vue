@@ -9,19 +9,12 @@
 
     <!-- <div class="video-responsive" v-html="video.iframe"></div> -->
   </div>
-  <div v-if="showProgress">
     <div class="loading-bar">
       <div class="percentage" :style="{'width' : percentage + '%'}"></div>
     </div>
     <div v-if="isComplete">
       <p>&#10003; COMPLETE!</p>
     </div>
-  </div>
-  <div v-else>
-    <div class="loading-bar">
-      <div class="percentage" :style="{'width' : 0+ '%'}"></div>
-    </div>
-  </div>
 </template>
 
 <script>
@@ -29,7 +22,7 @@ import { ref } from '@vue/reactivity'
 import { coursesStore } from '@/store/coursesStore'
 
 export default {
-    props: ['theMod', 'video', 'order', 'percent'],
+    props: ['theMod', 'video', 'percent'],
     setup(props){
       const cstore=coursesStore()
       const video = ref(props.video)
@@ -38,26 +31,26 @@ export default {
       const vidLength = ref(minutes +':'+seconds)
       const percentage = ref(0)
       const isComplete = ref(false)
-      const showProgress = ref(false)
-        if (video.value.order == cstore.currentVideo.order){
-          vidLength.value = "Now Playing"
-          showProgress.value = true
-          percentage.value = props.percent*100
-        }
+      
+      if (video.value.percentages){
+        percentage.value = video.value.percentages*100
+      }
+      if (video.value.order == cstore.currentVideo.order){
+        vidLength.value = "Now Playing"
+        percentage.value = props.percent*100
+      }
       if (percentage.value >= 100){
         isComplete.value = true
-          console.log("is complete: ", isComplete.value)
       }
       
 
         const setVideo = () =>{
           cstore.setCurrentVideo(props.video)
           cstore.setCurrentModule(props.theMod)
-          percentage.value = 0
           // context.emit('logInfo', {'vidinfo':props.video})
           
         }
-      return { video, setVideo, vidLength, percentage, showProgress, isComplete }
+      return { video, setVideo, vidLength, percentage, isComplete }
     }
 
 }
@@ -98,43 +91,6 @@ export default {
     border-radius: 8px;
     background-color: #a5df41;
     background-size: 20px 20px;
-    background-image: linear-gradient(135deg, rgba($color: #fff, $alpha: .15) 25%, transparent 25%,
-        transparent 50%, rgba($color: #fff, $alpha: .15) 50%,
-        rgba($color: #fff, $alpha: .15) 75%, transparent 75%,
-        transparent);
-    animation: animate-stripes 3s linear infinite;
   }
-
-
-@keyframes animate-stripes {
-  0% {
-    background-position: 0 0;
-  }
-
-  100% {
-    background-position: 60px 0;
-  }
-}
-
-/* Youtube Link */
-#yt_link {
-  position: absolute;
-  right: 0;
-  left: 0;
-  bottom: -200px;
-  display: block;
-  width: 160px;
-  text-align: center;
-  color: #fff;
-  font-size: 15px;
-  text-decoration: none;
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-  padding: 10px;
-  margin: 0 auto;
-  background-color: red;
-  border-radius: 2px;
-  animation: showYtLink 1.5s ease 3s forwards;
-}
-
 
 </style>

@@ -5,7 +5,7 @@
         <p>{{ theModule.description }}</p>
 
         <div v-for="video in theModule.videos" :key="video.id">
-            <ShowVidDetails :theMod="theModule" :video="video" :order="video.order" :percent="0" /> <br /><br />
+            <ShowVidDetails :theMod="theModule" :video="video" :percent="0"/> <br /><br />
         </div>
     </div>
 </template>
@@ -26,9 +26,6 @@ export default {
 
         watch(cstore.currentVideo, ()=>{
             currentVid.value = cstore.currentVideo
-            if (cstore.currentVideo.module == document.modnumb){
-                cstore.currentModule = document
-            }
         })
         // const {error, documents: videos}  = getOrderDocs(props.document.course, 'module', props.document.modnumb)
         // const logInfo =(video)=>{

@@ -40,9 +40,13 @@ export default {
     })
     
     const sendview = async (course) => {
+      if (cstore.currentCourse != course){
         await cstore.setCourseAll(course)
         await cstore.setCurrentCourse(course)
-        await ustore.setCoursePercentages(course)
+      }
+      if (cstore.currentVideo){
+        cstore.currentVideo={}
+      }
       router.push({ name: 'CourseView', params: { course: course.col_name } })
     }
     return {sendview, allCourses}

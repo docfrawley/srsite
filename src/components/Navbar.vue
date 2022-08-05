@@ -53,11 +53,6 @@ export default {
             router.push({ name: 'Login'})
         }
 
-    const goVideoAdmin = () => {
-      router.push({ name: 'VideoAdmin' })
-    }
-
-
     return { handleClick, isAdmin, displayName }
     }
 }
