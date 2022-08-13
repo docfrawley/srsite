@@ -21,13 +21,22 @@ export const coursesStore  = defineStore("courses", {
     getters: {
     },
     actions: {
-        setCourses(){
+         setCourses(){
+            const ustore = userStore()
             let colRef = collection(db, 'courses')
             const unsub = onSnapshot(colRef, snapshot => {
                 let results = []
                 snapshot.docs.forEach(doc => {
                 results.push({ ...doc.data(), id: doc.id })
                 })
+                for (var i = 0; i < results.length; i++) {
+                    if (results[i].status=='published'){
+                        const userObject = ustore.getCourseVidsComp(results[i].col_name)
+                        results[i].completedVids = userObject.numVids
+                        results[i].completedSecs = userObject.totalSecs
+                        results[i].percentCompleted = (userObject.totalSecs/results[i].total_length*100).toFixed(2)
+                    }
+                }
             this.allCourses = results
             })
 
@@ -112,7 +121,6 @@ export const coursesStore  = defineStore("courses", {
                 const unsub = onSnapshot(docRef, doc => {
                     if (doc.data()){
                         document.value = {...doc.data(), id:doc.id}
-                        console.log('got here: ', document.value)
                     } 
                 })
                 if (!document.percentages){

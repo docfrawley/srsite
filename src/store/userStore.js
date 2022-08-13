@@ -16,7 +16,8 @@ export const userStore  = defineStore("user", {
         admin:null,
         email:"",
         userID:"",
-        coursePercentages: []
+        coursePercentages: [],
+        compVids: []
         }
     },
     getters: {
@@ -43,6 +44,7 @@ export const userStore  = defineStore("user", {
                                 
                                 this.email = email;
                                 this.userID = res.user.uid
+                                this.compVids = results[0].completedVids
                             }
                         })
                 }
@@ -85,6 +87,10 @@ export const userStore  = defineStore("user", {
             watchEffect((onInvalidate) => {
                 onInvalidate(() => unsub());
             });
+        },
+        getCourseVidsComp(course){
+            let searchObject= this.compVids.find((obj) => obj.col_name==course);
+            return searchObject
         }
     }
 });

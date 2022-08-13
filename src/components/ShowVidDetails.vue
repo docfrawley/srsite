@@ -88,9 +88,16 @@ export default {
     right: 1px;
     display: block;
     height: 100%;
+    width: 100%;
     border-radius: 8px;
     background-color: #a5df41;
-    background-size: 20px 20px;
+    background: #001e41;
+      /* Old browsers */
+      background: -moz-linear-gradient( #a3ceff, #001e41);
+      /* FF3.6-15 */
+      background: -webkit-linear-gradient( #a3ceff, #001e41);
+      /* Chrome10-25,Safari5.1-6 */
+      background: linear-gradient(to right, #a3ceff 60%, #001e41 90%);
   }
 
 </style>

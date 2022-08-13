@@ -53,7 +53,7 @@ export default {
         currentModule.value = cstore.currentModule
 
         if (currentVideo.value.percentages){
-            percentVid.value = currentVideo.value.percentages[0].percentage
+            percentVid.value = currentVideo.value.percentages
         }
 
         // watchEffect(() => {
@@ -98,7 +98,6 @@ export default {
         }
 
         const WhenPaused = () => {
-            console.log('on pause: ')
             cstore.setPercentage(percentVid.value)
         }
 

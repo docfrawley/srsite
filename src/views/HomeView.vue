@@ -5,7 +5,17 @@
 
         <div v-if="course.status=='published'">
           <div @click="sendview(course)" class="course">
-            {{course.title}}
+            <div>
+              <h1>{{course.title}}</h1>
+            </div>
+            <div>
+              <h4>Instructor: {{course.instructor}}</h4>
+            </div>
+            <div>
+              <h6>{{course.description}}</h6>
+            </div>
+            <div>You have completed {{ course.completedVids }} of the {{course.numVids}} videos in this course</div>
+            <div>And you have watched {{ course.percentCompleted }}% of the course</div>
           </div>
 
         </div>
@@ -57,18 +67,18 @@ export default {
 <style scoped>
     .course {
       background: var(--secondary);
-      border-radius: 8px;
+      border-radius: 5px;
       border: 0;
       padding: 8px 12px;
       font-weight: 600;
       cursor: pointer;
       display: inline-block;
-      font-size: 35px;
+      font-size: 18px;
       margin: 10px;
     }
   
     .course:hover {
       background: var(--primary);
-      color: white;
+      color: var(--secondary);
     }
 </style>
