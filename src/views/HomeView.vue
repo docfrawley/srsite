@@ -14,8 +14,10 @@
             <div>
               <h6>{{course.description}}</h6>
             </div>
-            <div>You have completed {{ course.completedVids }} of the {{course.numVids}} videos in this course</div>
-            <div>And you have watched {{ course.percentCompleted }}% of the course</div>
+            <div>And you have completed {{ course.percentCompleted }}% of the course</div>
+            <div class="loading-bar">
+              <div class="percentage" :style="{ 'width': course.percentCompleted + '%'}"></div>
+            </div>
           </div>
 
         </div>

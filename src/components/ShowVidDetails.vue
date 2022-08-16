@@ -70,34 +70,6 @@ export default {
   cursor: pointer;
 }
 
-.loading-bar {
-  position: relative;
-  width: 400px;
-  height: 20px;
-  border-radius: 18px;
-  overflow: hidden;
-  border-bottom: 1px solid #ddd;
-  box-shadow: inset 0 1px 2px rgba( #000, .4),
-    0 -1px 1px #fff, 0 1px 0 #fff;
-}
 
-  .percentage {
-    position: absolute;
-    top: 1px;
-    left: 1px;
-    right: 1px;
-    display: block;
-    height: 100%;
-    width: 100%;
-    border-radius: 8px;
-    background-color: #a5df41;
-    background: #001e41;
-      /* Old browsers */
-      background: -moz-linear-gradient( #a3ceff, #001e41);
-      /* FF3.6-15 */
-      background: -webkit-linear-gradient( #a3ceff, #001e41);
-      /* Chrome10-25,Safari5.1-6 */
-      background: linear-gradient(to right, #a3ceff 60%, #001e41 90%);
-  }
 
 </style>
