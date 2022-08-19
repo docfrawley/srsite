@@ -105,8 +105,9 @@ export default {
 <style scoped>
   .navbar {
     padding: 16px 10px;
-    margin-bottom: 40px;
+    margin: 0 10px 40px 10px;
     background: white;
+    border-bottom: 1px solid var(--lines);
   }
 
   .navbar svg {

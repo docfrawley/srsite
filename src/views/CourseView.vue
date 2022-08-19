@@ -21,7 +21,7 @@
                 </svg>
             </div>
             <div v-for="mod in fullCourse" :key="mod.id">
-                <span class="ind-mod" @click="moveModule(mod.modnumb)">{{mod.title}} </span>
+                <span class="ind-mod np-module" @click="moveModule(mod.modnumb)">{{mod.title}} </span>
             </div>
         </div>
         <SingleModel :key="componentKey" />
@@ -124,6 +124,10 @@ export default {
         display:flex;
         flex-direction: row;
         justify-content: space-between;
+        padding:10px;
+        border-radius: 8px;
+        border: 1px solid var(--lines);
+        margin-bottom: 30px;
     }
 
     .module-list svg {
@@ -142,6 +146,13 @@ export default {
     .np-module {
         cursor: pointer;
         margin: 0 15px;
+        padding: 15px;
+        border-radius:8px;
+    }
+    .np-module:hover{
+        color:#fff;
+        background-color: #001e41;
+
     }
     .current-course{
         background-color: white;

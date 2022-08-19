@@ -61,12 +61,11 @@ export default {
 <style>
 
 .show-vid-details {
-  border-bottom: solid black 2px;
   padding: 10px;
   display: flex;
   justify-content: space-between;
   width: 500px;
-  background-color: antiquewhite;
+  background-color: #fff;
   cursor: pointer;
 }
 
