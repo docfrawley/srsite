@@ -68,9 +68,9 @@ export default {
 
 <style scoped>
     .course {
-      background: var(--secondary);
+      background: #fff;
       border-radius: 5px;
-      border: 0;
+      border: 1px solid var(--lines);
       padding: 8px 12px;
       font-weight: 600;
       cursor: pointer;
@@ -80,7 +80,6 @@ export default {
     }
   
     .course:hover {
-      background: var(--primary);
-      color: var(--secondary);
+      border: 3px solid var(--lines);
     }
 </style>

@@ -21,20 +21,29 @@
                 </svg>
             </div>
             <div v-for="mod in fullCourse" :key="mod.id">
-                <span class="ind-mod np-module" @click="moveModule(mod.modnumb)">{{mod.title}} </span>
+                <span v-if="currentModule.modnumb!=mod.modnumb" class="ind-mod np-module" @click="moveModule(mod.modnumb)">{{mod.title}} </span>
+                <span v-else class="ind-mod np-active" @click="moveModule(mod.modnumb)">{{mod.title}} </span>
             </div>
         </div>
         <SingleModel :key="componentKey" />
 
         <div class="next-previous">
-            <div class="np-module" v-if="currentModule.modnumb>1" @click="moveModule(currentModule.modnumb -1)">Previous
+            <div class="np-module" v-if="currentModule.modnumb>1" @click="moveModule(currentModule.modnumb -1)">
+
+                <!-- <svg xmlns="http://www.w3.org/2000/svg">
+                    <path d="M28.05 36 16 23.95 28.05 11.9l2.15 2.15-9.9 9.9 9.9 9.9Z" />
+                </svg> -->
+                Previous
                 Module
             </div>
 
             <div class="np-module" v-if="currentModule.modnumb < numbModules"
                 @click="moveModule(currentModule.modnumb +1)">
-                Next
-                Module</div>
+                Next Module
+                <!-- <svg xmlns="http://www.w3.org/2000/svg">
+                    <path d="m18.75 36-2.15-2.15 9.9-9.9-9.9-9.9 2.15-2.15L30.8 23.95Z" />
+                </svg> -->
+            </div>
         </div>
     </div>
 
@@ -79,6 +88,7 @@ export default {
         const currentModule = ref()
         const currentVideo = ref()
         const numbModules = ref(cstore.courseAll.length)
+        
 
         currentModule.value = cstore.currentModule
         currentVideo.value = cstore.currentVideo        
@@ -87,6 +97,7 @@ export default {
             fullCourse.value = cstore.courseAll
             currentVideo.value = cstore.currentVideo
             currentModule.value = cstore.currentModule
+            numbModules.value = cstore.courseAll.length
         })
         
 
@@ -128,6 +139,7 @@ export default {
         border-radius: 8px;
         border: 1px solid var(--lines);
         margin-bottom: 30px;
+        background-color: #fff;
     }
 
     .module-list svg {
@@ -143,16 +155,35 @@ export default {
         display: flex;
         justify-content: center;
     }
+        .next-previous:hover{
+            color:#fff;
+        }
     .np-module {
         cursor: pointer;
         margin: 0 15px;
+        color:#000;
         padding: 15px;
         border-radius:8px;
+        
     }
     .np-module:hover{
-        color:#fff;
+        color:#ffffff;
         background-color: #001e41;
+    }
 
+    .np-active {
+        cursor: pointer;
+        margin: 0 15px;
+        color: #ffffff;
+        background-color: #001e41;
+        padding: 15px;
+        border-radius: 8px;
+
+    }
+
+    .np-module svg{
+        height: 45px;
+        width:45px;
     }
     .current-course{
         background-color: white;

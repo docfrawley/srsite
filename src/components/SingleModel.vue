@@ -3,22 +3,23 @@
         <div v-if="currentVideo.iframe">
             <div class="video-responsive">
                 <vue-vimeo-player class="video-responsive-item" :video-id="currentVideo.iframe"
-                    :options="{ responsive: true }" :events-to-emit="['ended','progress', 'pause']" @progress="CheckProgress"
-                    @ended="NowEnded" @pause="WhenPaused" />
+                    :options="{ responsive: true }" :events-to-emit="['ended','progress', 'pause']"
+                    @progress="CheckProgress" @ended="NowEnded" @pause="WhenPaused" />
             </div>
-            <p>{{ currentVideo.title}}</p>
-            <p>{{ currentVideo.description}}</p>
-            <p>{{ currentVideo.length}}</p>
+            <div class="video-details">
+                <p>{{currentModule.title}}, {{ currentVideo.title}}</p>
+                <p>{{ currentVideo.description}}</p>
+            </div>
+
         </div>
 
-        <div class=" module-view">
+        <div class="module-view">
 
 
 
             <div v-for="video in currentModule.videos" :key="video.id">
                 <div @click="newVideo(video)">
-                    <ShowVidDetails :theMod="currentModule" :video="video" :percent="percentVid"
-                        :key="componentKey" />
+                    <ShowVidDetails :theMod="currentModule" :video="video" :percent="percentVid" :key="componentKey" />
                     <br /><br />
                 </div>
 
@@ -115,9 +116,16 @@ export default {
     position: relative;
     display: block;
     width: 600px;
-    height: 400px;
+    height: 340px;
     overflow: hidden;
-    margin-top: 25px;
+}
+
+.video-details {
+    padding: 20px;
+    background: #fff;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    height: 200px;
 }
 
 .video-responsive-item {
@@ -132,6 +140,7 @@ export default {
 }
 
 .video-responsive-item iframe{
-border-radius: 10px;
+border-top-left-radius: 8px;
+border-top-right-radius: 8px;
 }
 </style>
