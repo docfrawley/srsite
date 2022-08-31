@@ -135,10 +135,12 @@ export default {
 
 <style scoped>
   .navbar {
+    position: fixed;
+    width: 100%;
     padding: 16px 10px;
-    margin: 0 10px 40px 10px;
     background: white;
     border-bottom: 1px solid var(--lines);
+    z-index:150;
   }
 
   .navbar svg {
