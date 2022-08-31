@@ -30,28 +30,27 @@
         <div class="next-previous">
             <div class="np-module" v-if="currentModule.modnumb>1" @click="moveModule(currentModule.modnumb -1)">
 
-                <!-- <svg xmlns="http://www.w3.org/2000/svg">
+                <svg xmlns="http://www.w3.org/2000/svg">
                     <path d="M28.05 36 16 23.95 28.05 11.9l2.15 2.15-9.9 9.9 9.9 9.9Z" />
-                </svg> -->
-                Previous
-                Module
+                </svg>
+                <p>Previous Module</p>
             </div>
 
             <div class="np-module" v-if="currentModule.modnumb < numbModules"
                 @click="moveModule(currentModule.modnumb +1)">
-                Next Module
-                <!-- <svg xmlns="http://www.w3.org/2000/svg">
+                <p>Next Module</p>
+                <svg xmlns="http://www.w3.org/2000/svg">
                     <path d="m18.75 36-2.15-2.15 9.9-9.9-9.9-9.9 2.15-2.15L30.8 23.95Z" />
-                </svg> -->
+                </svg>
             </div>
         </div>
     </div>
 
-    <!-- <div v-else>
+    <div v-else>
         <div v-for="document in documents" :key="document.id">
             <ShowModule :document="document" @vidInfo="showvidInfo" />
         </div>
-    </div> -->
+    </div>
 
     <div v-else>
         <div v-for="aModule in fullCourse" :key="aModule.id">
@@ -164,11 +163,13 @@ export default {
         color:#000;
         padding: 15px;
         border-radius:8px;
-        
+        display: flex;
+        align-items: center;
     }
-    .np-module:hover{
+    .np-module:hover, p:hover, svg:hover{
         color:#ffffff;
         background-color: #001e41;
+        fill: #fff;
     }
 
     .np-active {

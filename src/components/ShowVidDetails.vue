@@ -3,7 +3,7 @@
 
 
 
-    <p>#{{ video.order }}, {{ video.title }}:</p>
+    <p>#{{ video.order }}: {{ video.title }}</p>
     <p>{{vidLength}}</p>
 
 
@@ -67,8 +67,11 @@ export default {
   width: 500px;
   background-color: #fff;
   cursor: pointer;
+  text-decoration: none;
 }
 
-
+.show-vid-details p:hover {
+  text-decoration: none;
+}
 
 </style>

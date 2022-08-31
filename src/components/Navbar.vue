@@ -49,21 +49,43 @@
         </router-link>
       </h1>
       <div class="links">
-        <div v-if="displayName" class="nav_row">
-          <div v-if="isAdmin" class="video-admin">
-            <router-link class="btn" :to="{ name: 'VideoAdmin' }">Video Admin</router-link>
-          </div>
-          <span> Hi there, {{ displayName }}</span>
+        <div v-if="displayName">
+          
+          <!-- <span> Hi there, {{ displayName }}</span> -->
 
-          <button @click="handleClick">Logout</button>
+           <div id="nav-container">
+                <div class="bg"></div>
+                <div class="button" tabindex="0">
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                </div>
+
+                <div id="nav-content" tabindex="0">
+                  <ul>
+                    <li v-if="isAdmin">
+                      <router-link class="btn" :to="{ name: 'VideoAdmin' }">Video Admin</router-link>
+                  </li>
+                    <li><button @click="handleClick">Logout</button></li>
+                  </ul>
+                </div>
+            </div>
+        
         </div>
         <div v-else>
-          <router-link class="btn" :to="{ name: 'Signup' }">Signup</router-link>
-          <router-link class="btn" :to="{ name: 'Login' }">Login</router-link>
+          
+            <router-link class="btn" :to="{ name: 'Signup' }">Signup</router-link>
+            <router-link class="btn" :to="{ name: 'Login' }">Login</router-link>
+          
         </div>
+        
       </div>
+      
     </nav>
   </div>
+  <!-- <div v-if="ModuleShow">
+          <ModalMenu @modalClose="modalClose"/>
+        </div> -->
 </template>
 
 <script>
@@ -73,8 +95,10 @@ import getUser from '@/composables/getUser'
 import { ref} from '@vue/reactivity'
 import { userStore } from '@/store/userStore'
 import { coursesStore } from '@/store/coursesStore'
+import ModalMenu from './ModalMenu.vue'
 
 export default {
+    components: { ModalMenu },
     setup(props, context) {
       const store = userStore()
       const cstore = coursesStore()
@@ -82,13 +106,20 @@ export default {
         const router = useRouter()
         const isAdmin = ref()
         const displayName = ref()
+        const ModuleShow = ref(false)
 
         store.$subscribe((login, state)=>{
           displayName.value = store.displayName
           isAdmin.value = store.admin
         })
 
-        
+        const showModule = () =>{
+          ModuleShow.value=true;
+        }
+
+        const modalClose = () =>{
+          ModuleShow.value=false
+        }
 
         const handleClick =async () => {
             store.$reset()
@@ -97,7 +128,7 @@ export default {
             router.push({ name: 'Login'})
         }
 
-    return { handleClick, isAdmin, displayName }
+    return { handleClick, isAdmin, displayName, showModule, ModuleShow, modalClose }
     }
 }
 </script>
@@ -127,6 +158,7 @@ export default {
   nav .links {
     margin-left: auto;
   }
+ 
   nav .links a, button {
     margin-left: 16px;
     font-size: 14px;
@@ -139,7 +171,110 @@ export default {
     border-left: 1px solid #eee;
   }
 
-  .video-admin{
-    display: inline;
-  }
+ 
+
+  #nav-container {
+  position: fixed;
+  margin-left: -140px;
+  height: 100vh;
+  width: 500px;
+  pointer-events: none;
+}
+/* #nav-container .bg {
+  position: absolute;
+  top: 70px;
+  left: 0;
+  width: 100%;
+  height: calc(100% - 70px);
+  visibility: hidden;
+  opacity: 0;
+  transition: .3s;
+  background: #000;
+}
+#nav-container:focus-within .bg {
+  visibility: visible;
+  opacity: .6;
+} */
+#nav-container * {
+  visibility: visible;
+}
+
+.button {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 1;
+  -webkit-appearance: none;
+  border: 0;
+  background: transparent;
+  border-radius: 0;
+  width: 30px;
+  cursor: pointer;
+  pointer-events: auto;
+  margin-left: 55px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+.icon-bar {
+  display: block;
+  width: 100%;
+  height: 3px;
+  background: #001e41;
+  transition: .3s;
+}
+.icon-bar + .icon-bar {
+  margin-top: 5px;
+}
+
+#nav-container:focus-within .button {
+  pointer-events: none;
+}
+#nav-container:focus-within .icon-bar:nth-of-type(1) {
+  transform: translate3d(0,8px,0) rotate(45deg);
+}
+#nav-container:focus-within .icon-bar:nth-of-type(2) {
+  opacity: 0;
+}
+#nav-container:focus-within .icon-bar:nth-of-type(3) {
+  transform: translate3d(0,-8px,0) rotate(-45deg);
+}
+
+#nav-content {
+  margin-top: 60px;
+  margin-left:10x;
+  padding: 20px;
+  
+  max-width: 300px;
+  position: absolute;
+  top: 0;
+ 
+  height: calc(100% - 60px);
+  background: #ececec;
+  pointer-events: auto;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  transform: translateX(100%);
+  transition: transform .3s;
+  will-change: transform;
+  contain: paint;
+}
+
+#nav-content ul {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  list-style-type: none;
+}
+
+#nav-content li  {
+  padding: 10px 5px;
+  display: block;
+  text-transform: uppercase;
+  transition: color .1s;
+}
+
+
+#nav-container:focus-within #nav-content {
+  transform: none;
+}
 </style>

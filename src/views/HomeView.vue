@@ -71,7 +71,7 @@ export default {
       background: #fff;
       border-radius: 5px;
       border: 1px solid var(--lines);
-      padding: 8px 12px;
+      padding: 15px 20px;
       font-weight: 600;
       cursor: pointer;
       display: inline-block;
@@ -80,6 +80,6 @@ export default {
     }
   
     .course:hover {
-      border: 3px solid var(--lines);
+      border: 2px solid var(--lines);
     }
 </style>
