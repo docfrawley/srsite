@@ -1,4 +1,5 @@
 <template>
+  <div class="page-container">
   This is the admin panel area
 
   First pick which course to edit:
@@ -20,7 +21,7 @@
     
     
     
-    
+    </div>
     
     </template>
     

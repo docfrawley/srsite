@@ -1,4 +1,5 @@
 <template>
+  <div class="page-container">
   <div class="home">
     <div v-if="allCourses">
       <div v-for="course in allCourses" :key="course.id">
@@ -26,7 +27,7 @@
     </div>
   </div>
 
-
+</div>
 
 </template>
 

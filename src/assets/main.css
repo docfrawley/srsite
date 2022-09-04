@@ -34,8 +34,12 @@ button, .btn {
   font-weight: 600;
   cursor: pointer;
   display: inline-block;
+  font-size: 14px;
+  margin-left: 16px;
+  pointer-events: auto;
 }
-button:hover, .btn:hover {
+
+button:hover, .btn:hover, .btn:active {
   background: var(--primary);
   color: white;
 }
@@ -78,7 +82,10 @@ input, textarea {
   margin: 16px 0;
 }
 
-
+.page-container{
+  position:relative;
+  top:200px;
+}
 
 .home svg{
   height: 50px;

@@ -53,23 +53,25 @@
           
           <!-- <span> Hi there, {{ displayName }}</span> -->
 
-           <div id="nav-container">
-                <div class="bg"></div>
-                <div class="button" tabindex="0">
-                  <span class="icon-bar"></span>
-                  <span class="icon-bar"></span>
-                  <span class="icon-bar"></span>
-                </div>
+                <input type="checkbox" class="openSidebarMenu" id="openSidebarMenu">
+                  <label for="openSidebarMenu" class="sidebarIconToggle">
+                    <div class="spinner diagonal part-1"></div>
+                    <div class="spinner horizontal"></div>
+                    <div class="spinner diagonal part-2"></div>
+                  </label>
 
-                <div id="nav-content" tabindex="0">
-                  <ul>
-                    <li v-if="isAdmin">
-                      <router-link class="btn" :to="{ name: 'VideoAdmin' }">Video Admin</router-link>
-                  </li>
-                    <li><button @click="handleClick">Logout</button></li>
-                  </ul>
-                </div>
-            </div>
+                  <div id="sidebarMenu">
+                    <ul class="sidebarMenuInner">
+                      <li><span><router-link :to="{ name: 'home' }">Home</router-link></span></li>
+                      <li v-if="isAdmin">
+                        <span><router-link :to="{ name: 'VideoAdmin' }">Video Admin</router-link></span>
+                      </li>
+                      <li><span><router-link :to="{ name: 'MemAccount' }">Account</router-link></span></li>
+                      <li><span @click="handleClick">Logout</span></li>
+                    </ul>
+                  </div>
+                
+           
         
         </div>
         <div v-else>
@@ -92,7 +94,7 @@
 import useLogout from '../composables/useLogout'
 import { useRouter} from 'vue-router'
 import getUser from '@/composables/getUser'
-import { ref} from '@vue/reactivity'
+import { ref, watch, watchEffect, onMounted } from 'vue'
 import { userStore } from '@/store/userStore'
 import { coursesStore } from '@/store/coursesStore'
 import ModalMenu from './ModalMenu.vue'
@@ -107,10 +109,21 @@ export default {
         const isAdmin = ref()
         const displayName = ref()
         const ModuleShow = ref(false)
+        const matty = ref(localStorage.getItem('displayName'))
+        
 
         store.$subscribe((login, state)=>{
           displayName.value = store.displayName
           isAdmin.value = store.admin
+          console.log('displayname: ', displayName.value)
+          console.log('how:', matty.value)
+        })
+
+        onMounted(() =>{
+          displayName.value = store.displayName
+          isAdmin.value = store.admin
+          console.log(`the component is now mounted.`)
+
         })
 
         const showModule = () =>{
@@ -138,7 +151,7 @@ export default {
     position: fixed;
     width: 100%;
     padding: 16px 10px;
-    background: white;
+    background: #ffffff;
     border-bottom: 1px solid var(--lines);
     z-index:150;
   }
@@ -161,122 +174,117 @@ export default {
     margin-left: auto;
   }
  
-  nav .links a, button {
+  nav .links button {
     margin-left: 16px;
     font-size: 14px;
   }
-  span {
+
+
+#sidebarMenu {
+    height: 100%;
+    position: fixed;
+    right: 0px;
+    width: 160px;
+    margin-top: 60px;
+    transform: translateX(250px);
+    transition: transform 250ms ease-in-out;
+    background: grey;
+}
+.sidebarMenuInner{
+    margin:0;
+    padding:0;
+    border-top: 1px solid rgba(255, 255, 255, 0.10);
+}
+.sidebarMenuInner li{
+    list-style: none;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: bold;
+    padding: 20px;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+}
+.sidebarMenuInner li span{
+    display: block;
     font-size: 14px;
-    display: inline-block;
-    margin-left: 16px;
-    padding-left: 16px;
-    border-left: 1px solid #eee;
-  }
-
- 
-
-  #nav-container {
-  position: fixed;
-  margin-left: -140px;
-  height: 100vh;
-  width: 500px;
-  pointer-events: none;
+    color: rgba(255, 255, 255, 0.50);
 }
-/* #nav-container .bg {
-  position: absolute;
-  top: 70px;
-  left: 0;
-  width: 100%;
-  height: calc(100% - 70px);
-  visibility: hidden;
-  opacity: 0;
-  transition: .3s;
-  background: #000;
-}
-#nav-container:focus-within .bg {
-  visibility: visible;
-  opacity: .6;
-} */
-#nav-container * {
-  visibility: visible;
+.sidebarMenuInner li a{
+    color:rgba(255, 255, 255, 0.50);
+    text-transform: uppercase;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
 }
 
-.button {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  z-index: 1;
-  -webkit-appearance: none;
-  border: 0;
-  background: transparent;
-  border-radius: 0;
-  width: 30px;
-  cursor: pointer;
-  pointer-events: auto;
-  margin-left: 55px;
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
+.sidebarMenuInner li a:hover, .sidebarMenuInner li span:hover{
+  color: #fff;
 }
-.icon-bar {
-  display: block;
-  width: 100%;
-  height: 3px;
-  background: #001e41;
-  transition: .3s;
-}
-.icon-bar + .icon-bar {
-  margin-top: 5px;
+input[type="checkbox"]:checked ~ #sidebarMenu {
+    transform: translateX(0);
 }
 
-#nav-container:focus-within .button {
-  pointer-events: none;
+input[type=checkbox] {
+    transition: all 0.3s;
+    box-sizing: border-box;
+    display: none;
 }
-#nav-container:focus-within .icon-bar:nth-of-type(1) {
-  transform: translate3d(0,8px,0) rotate(45deg);
+.sidebarIconToggle {
+    transition: all 0.3s;
+    box-sizing: border-box;
+    cursor: pointer;
+    position: fixed;
+    z-index: 99;
+    height: 100%;
+    width: 100%;
+    top: 45px;
+    right: 45px;
+    height: 30px;
+    width: 30px;
 }
-#nav-container:focus-within .icon-bar:nth-of-type(2) {
-  opacity: 0;
+.spinner {
+    transition: all 0.3s;
+    box-sizing: border-box;
+    position: absolute;
+    height: 3px;
+    width: 100%;
+    background-color: #001e41;
 }
-#nav-container:focus-within .icon-bar:nth-of-type(3) {
-  transform: translate3d(0,-8px,0) rotate(-45deg);
+.horizontal {
+    transition: all 0.3s;
+    box-sizing: border-box;
+    position: relative;
+    float: left;
+    margin-top: 3px;
 }
-
-#nav-content {
-  margin-top: 60px;
-  margin-left:10x;
-  padding: 20px;
-  
-  max-width: 300px;
-  position: absolute;
-  top: 0;
- 
-  height: calc(100% - 60px);
-  background: #ececec;
-  pointer-events: auto;
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
-  transform: translateX(100%);
-  transition: transform .3s;
-  will-change: transform;
-  contain: paint;
+.diagonal.part-1 {
+    position: relative;
+    transition: all 0.3s;
+    box-sizing: border-box;
+    float: left;
 }
-
-#nav-content ul {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  list-style-type: none;
+.diagonal.part-2 {
+    transition: all 0.3s;
+    box-sizing: border-box;
+    position: relative;
+    float: left;
+    margin-top: 3px;
 }
-
-#nav-content li  {
-  padding: 10px 5px;
-  display: block;
-  text-transform: uppercase;
-  transition: color .1s;
+input[type=checkbox]:checked ~ .sidebarIconToggle > .horizontal {
+    transition: all 0.3s;
+    box-sizing: border-box;
+    opacity: 0;
 }
-
-
-#nav-container:focus-within #nav-content {
-  transform: none;
+input[type=checkbox]:checked ~ .sidebarIconToggle > .diagonal.part-1 {
+    transition: all 0.3s;
+    box-sizing: border-box;
+    transform: rotate(135deg);
+    margin-top: 8px;
+}
+input[type=checkbox]:checked ~ .sidebarIconToggle > .diagonal.part-2 {
+    transition: all 0.3s;
+    box-sizing: border-box;
+    transform: rotate(-135deg);
+    margin-top: -9px;
 }
 </style>

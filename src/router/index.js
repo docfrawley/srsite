@@ -4,21 +4,36 @@ import Login from '../views/auth/Login.vue'
 import Signup from '../views/auth/Signup.vue'
 import CourseView from '../views/CourseView.vue'
 import VideoAdmin from '../views/VideoAdmin.vue'
+import MemAccount from '../views/MemAccount.vue'
 import { auth } from '@/firebase/config'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
 
-const requireAuth = (to, from, next) => {
-  let user = auth.currentUser
-  if (!user){
-    next({ name: 'Login'})
-  } else {
-    next()
-  }
+const getCurrentUser=()=>{
+  return new Promise((resolve, reject)=>{
+    const removeListener = onAuthStateChanged(
+      getAuth(),
+      (user) => {
+        removeListener();
+        resolve(user);
+      },
+      
+      reject
+    );
+  });
+}
+
+const requiresAuth = async (to, from, next) => {
+  if(await getCurrentUser()){
+      next();
+    } else {
+      next({ name: 'Login'})
+    }
 }
 
 const requireAdmin = (to, from, next) => {
   let user = auth.currentUser
   if (!user){
-    next({ name: 'HomeView'})
+    next({ name: 'home'})
   } else {
     next()
   }
@@ -29,7 +44,7 @@ const routes = [
     path: '/',
     name: 'home',
     component: HomeView,
-    beforeEnter: requireAuth
+    beforeEnter: requiresAuth
   },
   {
     path: '/login',
@@ -45,7 +60,7 @@ const routes = [
     path: '/course/:course',
     name: 'CourseView',
     component: CourseView,
-    beforeEnter: requireAuth,
+    beforeEnter: requiresAuth,
     props:true
   },
   {
@@ -53,6 +68,13 @@ const routes = [
     name: 'VideoAdmin',
     component: VideoAdmin,
     beforeEnter: requireAdmin,
+    props:true
+  },
+  {
+    path: '/account',
+    name: 'MemAccount',
+    component: MemAccount,
+    beforeEnter: requiresAuth,
     props:true
   }
 ]

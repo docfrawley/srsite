@@ -1,4 +1,7 @@
 <template>
+    <div class="page-container">
+
+    
     <div @click="returnToAll" class="current-course">
         <div>
             <h1>{{currentCourse.title}}</h1>
@@ -58,7 +61,7 @@
             <br />
         </div>
     </div>
-
+</div>
 </template>
 
 <script>

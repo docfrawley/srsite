@@ -165,5 +165,6 @@ export const coursesStore  = defineStore("courses", {
 
 
         }
-    }
+    },
+    persist:true,
 });

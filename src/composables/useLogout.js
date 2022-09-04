@@ -14,7 +14,7 @@ const logout = async () => {
 
   try {
     await signOut(auth)
-    isPending.value = false
+    localStorage.loggedin = false
   }
   catch(err) {
     console.log(err.message)

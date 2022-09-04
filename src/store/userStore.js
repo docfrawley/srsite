@@ -66,6 +66,7 @@ export const userStore  = defineStore("user", {
                     this.displayName=dn
                     this.admin = false
                     this.userID = res.user.uid
+                    localStorage.loggedin = true
                     }
                 }   
             }            
@@ -92,5 +93,6 @@ export const userStore  = defineStore("user", {
             let searchObject= this.compVids.find((obj) => obj.col_name==course);
             return searchObject
         }
-    }
+    },
+    persist: true,
 });
