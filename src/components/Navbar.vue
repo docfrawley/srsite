@@ -53,7 +53,7 @@
           
           <!-- <span> Hi there, {{ displayName }}</span> -->
 
-                <input type="checkbox" class="openSidebarMenu" id="openSidebarMenu">
+                <input type="checkbox" class="openSidebarMenu" id="openSidebarMenu" v-model="isChecked">
                   <label for="openSidebarMenu" class="sidebarIconToggle">
                     <div class="spinner diagonal part-1"></div>
                     <div class="spinner horizontal"></div>
@@ -62,12 +62,12 @@
 
                   <div id="sidebarMenu">
                     <ul class="sidebarMenuInner">
-                      <li><span><router-link :to="{ name: 'home' }">Home</router-link></span></li>
+                      <li><span @click="unChecked"><router-link :to="{ name: 'home' }">Home</router-link></span></li>
                       <li v-if="isAdmin">
-                        <span><router-link :to="{ name: 'VideoAdmin' }">Video Admin</router-link></span>
+                        <span @click="unChecked"><router-link :to="{ name: 'VideoAdmin' }">Video Admin</router-link></span>
                       </li>
-                      <li><span><router-link :to="{ name: 'MemAccount' }">Account</router-link></span></li>
-                      <li><span @click="handleClick">Logout</span></li>
+                      <li><span @click="unChecked"><router-link :to="{ name: 'MemAccount' }">Account</router-link></span></li>
+                      <li><span class="sb-item" @click="handleClick">Logout</span></li>
                     </ul>
                   </div>
                 
@@ -110,6 +110,7 @@ export default {
         const displayName = ref()
         const ModuleShow = ref(false)
         const matty = ref(localStorage.getItem('displayName'))
+        const isChecked = ref(false)
         
 
         store.$subscribe((login, state)=>{
@@ -139,9 +140,14 @@ export default {
             cstore.$reset()
             await logout()
             router.push({ name: 'Login'})
+            isChecked.value = false
         }
 
-    return { handleClick, isAdmin, displayName, showModule, ModuleShow, modalClose }
+        const unChecked = () => {
+          isChecked.value = false
+        }
+
+    return { handleClick, isAdmin, displayName, showModule, ModuleShow, modalClose, isChecked, unChecked }
     }
 }
 </script>
