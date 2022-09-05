@@ -90,5 +90,16 @@ export default {
       color:#fff;
     }
   
+    @media screen and (max-width: 600px){
     
+      .course-view {
+        display: flex;
+      flex-wrap: wrap;
+      height: 230px;
+      width: 335px;
+      font-size:12px;
+      background-image:url("../assets/procrastinateSmall.jpg");
+    }
+    
+  }
 </style>
