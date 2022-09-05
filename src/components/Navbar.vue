@@ -166,6 +166,7 @@ export default {
     height:75px;
     width:300px;
   }
+
   nav {
     display: flex;
     align-items: center;
@@ -293,4 +294,28 @@ input[type=checkbox]:checked ~ .sidebarIconToggle > .diagonal.part-2 {
     transform: rotate(-135deg);
     margin-top: -9px;
 }
+
+
+  @media screen and (max-width: 600px){
+    .navbar svg {
+      height:50px;
+      width:200px;
+    }
+
+    .sidebarIconToggle {
+      top: 30px;
+      right: 20px;
+      height: 20px;
+      width: 20px;
+    }
+    #sidebarMenu {
+      width: 120px;
+      margin-top: 45px;
+    }
+
+    .sidebarMenuInner li span{
+      font-size: 12px;
+    }
+    
+  }
 </style>

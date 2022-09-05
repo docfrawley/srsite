@@ -3,21 +3,21 @@
   <div class="home">
     <div v-if="allCourses">
       <div v-for="course in allCourses" :key="course.id">
-
         <div v-if="course.status=='published'">
-          <div @click="sendview(course)" class="course">
+          <div @click="sendview(course)" class="course-view">
             <div>
-              <h1>{{course.title}}</h1>
+              <h2>{{course.title}}</h2>
+              <h3>Instructor: {{course.instructor}}</h3>
+            </div>
+      
+            <div>
+              <h4>{{course.description}}</h4>
             </div>
             <div>
-              <h4>Instructor: {{course.instructor}}</h4>
-            </div>
-            <div>
-              <h6>{{course.description}}</h6>
-            </div>
-            <div>And you have completed {{ course.percentCompleted }}% of the course</div>
-            <div class="loading-bar">
-              <div class="percentage" :style="{ 'width': course.percentCompleted + '%'}"></div>
+              <div><h4>You have completed {{ course.percentCompleted }}% of the course</h4></div>
+              <div class="loading-bar">
+                <div class="percentage" :style="{ 'width': course.percentCompleted + '%'}"></div>
+              </div>
             </div>
           </div>
 
@@ -68,19 +68,27 @@ export default {
 </script>
 
 <style scoped>
-    .course {
-      background: #fff;
+    .course-view {
+      display: flex;
+      flex-wrap: wrap;
+      align-content: space-between;
+      background-blend-mode: darken;
+      background-color: rgba(0, 0, 0, 0.3);
       border-radius: 5px;
       border: 1px solid var(--lines);
-      padding: 15px 20px;
+      padding: 25px 20px;
       font-weight: 600;
       cursor: pointer;
-      display: inline-block;
       font-size: 18px;
-      margin: 10px;
+      background-image:url("../assets/procrastinateLarge.jpg");
+      height: 375px;
+      width: 500px;
+      color: #fff;
+    }
+
+    .course h1, h2, h3, h4, h5, h6{
+      color:#fff;
     }
   
-    .course:hover {
-      border: 2px solid var(--lines);
-    }
+    
 </style>
