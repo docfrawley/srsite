@@ -18,9 +18,5 @@ export default {
 
 
 <style>
-.content {
-  margin: 0 auto;
-  max-width: 95vw;
-  padding: 0 20px;
-}
+
 </style>

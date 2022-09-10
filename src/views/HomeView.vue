@@ -1,6 +1,6 @@
 <template>
   <div class="page-container">
-  <div class="home">
+ 
     <div v-if="allCourses">
       <div v-for="course in allCourses" :key="course.id">
         <div v-if="course.status=='published'">
@@ -25,7 +25,7 @@
 
       </div>
     </div>
-  </div>
+
 
 </div>
 
@@ -96,7 +96,7 @@ export default {
         display: flex;
       flex-wrap: wrap;
       height: 230px;
-      width: 335px;
+      max-width: 300px;
       font-size:12px;
       background-image:url("../assets/procrastinateSmall.jpg");
     }

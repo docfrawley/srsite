@@ -82,19 +82,12 @@ input, textarea {
 
 .page-container{
   position:relative;
-  top:200px;
+  top:175px;
+  display: flex;
+  justify-content: center;
 }
 
-.home svg{
-  height: 50px;
-  width:50px;
-  transition: fill 1s;
-  cursor: pointer;
-}
 
-.home svg:hover {
-  fill:grey;
-}
 
 .module-view {
   background-color: #fff;
@@ -163,4 +156,11 @@ input, textarea {
       background: -webkit-linear-gradient( #a3ceff, #001e41);
       /* Chrome10-25,Safari5.1-6 */
       background: linear-gradient(to right, #a3ceff 10%, #001e41 90%);
+  }
+
+  @media screen and (max-width: 600px){
+    
+    .page-container{
+      top:125px;
+    }
   }
