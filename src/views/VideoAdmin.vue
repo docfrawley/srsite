@@ -1,31 +1,34 @@
 <template>
-  <div class="page-container">
-  This is the admin panel area
-
-  First pick which course to edit:
+  <div class="admin-container">
+<div>
+  <p>This is the admin panel area</p>
+  
+ <p>First pick which course to edit:</p>
+</div>
+  
   <div class="course-container">
-    <div v-for="course in courses" :key="course.id">
-      <div class="course-listing" @click="goToCourse(course)">{{course.title}} </div>
-    </div>
-    <button class="course-listing" @click="newCourseForm">ADD COURSE +</button>
+<div v-for="course in courses" :key="course.id">
+  <div class="course-listing" @click="goToCourse(course)">{{course.title}} </div>
+</div>
+<button class="course-listing" @click="newCourseForm">ADD COURSE +</button>
   </div>
 
   <div v-if="currentCourse">
-    <CourseForm :courseInfo="currentCourse" :key="componentKey" />
+<CourseForm :courseInfo="currentCourse" :key="componentKey" />
   </div>
 
   <div v-if="showAddForm">
-    <AddCourse @courseAdded="wasItAdded"/>
+<AddCourse @courseAdded="wasItAdded"/>
   </div>
+
+
+
+
+</div>
+
+</template>
     
-    
-    
-    
-    </div>
-    
-    </template>
-    
-    <script>
+<script>
     import { ref, reactive } from 'vue'
     import getCollection from '@/composables/getCollection'
     import CourseForm from '@/components/CourseForm.vue'
@@ -64,8 +67,14 @@
     }
     </script>
     
-    <style scoped>
-    
+<style scoped>
+    .admin-container {
+          position: relative;
+          top: 175px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+      }
     .course-listing{
       width:250px;
       height:300px;
@@ -73,5 +82,4 @@
       cursor: pointer;
       margin: 10px;
     }
-    
-    </style>
+</style>
