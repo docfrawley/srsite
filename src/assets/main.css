@@ -85,7 +85,8 @@ input, textarea {
   position:relative;
   top:175px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 
 

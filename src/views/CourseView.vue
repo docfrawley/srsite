@@ -191,11 +191,12 @@ export default {
     }
     .current-course{
         background-color: white;
-        margin-bottom: 25px;
+        margin-bottom: 5px;
         border-radius: 10px;
         padding:20px;
-        width:50%;
+        width:540px;
         cursor: pointer;
+        height:100px;
     }
 
 </style>

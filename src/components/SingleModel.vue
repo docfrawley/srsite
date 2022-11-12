@@ -1,10 +1,11 @@
 <template>
+    
     <div class="smcontainer">
         <div v-if="currentVideo.iframe">
             <div class="video-responsive">
                 <vue-vimeo-player class="video-responsive-item" :video-id="currentVideo.iframe"
-                    :options="{ responsive: true }" :events-to-emit="['ended','progress', 'pause']"
-                    @progress="CheckProgress" @ended="NowEnded" @pause="WhenPaused" />
+                    :options="{ responsive: true }" :events-to-emit="['ended','progress', 'pause', 'timeupdate']"
+                    @progress="CheckProgress" @ended="NowEnded" @pause="WhenPaused" @timeupdate="ShowUpdate"/>
             </div>
             <div class="video-details">
                 <p>{{currentModule.title}}, {{ currentVideo.title}}</p>
@@ -12,20 +13,25 @@
             </div>
 
         </div>
-
-        <div class="module-view">
-
-
-
-            <div v-for="video in currentModule.videos" :key="video.id">
-                <div @click="newVideo(video)">
-                    <ShowVidDetails :theMod="currentModule" :video="video" :percent="percentVid" :key="componentKey" />
-                    <br /><br />
-                </div>
-
-            </div>
-
+        <div v-for="item in samplearray" :key="item.order">
+            <p :class="{Active: item.active}">{{item.statement}}</p>
         </div>
+
+        
+    </div>
+
+    <div class="module-view">
+    
+    
+    
+        <div v-for="video in currentModule.videos" :key="video.id">
+            <div @click="newVideo(video)">
+                <ShowVidDetails :theMod="currentModule" :video="video" :percent="percentVid" :key="componentKey" />
+                <br /><br />
+            </div>
+    
+        </div>
+    
     </div>
 </template>
 
@@ -48,6 +54,12 @@ export default {
         const componentKey = ref(0)
         const currentModule = ref()
         const currentVideo = ref()
+        const showForm = ref(false)
+        const samplearray = ref([
+            {order: 0, statement: 'this is first', active:false, cue:5},
+            {order: 1, statement: 'this is second', active: false, cue: 15 },
+            {order: 2, statement: 'this is third', active: false, cue:25 }
+        ])
 
 
         currentVideo.value = cstore.currentVideo
@@ -102,13 +114,40 @@ export default {
             cstore.setPercentage(percentVid.value)
         }
 
-        return { currentVideo, currentModule, componentKey, percentVid, newVideo, CheckProgress, NowEnded, WhenPaused }
+        const ShowUpdate = (e,d,p) => {
+            for (let i = 0; i < samplearray.value.length; i++) {
+                if (i + 1 != samplearray.value.length){
+                    if (samplearray.value[i].cue <= e.seconds && e.seconds <= samplearray.value[i + 1].cue) {
+                        samplearray.value.forEach(element => {
+                            element.active=false
+                        });
+                        samplearray.value[i].active = true
+                    }
+                } else{
+                    if (samplearray.value[i].cue <= e.seconds) {
+                        samplearray.value.forEach(element => {
+                            element.active = false
+                        });
+                        samplearray.value[i].active = true
+                    }
+                }
+                
+            }
+        }
+
+        return { currentVideo, currentModule, componentKey, percentVid, newVideo, CheckProgress, NowEnded, WhenPaused, ShowUpdate, showForm, samplearray}
     }
 
 }
 </script>
 
-<style>
+<style scoped>
+
+
+.Active {
+    color: red;
+}
+
 .smcontainer{
     display: flex;
 }
