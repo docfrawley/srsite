@@ -100,13 +100,16 @@ export default {
         }
 
        
-        const NowEnded = (e,d,p)=>{
-            
+        const NowEnded = ()=>{
+            console.log("i am here now:", componentKey.value)
                 ElementNum.value++
-                if (ElementNum.value == videos.value.length){
+                console.log('two')
+            if (ElementNum.value == currentModule.value.videos.length){
                     ElementNum.value = 0
                 }
-                theVideo.value =videos.value[ElementNum.value]
+                console.log('three')
+            currentVideo.value =currentModule.value.videos[ElementNum.value]
+                console.log('four')
             componentKey.value++
         }
 
