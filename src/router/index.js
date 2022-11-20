@@ -4,6 +4,7 @@ import Login from '../views/auth/Login.vue'
 import Signup from '../views/auth/Signup.vue'
 import CourseView from '../views/CourseView.vue'
 import VideoAdmin from '../views/VideoAdmin.vue'
+import ToolkitAdmin from '../views/ToolkitAdmin.vue'
 import MemAccount from '../views/MemAccount.vue'
 import { auth } from '@/firebase/config'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
@@ -67,6 +68,13 @@ const routes = [
     path: '/videoadmin',
     name: 'VideoAdmin',
     component: VideoAdmin,
+    beforeEnter: requireAdmin,
+    props:true
+  },
+  {
+    path: '/toolkitadmin',
+    name: 'ToolkitAdmin',
+    component: ToolkitAdmin,
     beforeEnter: requireAdmin,
     props:true
   },

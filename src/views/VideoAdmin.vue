@@ -77,7 +77,7 @@
       }
     .course-listing{
       width:250px;
-      height:300px;
+      height:50px;
       background-color: bisque;
       cursor: pointer;
       margin: 10px;

@@ -25,7 +25,6 @@
   </div>
 
   <div v-if="currentVideo">
-    hello there
     <VideoForm :videoInfo="currentVideo" :courseCol="colName" :key="componentKey" />
   </div>
 
@@ -49,7 +48,7 @@ export default {
   setup(props) {
     const edMod = ref(props.moduleInfo)
     const { isPending, error, deleteTheDoc, updateTheDoc } = useDocument('course-modules', props.moduleInfo.id)
-    const { documents } = getOrderDocs(props.modColName, 'modules', props.moduleInfo.modnumb)
+    const { documents } = getOrderDocs(props.modColName, 'module', props.moduleInfo.modnumb)
     const updated = ref(false)
     const componentKey = ref(0)
     const currentVideo = ref()
