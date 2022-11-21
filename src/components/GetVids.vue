@@ -13,8 +13,9 @@
             <p>{{currentVideo.title}}</p>
             <vue-vimeo-player class="video-item" :video-id="currentVideo.iframe" :options="{ responsive: true }" />
         </div>
-       <div>
-        <GetQuestions :videoID="currentVideo.id" :key="componentKey"/>
+       <div class="all-prompts">
+            <AddPrompt @promptAdded="wasItAdded" :vid="currentVideo.id"/>
+            <GetQuestions :videoID="currentVideo.id" :key="componentKey"/>
         </div>
     </div>
 
@@ -25,29 +26,33 @@ import { ref } from 'vue'
 import getOrderDocs from '@/composables/getOrderDocs'
 import { vueVimeoPlayer } from 'vue-vimeo-player'
 import GetQuestions from '@/components/GetQuestions.vue'
+import AddPrompt from './AddPrompt.vue'
 
 export default {
     props: ['moduleInfo'],
-    components: { vueVimeoPlayer, GetQuestions },
+    components: { vueVimeoPlayer, GetQuestions, AddPrompt },
     setup(props) {
         const { documents } = getOrderDocs(props.moduleInfo.course, 'module', props.moduleInfo.modnumb)
         const componentKey = ref(0)
         const currentVideo = ref()
   
-
+        const wasItAdded = () => {
+            componentKey.value++
+        }
    
         const showVid = (info) => {
             currentVideo.value = info
             componentKey.value++
         }
 
-        return {documents, showVid, currentVideo, componentKey }
+        return {documents, showVid, currentVideo, componentKey, wasItAdded }
     }
 
 }
 </script>
 
 <style>
+
 .video-listing {
     padding: 10px;
     background-color: lightblue;
@@ -77,5 +82,11 @@ export default {
 
 .order-questions{
     display: flex;
+    margin-top: 50px;
+}
+
+.all-prompte{
+    display: flex;
+    flex-direction: column;
 }
 </style>

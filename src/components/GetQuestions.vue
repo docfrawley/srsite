@@ -3,8 +3,8 @@
     <div v-if="documents" >
         <div v-for="document in documents" :key="document.id" class="questions-pos">
             <div class="display-question">
-                <p>{{document.vcue}}</p>
-                <p class="the-prompt">{{document.prompt}}</p>
+                <PromptForm :vprompt="document" />
+                
             </div>
           
         </div>
@@ -17,21 +17,19 @@
 <script>
 import { ref } from 'vue'
 import getOrderDocs from '@/composables/getOrderDocs'
-
+import AddPrompt from './AddPrompt.vue'
+import PromptForm from './PromptForm.vue'
 
 export default {
     props: ['videoID'],
-    components: { },
+    components: { AddPrompt, PromptForm},
     setup(props) {
         const { documents } = getOrderDocs('questions', 'vid', props.videoID)
         const componentKey = ref(0)
         const currentVideo = ref(props.videoID)
 
+ 
 
-
-        const showQuestions = (info) => {
-            componentKey.value++
-        }
 
         return { documents, currentVideo }
     }
@@ -82,4 +80,6 @@ export default {
 .the-prompt{
     width:500px;
 }
+
+
 </style>
