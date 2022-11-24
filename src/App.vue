@@ -9,6 +9,7 @@
 
 <script>
 import Navbar from './components/Navbar.vue'
+import './assets/tailwind.css'
 
 export default {
   components: { Navbar }

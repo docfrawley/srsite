@@ -7,10 +7,13 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "autoprefixer": "^10",
     "core-js": "^3.8.3",
     "firebase": "^9.8.2",
     "pinia": "^2.0.16",
     "pinia-plugin-persistedstate": "^2.1.1",
+    "postcss": "^8",
+    "tailwindcss": "^3",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",
     "vue-vimeo-player": "^1.1.2"
@@ -18,6 +21,10 @@
   "devDependencies": {
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-router": "~5.0.0",
-    "@vue/cli-service": "~5.0.0"
+    "@vue/cli-service": "~5.0.0",
+    "autoprefixer": "^10.4.13",
+    "postcss": "^8.4.19",
+    "tailwindcss": "^3.2.4",
+    "vue-cli-plugin-tailwind": "~3.0.0"
   }
 }

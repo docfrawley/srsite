@@ -10,6 +10,7 @@ import './assets/main.css'
 // firebase imports
 import { auth } from './firebase/config'
 import { onAuthStateChanged } from 'firebase/auth'
+import './assets/tailwind.css'
 
 const pinia = createPinia()
 pinia.use(piniaPluginPersistedstate)
