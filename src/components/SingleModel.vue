@@ -64,7 +64,7 @@ export default {
 
         currentVideo.value = cstore.currentVideo
         currentModule.value = cstore.currentModule
-
+        
         if (currentVideo.value.percentages){
             percentVid.value = currentVideo.value.percentages
         }

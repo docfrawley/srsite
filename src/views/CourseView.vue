@@ -49,11 +49,11 @@
         </div>
     </div>
 
-    <div v-else>
+    <!-- <div v-else>
         <div v-for="document in documents" :key="document.id">
             <ShowModule :document="document" @vidInfo="showvidInfo" />
         </div>
-    </div>
+    </div> -->
 
     <div v-else>
         <div v-for="aModule in fullCourse" :key="aModule.id">

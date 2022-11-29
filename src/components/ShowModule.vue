@@ -23,7 +23,6 @@ export default {
         const cstore = coursesStore()
         const theModule = ref(props.theModule)
         const currentVid = ref(cstore.currentVideo)
-
         watch(cstore.currentVideo, ()=>{
             currentVid.value = cstore.currentVideo
         })

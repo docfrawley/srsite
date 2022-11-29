@@ -47,6 +47,7 @@ export const coursesStore  = defineStore("courses", {
          async setCourseAll(course){
             let results = []
             let vidResults = []
+            
             this.currentCourse = course
             const ustore = userStore()
             let colRef = collection(db, 'course-modules')
@@ -58,26 +59,38 @@ export const coursesStore  = defineStore("courses", {
                 });
                 results.sort((a, b) => (a.modnumb > b.modnumb) ? 1 : -1)
             })
-            let vidRef = collection(db, course.col_name)
+            
+
+
+            let questionRef = await collection(db, 'questions')
+
+            let vidRef =  await collection(db, course.col_name)
             const unsubVid = onSnapshot(vidRef, snap => {
                 snap.docs.forEach(doc => {
                     vidResults.push({ ...doc.data(), id: doc.id });
                 });
-                for (var i = 0; i < results.length; i++) {
-                    const modVids = vidResults.filter(vid => vid.module == results[i].modnumb);
+                for (let i = 0; i < results.length; i++) {
+                    let modVids = vidResults.filter(vid => vid.module == results[i].modnumb);
                     modVids.sort((a, b) => (a.order > b.order) ? 1 : -1);
                     modVids.forEach( video => {
+                        let qresults = []
+                        let qRef = query(questionRef, where("vid", "==", video.id))
+                        let usub = onSnapshot(qRef, snap => {
+                            snap.docs.forEach(doc => {
+                            qresults.push({...doc.data(), id: doc.id})
+                            });
+                            qresults.sort((a, b) => (a.vcue > b.vcue) ? 1 : -1)
+                        })
+
+                        video.questions = qresults
+                       
                         
                         if (video.percentages){
-                            const percentageVid = ref(video.percentages.filter(doc =>
-                                doc.uid === ustore.userID))
-                            // for (let [key, value] of Object.entries(video.percentages)){
-                            //     if (key == userID.value){ percentage.value = value}
-                            // }
-                        //     let percentage = video.percentages.filter(what => Object.keys(what) == userID)
-                        // console.log('percent = ', percentage)
-                            if (percentageVid.value[0]){
-                            video.percentages = percentageVid.value[0].percentage
+                            console.log('percentages: ', video.percentages)
+                            const percentageVid = video.percentages.filter(doc =>
+                                doc.uid === ustore.userID)
+                            if (percentageVid[0]){
+                            video.percentages = percentageVid[0].percentage
                             } else {
                                 video.percentages= null
                             }
@@ -87,6 +100,8 @@ export const coursesStore  = defineStore("courses", {
                         
                     });
                     results[i].videos = modVids;
+                    console.log('first: ', modVids)
+                    console.log("which module: ", i)
                 }
                 this.courseAll = results
             })
