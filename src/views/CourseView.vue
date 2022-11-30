@@ -87,14 +87,10 @@ export default {
         const cstore = coursesStore()
         const fullCourse = ref()
         const currentCourse = ref(cstore.currentCourse)
-        const currentModule = ref()
-        const currentVideo = ref()
+        const currentModule = ref(cstore.currentModule)
+        const currentVideo = ref(cstore.currentVideo)
         const numbModules = ref(cstore.courseAll.length)
         
-
-        currentModule.value = cstore.currentModule
-        currentVideo.value = cstore.currentVideo        
-
         watchEffect(() => {
             fullCourse.value = cstore.courseAll
             currentVideo.value = cstore.currentVideo

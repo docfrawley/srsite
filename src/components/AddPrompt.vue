@@ -31,7 +31,8 @@ export default {
                 prompt: vprompt.value,
                 vcue: vcue.value,
                 type: 'question',
-                vid: props.vid
+                vid: props.vid,
+                active: false
             })
             isPending.value = false
             if (res) {

@@ -86,7 +86,6 @@ export const coursesStore  = defineStore("courses", {
                        
                         
                         if (video.percentages){
-                            console.log('percentages: ', video.percentages)
                             const percentageVid = video.percentages.filter(doc =>
                                 doc.uid === ustore.userID)
                             if (percentageVid[0]){
@@ -100,8 +99,6 @@ export const coursesStore  = defineStore("courses", {
                         
                     });
                     results[i].videos = modVids;
-                    console.log('first: ', modVids)
-                    console.log("which module: ", i)
                 }
                 this.courseAll = results
             })

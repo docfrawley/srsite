@@ -13,9 +13,13 @@
             </div>
 
         </div>
-        <div v-for="item in samplearray" :key="item.order">
-            <p :class="{Active: item.active}">{{item.statement}}</p>
+        <div class="flex flex-col questions-class">
+            <div v-for="question in currentVideo.questions" :key="question.id" >
+                <p :class="{Active: question.active}">{{question.prompt}}</p>
+                <br/>
+            </div>
         </div>
+        
 
         
     </div>
@@ -27,7 +31,7 @@
         <div v-for="video in currentModule.videos" :key="video.id">
             <div @click="newVideo(video)">
                 <ShowVidDetails :theMod="currentModule" :video="video" :percent="percentVid" :key="componentKey" />
-                <br /><br />
+                
             </div>
     
         </div>
@@ -52,19 +56,12 @@ export default {
         const ElementNum = ref(0)
         const percentVid = ref(0)
         const componentKey = ref(0)
-        const currentModule = ref()
-        const currentVideo = ref()
+        const currentModule = ref(cstore.currentModule)
+        const currentVideo = ref(cstore.currentVideo)
         const showForm = ref(false)
-        const samplearray = ref([
-            {order: 0, statement: 'this is first', active:false, cue:5},
-            {order: 1, statement: 'this is second', active: false, cue: 15 },
-            {order: 2, statement: 'this is third', active: false, cue:25 }
-        ])
 
+        console.log('here single:', currentVideo.value.questions)
 
-        currentVideo.value = cstore.currentVideo
-        currentModule.value = cstore.currentModule
-        
         if (currentVideo.value.percentages){
             percentVid.value = currentVideo.value.percentages
         }
@@ -118,27 +115,27 @@ export default {
         }
 
         const ShowUpdate = (e,d,p) => {
-            for (let i = 0; i < samplearray.value.length; i++) {
-                if (i + 1 != samplearray.value.length){
-                    if (samplearray.value[i].cue <= e.seconds && e.seconds <= samplearray.value[i + 1].cue) {
-                        samplearray.value.forEach(element => {
+            for (let i = 0; i < currentVideo.value.questions.length; i++) {
+                if (i + 1 != currentVideo.value.questions.length){
+                    if (currentVideo.value.questions[i].vcue <= e.seconds && e.seconds <= currentVideo.value.questions[i + 1].vcue) {
+                        currentVideo.value.questions.forEach(element => {
                             element.active=false
                         });
-                        samplearray.value[i].active = true
+                        currentVideo.value.questions[i].active = true
                     }
                 } else{
-                    if (samplearray.value[i].cue <= e.seconds) {
-                        samplearray.value.forEach(element => {
+                    if (currentVideo.value.questions[i].vcue <= e.seconds) {
+                        currentVideo.value.questions.forEach(element => {
                             element.active = false
                         });
-                        samplearray.value[i].active = true
+                        currentVideo.value.questions[i].active = true
                     }
                 }
                 
             }
         }
 
-        return { currentVideo, currentModule, componentKey, percentVid, newVideo, CheckProgress, NowEnded, WhenPaused, ShowUpdate, showForm, samplearray}
+        return { currentVideo, currentModule, componentKey, percentVid, newVideo, CheckProgress, NowEnded, WhenPaused, ShowUpdate, showForm }
     }
 
 }
@@ -147,6 +144,12 @@ export default {
 <style scoped>
 .Active {
     color: red;
+}
+
+.questions-class{
+    font-size: 14px;
+    width:500px;
+    margin:20px;
 }
 
 .smcontainer{

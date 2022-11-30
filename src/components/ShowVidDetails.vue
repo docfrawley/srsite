@@ -31,7 +31,6 @@ export default {
       const vidLength = ref(minutes +':'+seconds)
       const percentage = ref(0)
       const isComplete = ref(false)
-      console.log('what I got: ', video.value)
       if (video.value.percentages){
         percentage.value = video.value.percentages*100
       }
