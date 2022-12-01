@@ -15,8 +15,13 @@
         </div>
         <div class="flex flex-col questions-class">
             <div v-for="question in currentVideo.questions" :key="question.id" >
-                <p :class="{Active: question.active}">{{question.prompt}}</p>
-                <br/>
+                <div>
+                    <form action="" class="rounded-md border-2 border-black" :class="{Active: question.active}">
+                        <label>{{ question.prompt }}</label>
+                        <textarea></textarea>
+                    </form>
+                </div>
+                   
             </div>
         </div>
         
@@ -143,7 +148,7 @@ export default {
 
 <style scoped>
 .Active {
-    color: red;
+    border-color: red;
 }
 
 .questions-class{
