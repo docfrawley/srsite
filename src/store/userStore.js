@@ -2,11 +2,11 @@ import {defineStore} from "pinia"
 import { watchEffect } from 'vue'
 
 // firebase imports
-import { auth } from '../firebase/config'
+import { auth, timestamp } from '../firebase/config'
 import { onAuthStateChanged } from 'firebase/auth'
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword  } from 'firebase/auth'
 import { db } from '../firebase/config'
-import { collection, onSnapshot, query, where, addDoc } from 'firebase/firestore'
+import { collection, onSnapshot, query, where, addDoc, updateDoc } from 'firebase/firestore'
 
 
 export const userStore  = defineStore("user", {
@@ -92,6 +92,19 @@ export const userStore  = defineStore("user", {
         getCourseVidsComp(course){
             let searchObject= this.compVids.find((obj) => obj.col_name==course);
             return searchObject
+        },
+        async setAnswer(answer){
+            console.log("answer: ", answer)
+            // const document = ref(null)
+            // let docRef = doc(db, 'users', this.userID)
+            //     const unsub = onSnapshot(docRef, doc => {
+            //         if (doc.data()){
+            //             document.value = {...doc.data(), id:doc.id}
+            //         } 
+            //     })
+            // if (!document.answers){
+            //         updateDoc(docRef, {answers: answer})
+            //     } 
         }
     },
     persist: true,

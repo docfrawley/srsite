@@ -15,44 +15,49 @@
         </div>
         <div class="flex flex-col questions-class">
             <div v-for="question in currentVideo.questions" :key="question.id" >
-                <div>
-                    <form action="" class="rounded-md border-2 border-black" :class="{Active: question.active}">
+                <ShowPromptForm :prompt="question" :class="{Active: question.active}"/>
+                <!-- <div :class="{Active: question.active}"> -->
+                    <!-- <form @submit.prevent="handleSubmit" action="" class="rounded-md border-2 border-black mb-1 h-4.5 bg-gray-100" :class="{Active: question.active}">
                         <label>{{ question.prompt }}</label>
-                        <textarea></textarea>
+                        <textarea ref="userinput" autofocus v-model="answer"></textarea>
+                        <button >SAVE</button>
                     </form>
-                </div>
+                </div> -->
                    
             </div>
         </div>
         
-
+        <div class="module-view">
+        
+        
+        
+            <div v-for="video in currentModule.videos" :key="video.id">
+                <div @click="newVideo(video)">
+                    <ShowVidDetails :theMod="currentModule" :video="video" :percent="percentVid" :key="componentKey" />
+        
+                </div>
+        
+            </div>
+        
+        </div>
         
     </div>
 
-    <div class="module-view">
     
-    
-    
-        <div v-for="video in currentModule.videos" :key="video.id">
-            <div @click="newVideo(video)">
-                <ShowVidDetails :theMod="currentModule" :video="video" :percent="percentVid" :key="componentKey" />
-                
-            </div>
-    
-        </div>
-    
-    </div>
 </template>
 
 <script>
 import ShowVidDetails from '@/components/ShowVidDetails.vue'
+import ShowPromptForm from './ShowPromptForm.vue'
 import { ref } from '@vue/reactivity'
+import { onMounted } from 'vue'
 import { vueVimeoPlayer } from 'vue-vimeo-player'
 import { coursesStore } from '@/store/coursesStore'
 import { userStore } from '@/store/userStore'
+import { timestamp } from '@/firebase/config'
 
 export default {
-    components: { ShowVidDetails, vueVimeoPlayer },
+    components: { ShowVidDetails, vueVimeoPlayer, ShowPromptForm},
     setup(){
         const cstore = coursesStore()
         const ustore = userStore()
@@ -64,8 +69,9 @@ export default {
         const currentModule = ref(cstore.currentModule)
         const currentVideo = ref(cstore.currentVideo)
         const showForm = ref(false)
-
-        console.log('here single:', currentVideo.value.questions)
+        const userinput=ref(null)
+        const answer = ref()
+  
 
         if (currentVideo.value.percentages){
             percentVid.value = currentVideo.value.percentages
@@ -119,6 +125,10 @@ export default {
             cstore.setPercentage(percentVid.value)
         }
 
+        const handleSubmit = ()=> {
+            console.log('answer: ', answer.value)
+        }
+
         const ShowUpdate = (e,d,p) => {
             for (let i = 0; i < currentVideo.value.questions.length; i++) {
                 if (i + 1 != currentVideo.value.questions.length){
@@ -140,7 +150,7 @@ export default {
             }
         }
 
-        return { currentVideo, currentModule, componentKey, percentVid, newVideo, CheckProgress, NowEnded, WhenPaused, ShowUpdate, showForm }
+        return { currentVideo, currentModule, componentKey, percentVid, newVideo, CheckProgress, NowEnded, WhenPaused, ShowUpdate, showForm, handleSubmit, userinput, answer }
     }
 
 }
@@ -148,17 +158,25 @@ export default {
 
 <style scoped>
 .Active {
-    border-color: red;
+    border-color: red;        
+    border-width: 5px;
+    background-color: lightgrey;
 }
 
 .questions-class{
     font-size: 14px;
     width:500px;
     margin:20px;
+    height:500px;
+    overflow: hidden;
+    overflow: -moz-scrollbars-vertical;
+        overflow-y: scroll;
 }
 
 .smcontainer{
     display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 200px;
 }
 .video-responsive {
     position: relative;

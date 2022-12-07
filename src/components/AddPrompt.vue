@@ -1,5 +1,5 @@
 <template>
-<form @submit.prevent="handleSubmit">
+<form @submit.prevent="handleSubmit" class="w-2/3">
     <h4>Add Prompt</h4>
     <input type="text" required placeholder="Cue" v-model="vcue">
     <textarea required placeholder="Prompt" v-model="vprompt"></textarea>
