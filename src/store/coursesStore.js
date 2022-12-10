@@ -32,9 +32,11 @@ export const coursesStore  = defineStore("courses", {
                 for (var i = 0; i < results.length; i++) {
                     if (results[i].status=='published'){
                         const userObject = ustore.getCourseVidsComp(results[i].col_name)
-                        results[i].completedVids = userObject.numVids
-                        results[i].completedSecs = userObject.totalSecs
-                        results[i].percentCompleted = (userObject.totalSecs/results[i].total_length*100).toFixed(2)
+                        if (userObject.length>0){
+                        results[i].completedVids = (userObject.numVids) ? userObject.numVids :0
+                        results[i].completedSecs = (userObject.totalSecs) ? userObject.totalSecs :0 
+                        results[i].percentCompleted = (userObject.totalSecs) ? (userObject.totalSecs/results[i].total_length*100).toFixed(2): 0
+                        }
                     }
                 }
             this.allCourses = results

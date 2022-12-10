@@ -208,7 +208,6 @@ export default {
         onMounted(() =>{
           displayName.value = store.displayName
           isAdmin.value = store.admin
-          console.log(`the component is now mounted.`)
 
         })
 

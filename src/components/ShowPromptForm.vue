@@ -8,15 +8,17 @@
 
 <script>
 import { ref } from 'vue'
-import useDocument from '@/composables/useDocument'
+import { userStore } from '@/store/userStore'
+import { timestamp } from '@/firebase/config'
 export default {
     props: ['prompt'],
     setup(props) {
         const answer = ref('')
+        const ustore= userStore()
         const question = ref(props.prompt.prompt)
 
         const handleSubmit = () => {
-            console.log('answer: ', answer.value)
+            ustore.setAnswer(answer.value, props.prompt.id)
         }
         return { answer, handleSubmit, question }
     }
