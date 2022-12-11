@@ -18,7 +18,8 @@ export const userStore  = defineStore("user", {
         email:"",
         userID:"",
         coursePercentages: [],
-        compVids: []
+        compVids: [],
+        promptAnswers: []
         }
     },
     getters: {
@@ -97,18 +98,27 @@ export const userStore  = defineStore("user", {
 
             const ansRef = doc(db, 'users', this.userID)
             const ansSnap = await getDoc(ansRef)
-             console.log('sssssss')
-
+            const ansObject = ref({
+                answer:answer, 
+                promptId:promptID,
+                createdAt: Timestamp.now()
+            })            
             if (ansSnap.exists()){
-                await updateDoc(ansRef, {answers: [{
-                        answer:answer, 
-                        promptId:promptID,
-                        createdAt: Timestamp.now()
-                    }]})
+                await updateDoc(ansRef, {answers: [ansObject.value]})
 
                 await updateDoc(ansRef, {createAt: timestamp})
             } 
+            this.promptAnswers.push(ansObject.value)
             
+        },
+        unsetpromptAnswers(){
+            this.promptAnswers = []
+        },
+        unsetCompVids(){
+            this.compVids = []
+        },
+        unsetcoursepercentages(){
+            this.coursePercentages = []
         }
     },
     persist: true,

@@ -15,7 +15,7 @@
         </div>
         <div class="flex flex-col questions-class">
             <div v-for="question in currentVideo.questions" :key="question.id" >
-                <ShowPromptForm :prompt="question" :class="{Active: question.active}"/>
+                <ShowPromptForm :prompt="question" :class="{Active: question.active}" @answerAdded="wasItAdded" :key="answerKey"/>
                 <!-- <div :class="{Active: question.active}"> -->
                     <!-- <form @submit.prevent="handleSubmit" action="" class="rounded-md border-2 border-black mb-1 h-4.5 bg-gray-100" :class="{Active: question.active}">
                         <label>{{ question.prompt }}</label>
@@ -71,6 +71,7 @@ export default {
         const showForm = ref(false)
         const userinput=ref(null)
         const answer = ref()
+        const answerKey = ref(0)
   
 
         if (currentVideo.value.percentages){
@@ -150,7 +151,11 @@ export default {
             }
         }
 
-        return { currentVideo, currentModule, componentKey, percentVid, newVideo, CheckProgress, NowEnded, WhenPaused, ShowUpdate, showForm, handleSubmit, userinput, answer }
+        const wasItAdded = (addedYes) => {
+            answerKey.value++
+        }
+
+        return { answerKey, wasItAdded, currentVideo, currentModule, componentKey, percentVid, newVideo, CheckProgress, NowEnded, WhenPaused, ShowUpdate, showForm, handleSubmit, userinput, answer }
     }
 
 }

@@ -201,8 +201,6 @@ export default {
         store.$subscribe((login, state)=>{
           displayName.value = store.displayName
           isAdmin.value = store.admin
-          console.log('displayname: ', displayName.value)
-          console.log('how:', matty.value)
         })
 
         onMounted(() =>{
