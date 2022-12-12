@@ -2,7 +2,7 @@ import {defineStore} from "pinia"
 import {  ref, watchEffect } from 'vue'
 import { db } from '../firebase/config'
 import { userStore } from "./userStore"
-import { collection, onSnapshot, query, where, doc, updateDoc, arrayUnion } from 'firebase/firestore'
+import { collection, onSnapshot, query, where, doc, updateDoc, arrayUnion, getDoc, arrayRemove } from 'firebase/firestore'
 
 
 
@@ -131,26 +131,19 @@ export const coursesStore  = defineStore("courses", {
             const ustore = userStore()
             if (p>this.initialPercentage){
                 const document = ref(null)
-                let docRef = doc(db, this.currentCourse.col_name, this.currentVideo.id)
-                const unsub = onSnapshot(docRef, doc => {
-                    if (doc.data()){
-                        document.value = {...doc.data(), id:doc.id}
-                    } 
-                })
-                if (!document.percentages){
+                const docRef = doc(db, this.currentCourse.col_name, this.currentVideo.id)
+                const docSnap = await getDoc(docRef)
+                console.log('before if: ', docSnap)
+                if (!docSnap.data().percentages){
                     updateDoc(docRef, {percentages: [{uid: ustore.userID, percentage: p}]})
                     this.currentVideo.percentages = p
                 } else {
                     this.courseAll[this.currentVideo.module-1].videos[this.currentVideo.order-1].percentages = p
-                    const findObject = document.percentages.findIndex(doc =>{
-                        doc.uid==this.ustore.userID
-                    })
-                    if (findObject){
-                        document.percentages[findObject].percentage=p
-                    } else {
-                        document.percentages.push({uid: ustore.userID, percentage: p})
-                    }
-                    updateDoc(docRef, {percentages: document.percentages})
+                    let findObject = docSnap.data().percentages.find((obj) => obj.uid===ustore.userID)
+                    if(findObject){
+                    await updateDoc(docRef, {percentages: arrayRemove(findObject)})
+                }
+                await updateDoc(docRef, {percentages: arrayUnion({uid: ustore.userID, percentage: p})})
 
                 }
 
