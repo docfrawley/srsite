@@ -6,7 +6,7 @@ import { auth, timestamp } from '../firebase/config'
 import { onAuthStateChanged } from 'firebase/auth'
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword  } from 'firebase/auth'
 import { db } from '../firebase/config'
-import { collection, onSnapshot, query, where, addDoc, updateDoc, doc, getDoc, setDoc, Timestamp } from 'firebase/firestore'
+import { collection, onSnapshot, query, where, addDoc, updateDoc, doc, getDoc, setDoc, Timestamp, arrayUnion, arrayRemove } from 'firebase/firestore'
 import { ref } from "vue"
 
 
@@ -40,6 +40,9 @@ export const userStore  = defineStore("user", {
                         this.userID = res.user.uid
                         if (docSnap.data().completedVids) {
                          this.compVids = docSnap.data().completedVids
+                        }
+                        if (docSnap.data().answers){
+                            this.promptAnswers = docSnap.data().answers
                         }
                     }
                 }
@@ -94,19 +97,25 @@ export const userStore  = defineStore("user", {
             }
             return searchObject
         },
-        async setAnswer(answer, promptID){
+        async setAnswer(answer, promptId){
 
             const ansRef = doc(db, 'users', this.userID)
             const ansSnap = await getDoc(ansRef)
             const ansObject = ref({
                 answer:answer, 
-                promptId:promptID,
-                createdAt: Timestamp.now()
+                createdAt: Timestamp.now(),
+                promptId:promptId
             })            
             if (ansSnap.exists()){
-                await updateDoc(ansRef, {answers: [ansObject.value]})
+                let answerObject = this.promptAnswers.find((obj) => obj.promptId==ansObject.value.promptId)
+                if(answerObject){
+                    await updateDoc(ansRef, {answers: arrayRemove(answerObject)})
+                    let filtered = this.promptAnswers.filter((ansObj)=> ansObj.promptId != ansObject.value.promptId)
+                    this.promptAnswers = filtered
+                }
+                await updateDoc(ansRef, {answers: arrayUnion(ansObject.value)})
+               
 
-                await updateDoc(ansRef, {createAt: timestamp})
             } 
             this.promptAnswers.push(ansObject.value)
             
