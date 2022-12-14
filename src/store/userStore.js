@@ -97,6 +97,35 @@ export const userStore  = defineStore("user", {
             }
             return searchObject
         },
+        async updateCompVids(p, secs, course){
+            const compRef = doc(db, 'users', this.userID)
+            const compSnap = await getDoc(compRef)
+            const completedVideos = ref(0)
+            const totalSecs = ref(0)
+            if (this.compVids.length>0){
+                let compObject = this.compVids.find((obj) => obj.col_name==course)
+                if (compObject){
+                    completedVideos.value = compObject.numVids
+                    totalSecs.value = compObject.totalSecs
+                    await updateDoc(compRef, {completedVids: arrayRemove(compObject)})
+                    let compFiltered = this.compVids.filter((compObj)=> compObj.col_name != course)
+                    this.compVids = compFiltered
+                }
+            } 
+            if(p==1){
+                completedVideos.value++
+            }
+            totalSecs.value += p*secs
+            const newObject = {
+                col_name: course,
+                numVids: completedVideos.value,
+                totalSecs: totalSecs.value
+            }
+            await updateDoc(compRef, {completedVids: arrayUnion(newObject)})
+            this.compVids.push(newObject)
+            
+            
+        },
         async setAnswer(answer, promptId){
 
             const ansRef = doc(db, 'users', this.userID)

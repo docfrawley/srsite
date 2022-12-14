@@ -35,7 +35,8 @@ export const coursesStore  = defineStore("courses", {
                         if (userObject.length>0){
                         results[i].completedVids = (userObject.numVids) ? userObject.numVids :0
                         results[i].completedSecs = (userObject.totalSecs) ? userObject.totalSecs :0 
-                        results[i].percentCompleted = (userObject.totalSecs) ? (userObject.totalSecs/results[i].total_length*100).toFixed(2): 0
+                        results[i].percentCompleted = (userObject.totalSecs) ? (userObject.totalSecs / results[i].total_length*100).toFixed(2): 0
+
                         }
                     }
                 }
@@ -133,7 +134,6 @@ export const coursesStore  = defineStore("courses", {
                 const document = ref(null)
                 const docRef = doc(db, this.currentCourse.col_name, this.currentVideo.id)
                 const docSnap = await getDoc(docRef)
-                console.log('before if: ', docSnap)
                 if (!docSnap.data().percentages){
                     updateDoc(docRef, {percentages: [{uid: ustore.userID, percentage: p}]})
                     this.currentVideo.percentages = p
@@ -144,9 +144,8 @@ export const coursesStore  = defineStore("courses", {
                     await updateDoc(docRef, {percentages: arrayRemove(findObject)})
                 }
                 await updateDoc(docRef, {percentages: arrayUnion({uid: ustore.userID, percentage: p})})
-
                 }
-
+                ustore.updateCompVids(p, docSnap.data().length, this.currentCourse.col_name)
             }
             // colRef =  await query(colRef, where("iframe", "==", this.currentVideo.iframe))
             // const unsub =  await onSnapshot(colRef, snap => {
