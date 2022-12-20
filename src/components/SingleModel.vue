@@ -14,8 +14,8 @@
 
         </div>
         <div class="flex flex-col questions-class">
-            <div v-for="question in currentVideo.questions" :key="question.id" >
-                <ShowPromptForm :prompt="question" :class="{Active: question.active}" @answerAdded="wasItAdded" :key="answerKey"/>
+            <div v-for="question in currentVideo.questions" :key="'A' + question.id" >
+                <ShowPromptForm :prompt="question" :class="{Active: question.active}" @answerAdded="wasItAdded" :key="'Y' + answerKey"/>
                 <!-- <div :class="{Active: question.active}"> -->
                     <!-- <form @submit.prevent="handleSubmit" action="" class="rounded-md border-2 border-black mb-1 h-4.5 bg-gray-100" :class="{Active: question.active}">
                         <label>{{ question.prompt }}</label>
@@ -31,9 +31,9 @@
         
         
         
-            <div v-for="video in currentModule.videos" :key="video.id">
+            <div v-for="video in currentModule.videos" :key="'thisvideo' + video.id">
                 <div @click="newVideo(video)">
-                    <ShowVidDetails :theMod="currentModule" :video="video" :percent="percentVid" :key="componentKey" />
+                    <ShowVidDetails :theMod="currentModule" :video="video" :percent="percentVid" :key="'hereitis' + componentKey" />
         
                 </div>
         
@@ -73,7 +73,7 @@ export default {
         const answer = ref()
         const answerKey = ref(0)
   
-
+        console.log('here now', currentModule.value)
         if (currentVideo.value.percentages){
             percentVid.value = currentVideo.value.percentages
         }
@@ -93,6 +93,7 @@ export default {
             //     }
             // }
             currentVideo.value = specs
+            cstore.unsetCurrentVideo()
             cstore.setCurrentVideo(specs)
             percentVid.value = (currentVideo.value.percentages)?currentVideo.value.percentages:0
             componentKey.value++
@@ -110,15 +111,11 @@ export default {
 
        
         const NowEnded = ()=>{
-            console.log("i am here now:", componentKey.value)
                 ElementNum.value++
-                console.log('two')
             if (ElementNum.value == currentModule.value.videos.length){
                     ElementNum.value = 0
                 }
-                console.log('three')
             currentVideo.value =currentModule.value.videos[ElementNum.value]
-                console.log('four')
             componentKey.value++
         }
 

@@ -2,7 +2,7 @@
   <div class="page-container">
  
     <div v-if="allCourses">
-      <div v-for="course in allCourses" :key="course.id">
+      <div v-for="course in allCourses" :key="'Z' + course.id">
         <div v-if="course.status=='published'">
           <div @click="sendview(course)" class="course-view">
             <div>
@@ -14,9 +14,9 @@
               <h4>{{course.description}}</h4>
             </div>
             <div>
-              <div><h4>You have completed {{ course.percentCompleted }}% of the course</h4></div>
+              <div><h4>You have completed {{ totalPercentage }}% of the course</h4></div>
               <div class="loading-bar">
-                <div class="percentage" :style="{ 'width': course.percentCompleted + '%'}"></div>
+                <div class="percentage" :style="{ 'width': totalPercentage + '%'}"></div>
               </div>
             </div>
           </div>
@@ -45,11 +45,12 @@ export default {
     const ustore = userStore()
     const cstore = coursesStore()
     const router = useRouter()
-    const allCourses = ref(null)
-    allCourses.value = cstore.allCourses
+    const allCourses = ref(cstore.allCourses)
+    const totalPercentage = ref(ustore.TotalPercentage)
     
     watchEffect(() =>{
       allCourses.value = cstore.allCourses
+      totalPercentage.value = ustore.TotalPercentage
     })
     
     const sendview = async (course) => {
@@ -58,11 +59,12 @@ export default {
         await cstore.setCurrentCourse(course)
       }
       if (cstore.currentVideo){
-        cstore.currentVideo={}
+        cstore.unsetCurrentVideo()
+        cstore.unsetCurrentModule()
       }
       router.push({ name: 'CourseView', params: { course: course.col_name } })
     }
-    return {sendview, allCourses}
+    return { sendview, allCourses, totalPercentage }
     }
 }
 </script>

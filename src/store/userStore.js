@@ -8,6 +8,7 @@ import { signInWithEmailAndPassword, createUserWithEmailAndPassword  } from 'fir
 import { db } from '../firebase/config'
 import { collection, onSnapshot, query, where, addDoc, updateDoc, doc, getDoc, setDoc, Timestamp, arrayUnion, arrayRemove } from 'firebase/firestore'
 import { ref } from "vue"
+import { coursesStore } from "./coursesStore"
 
 
 export const userStore  = defineStore("user", {
@@ -18,11 +19,18 @@ export const userStore  = defineStore("user", {
         email:"",
         userID:"",
         coursePercentages: [],
-        compVids: [],
+        courseSecsTotal: 0,
+        courseTotalPercentage: 0,
         promptAnswers: []
         }
     },
     getters: {
+        TotalPercentage(){
+            return this.courseTotalPercentage
+        },
+        getUserId(){
+            return this.userID
+        }
     },
     actions: {
         async login(email, password){
@@ -39,7 +47,8 @@ export const userStore  = defineStore("user", {
                         this.email = email;
                         this.userID = res.user.uid
                         if (docSnap.data().completedVids) {
-                         this.compVids = docSnap.data().completedVids
+                         this.courseSecsTotal = docSnap.data().completedVids[0].totalSecs
+                         this.courseTotalPercentage = docSnap.data().completedVids[0].totalPercentage
                         }
                         if (docSnap.data().answers){
                             this.promptAnswers = docSnap.data().answers
@@ -58,7 +67,7 @@ export const userStore  = defineStore("user", {
                 throw new Error('Could not complete signup')
                 } else {
                     response = await setDoc(doc(db, 'users', res.user.uid), {
-                        DisplayName: dn, admin:false, uid: res.user.uid
+                        DisplayName: dn, admin:false, uid: res.user.uid, completedVids: []
                     })
                 // const documentRef = collection(db, 'users')
                 // const response = await addDoc(documentRef, {DisplayName: dn, admin:false, uid: res.user.uid})
@@ -90,39 +99,34 @@ export const userStore  = defineStore("user", {
                 onInvalidate(() => unsub());
             });
         },
-        getCourseVidsComp(course){
-            let searchObject= []
-            if (this.compVids.length>0){
-                searchObject = this.compVids.find((obj) => obj.col_name==course)
-            }
-            return searchObject
-        },
+        // getCourseVidsComp(course){
+        //     let searchObject= []
+        //     if (this.compVids.length>0){
+        //         searchObject = this.compVids.find((obj) => obj.col_name==course)
+        //     }
+        //     return searchObject
+        // },
         async updateCompVids(p, secs, course){
-            const compRef = doc(db, 'users', this.userID)
+            const compRef = await doc(db, 'users', this.userID)
             const compSnap = await getDoc(compRef)
-            const completedVideos = ref(0)
             const totalSecs = ref(0)
-            if (this.compVids.length>0){
-                let compObject = this.compVids.find((obj) => obj.col_name==course)
-                if (compObject){
-                    completedVideos.value = compObject.numVids
-                    totalSecs.value = compObject.totalSecs
-                    await updateDoc(compRef, {completedVids: arrayRemove(compObject)})
-                    let compFiltered = this.compVids.filter((compObj)=> compObj.col_name != course)
-                    this.compVids = compFiltered
-                }
+            const totalPer = ref(0)
+            const cstore = coursesStore()
+            if (compSnap.data().completedVids.length>0){
+                let compObject = compSnap.data().completedVids[0]
+                totalSecs.value = compObject.totalSecs
+                await updateDoc(compRef, {completedVids: arrayRemove(compObject)})
             } 
-            if(p==1){
-                completedVideos.value++
-            }
-            totalSecs.value += p*secs
+            totalSecs.value = totalSecs.value + (p*secs)
+            totalPer.value = ((totalSecs.value / cstore.getCourseSeconds )*100).toFixed(2)
             const newObject = {
                 col_name: course,
-                numVids: completedVideos.value,
-                totalSecs: totalSecs.value
+                totalSecs: totalSecs.value,
+                totalPercentage: totalPer.value
             }
             await updateDoc(compRef, {completedVids: arrayUnion(newObject)})
-            this.compVids.push(newObject)
+            this.courseSecsTotal = totalSecs.value
+            this.courseTotalPercentage = totalPer.value
             
             
         },

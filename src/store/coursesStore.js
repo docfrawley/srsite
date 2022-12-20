@@ -13,12 +13,18 @@ export const coursesStore  = defineStore("courses", {
         currentCourse: {},
         courseAll: [],
         currentModule:{},
-        courseAllVideos: [],
+        currentCourseTotal: 0,
         currentVideo: {},
         initialPercentage: null
         }
     },
     getters: {
+        getCourseSeconds(){
+            return this.currentCourseTotal
+        },
+        getfullCourse(){
+            return this.courseAll
+        }
     },
     actions: {
          setCourses(){
@@ -29,17 +35,17 @@ export const coursesStore  = defineStore("courses", {
                 snapshot.docs.forEach(doc => {
                 results.push({ ...doc.data(), id: doc.id })
                 })
-                for (var i = 0; i < results.length; i++) {
-                    if (results[i].status=='published'){
-                        const userObject = ustore.getCourseVidsComp(results[i].col_name)
-                        if (userObject.length>0){
-                        results[i].completedVids = (userObject.numVids) ? userObject.numVids :0
-                        results[i].completedSecs = (userObject.totalSecs) ? userObject.totalSecs :0 
-                        results[i].percentCompleted = (userObject.totalSecs) ? (userObject.totalSecs / results[i].total_length*100).toFixed(2): 0
+                // for (var i = 0; i < results.length; i++) {
+                //     if (results[i].status=='published'){
+                //         const userObject = ustore.getCourseVidsComp(results[i].col_name)
+                //         if (userObject.length>0){
+                //         results[i].completedVids = (userObject.numVids) ? userObject.numVids :0
+                //         results[i].completedSecs = (userObject.totalSecs) ? userObject.totalSecs :0 
+                //         results[i].percentCompleted = (userObject.totalSecs) ? (userObject.totalSecs / results[i].total_length*100).toFixed(2): 0
 
-                        }
-                    }
-                }
+                //         }
+                //     }
+                // }
             this.allCourses = results
             })
 
@@ -47,12 +53,17 @@ export const coursesStore  = defineStore("courses", {
                 onInvalidate(() => unsub());
             });
         },
+         unsetCourseAll(){
+            this.courseAll=[]
+        },
          async setCourseAll(course){
             let results = []
             let vidResults = []
+            const totalVidsSecs = ref(0)
             
             this.currentCourse = course
             const ustore = userStore()
+            const uID = ref(ustore.getUserId)
             let colRef = collection(db, 'course-modules')
             colRef =  await query(colRef, where("course", "==", course.col_name))
             
@@ -84,31 +95,34 @@ export const coursesStore  = defineStore("courses", {
                             });
                             qresults.sort((a, b) => (a.vcue > b.vcue) ? 1 : -1)
                         })
-
+                        totalVidsSecs.value = totalVidsSecs.value + parseInt(video.length)
                         video.questions = qresults
                        
-                        
-                        if (video.percentages){
+                        if (Array.isArray(video.percentages)){
                             const percentageVid = video.percentages.filter(doc =>
-                                doc.uid === ustore.userID)
+                                doc.uid === uID.value)
                             if (percentageVid[0]){
                             video.percentages = percentageVid[0].percentage
                             } else {
                                 video.percentages= null
                             }
-
                         }
+                        
                         
                         
                     });
                     results[i].videos = modVids;
                 }
                 this.courseAll = results
+                this.currentCourseTotal = totalVidsSecs.value
             })
             
         },
         setCurrentModule(mod){
             this.currentModule = mod;
+        },
+        unsetCurrentModule(){
+            this.currentModule = {}
         },
         setCurrentVideo(video){
             this.currentVideo = video;
@@ -129,47 +143,33 @@ export const coursesStore  = defineStore("courses", {
             this.currentCourse = {}
         },
         async setPercentage(p){
+            console.log('coursesss: ', this.courseAll)
             const ustore = userStore()
+            const userID = ref(ustore.getUserId)
             if (p>this.initialPercentage){
-                const document = ref(null)
-                const docRef = doc(db, this.currentCourse.col_name, this.currentVideo.id)
+                const docRef = await doc(db, this.currentCourse.col_name, this.currentVideo.id)
                 const docSnap = await getDoc(docRef)
                 if (!docSnap.data().percentages){
-                    updateDoc(docRef, {percentages: [{uid: ustore.userID, percentage: p}]})
+                   await  updateDoc(docRef, {percentages: [{uid: userID.value, percentage: p}]})
+                   
                     this.currentVideo.percentages = p
                 } else {
-                    this.courseAll[this.currentVideo.module-1].videos[this.currentVideo.order-1].percentages = p
-                    let findObject = docSnap.data().percentages.find((obj) => obj.uid===ustore.userID)
+                    // this.courseAll[this.currentVideo.module-1].videos[this.currentVideo.order-1].percentages = p
+                    let findObject = docSnap.data().percentages.find((obj) => obj.uid===userID.value)
                     if(findObject){
-                    await updateDoc(docRef, {percentages: arrayRemove(findObject)})
+                        console.log('i am here: ', this.courseAll)
+                        console.log('what object: ', findObject)
+                        await updateDoc(docRef, {percentages: arrayRemove(findObject)})
+                    }
+                    await updateDoc(docRef, {percentages: arrayUnion({uid: userID.value, percentage: p})})
+                console.log('coursefullllasdfasdfasdf: ', this.courseAll)
                 }
-                await updateDoc(docRef, {percentages: arrayUnion({uid: ustore.userID, percentage: p})})
-                }
+                this.unsetCourseAll()
+                this.setCourseAll(this.currentCourse)
                 ustore.updateCompVids(p, docSnap.data().length, this.currentCourse.col_name)
             }
-            // colRef =  await query(colRef, where("iframe", "==", this.currentVideo.iframe))
-            // const unsub =  await onSnapshot(colRef, snap => {
-            //     snap.docs.forEach(doc => {
-            //     results.push({...doc.data(), id: doc.id})
-            //     });
-            // })
-            // console.log('results: ', results[0])
-
-            // if (results[0].percentages){
-            //     let obj = results[0].percentages.find((o,i)=>{
-            //         if (o.uid === ustore.userID) {
-            //         results[0].percentages[i] = { uid: ustore.userID, percentage: p };
-            //         } else {
-            //             results[0].percentages.push({ uid: ustore.userID, percentage: p })
-            //         }
-            //     })
-            // } else {
-            //     results[0].percentages=[{ uid: ustore.userID, percentage: p }]
-            // }
-            //             console.log("percentage: ", p)
-            //                         console.log("percentages: ", results[0].percentages)
-
-
+            
+         
         }
     },
     persist:true,

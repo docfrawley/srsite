@@ -23,7 +23,7 @@
                         d="M7 42.55V22.5l-3.9 3-2.5-3.3L7 17.3v-6.2h4.15v3l12.8-9.7 23.4 17.85-2.5 3.25-3.9-3v20.05H25.9v-12.1h-4.15v12.1ZM7 8.6q.1-3.1 2.275-5.3Q11.45 1.1 14.5 1.1q1.4 0 2.375-1 .975-1 .975-2.35h4.2q-.15 3.1-2.3 5.3-2.15 2.2-5.25 2.2-1.35 0-2.325.975Q11.2 7.2 11.2 8.6Z" />
                 </svg>
             </div>
-            <div v-for="mod in fullCourse" :key="mod.id">
+            <div v-for="mod in fullCourse" :key="'A' + mod.id">
                 <span v-if="currentModule.modnumb!=mod.modnumb" class="ind-mod np-module" @click="moveModule(mod.modnumb)">{{mod.title}} </span>
                 <span v-else class="ind-mod np-active" @click="moveModule(mod.modnumb)">{{mod.title}} </span>
             </div>
@@ -56,7 +56,7 @@
     </div> -->
 
     <div v-else>
-        <div v-for="aModule in fullCourse" :key="aModule.id">
+        <div v-for="aModule in fullCourse" :key="'B' + aModule.id">
             <ShowModule :theModule="aModule" />
             <br />
         </div>
@@ -85,18 +85,23 @@ export default {
         
         const componentKey = ref(0)
         const cstore = coursesStore()
-        const fullCourse = ref()
+        const fullCourse = ref(cstore.courseAll)
         const currentCourse = ref(cstore.currentCourse)
         const currentModule = ref(cstore.currentModule)
         const currentVideo = ref(cstore.currentVideo)
         const numbModules = ref(cstore.courseAll.length)
+        console.log('module: ', cstore.currentModule)
+        console.log('course: ', cstore.courseAll)
         
         watchEffect(() => {
             fullCourse.value = cstore.courseAll
             currentVideo.value = cstore.currentVideo
             currentModule.value = cstore.currentModule
             numbModules.value = cstore.courseAll.length
+            console.log('module: ', cstore.currentModule)
+            console.log('course: ', cstore.courseAll)
         })
+        
         
 
         const showvidInfo= (video) =>{
