@@ -5,6 +5,7 @@ import Signup from '../views/auth/Signup.vue'
 import CourseView from '../views/CourseView.vue'
 import VideoAdmin from '../views/VideoAdmin.vue'
 import ToolkitAdmin from '../views/ToolkitAdmin.vue'
+import MyToolkit from '../views/MyToolkit.vue'
 import MemAccount from '../views/MemAccount.vue'
 import { auth } from '@/firebase/config'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
@@ -61,6 +62,13 @@ const routes = [
     path: '/course/:course',
     name: 'CourseView',
     component: CourseView,
+    beforeEnter: requiresAuth,
+    props:true
+  },
+  {
+    path: '/toolkit',
+    name: 'MyToolkit',
+    component: MyToolkit,
     beforeEnter: requiresAuth,
     props:true
   },

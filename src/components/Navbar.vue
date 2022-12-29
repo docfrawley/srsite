@@ -151,6 +151,7 @@
                           <router-link :to="{ name: 'ToolkitAdmin' }">Toolkit Admin</router-link>
                         </span>
                       </li>
+                      <li><span @click="unChecked"><router-link :to="{ name: 'MyToolkit' }">My Toolkit</router-link></span></li>
                       <li><span @click="unChecked"><router-link :to="{ name: 'MemAccount' }">Account</router-link></span></li>
                       <li><span class="sb-item" @click="handleClick">Logout</span></li>
                     </ul>

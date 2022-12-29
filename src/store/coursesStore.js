@@ -143,7 +143,6 @@ export const coursesStore  = defineStore("courses", {
             this.currentCourse = {}
         },
         async setPercentage(p){
-            console.log('coursesss: ', this.courseAll)
             const ustore = userStore()
             const userID = ref(ustore.getUserId)
             if (p>this.initialPercentage){

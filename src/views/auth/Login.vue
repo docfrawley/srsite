@@ -1,4 +1,5 @@
 <template>
+  <div  class="login-stuff">
   <form @submit.prevent="handleSubmit">
     <h3>Login</h3>
     <input type="email" placeholder="Email" v-model="email">
@@ -7,6 +8,7 @@
     <button v-if="!isPending">Log in</button>
     <button v-if="isPending" disabled>Loading</button>
   </form>
+  </div>
 </template>
 
 <script>
@@ -39,5 +41,7 @@ export default {
 </script>
 
 <style>
-
+.login-stuff{
+  padding-top: 150px;
+}
 </style>

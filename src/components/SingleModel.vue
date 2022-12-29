@@ -2,8 +2,12 @@
     
     <div class="smcontainer">
         <div v-if="currentVideo.iframe">
+            
             <div class="video-responsive">
-                <vue-vimeo-player class="video-responsive-item" :video-id="currentVideo.iframe"
+                <div v-if="showPause" @click="startPlaying" class="overlay-Pause">
+                   <div class="inside-pause">press here when ready to resume video</div>
+                </div>
+                <vue-vimeo-player ref="player" class="video-responsive-item" :video-id="currentVideo.iframe"
                     :options="{ responsive: true }" :events-to-emit="['ended','progress', 'pause', 'timeupdate']"
                     @progress="CheckProgress" @ended="NowEnded" @pause="WhenPaused" @timeupdate="ShowUpdate"/>
             </div>
@@ -72,8 +76,9 @@ export default {
         const userinput=ref(null)
         const answer = ref()
         const answerKey = ref(0)
+        const player = ref()
+        const showPause = ref(false)
   
-        console.log('here now', currentModule.value)
         if (currentVideo.value.percentages){
             percentVid.value = currentVideo.value.percentages
         }
@@ -128,8 +133,13 @@ export default {
         }
 
         const ShowUpdate = (e,d,p) => {
+            
             for (let i = 0; i < currentVideo.value.questions.length; i++) {
                 if (i + 1 != currentVideo.value.questions.length){
+                    if (e.seconds > currentVideo.value.questions[i].vcue - .1 && e.seconds < currentVideo.value.questions[i].vcue +.1) {
+                        player.value.pause()
+                        showPause.value = true
+                    }
                     if (currentVideo.value.questions[i].vcue <= e.seconds && e.seconds <= currentVideo.value.questions[i + 1].vcue) {
                         currentVideo.value.questions.forEach(element => {
                             element.active=false
@@ -148,11 +158,16 @@ export default {
             }
         }
 
+        const startPlaying = () => {
+            player.value.play()
+            showPause.value = false
+        }
+
         const wasItAdded = (addedYes) => {
             answerKey.value++
         }
 
-        return { answerKey, wasItAdded, currentVideo, currentModule, componentKey, percentVid, newVideo, CheckProgress, NowEnded, WhenPaused, ShowUpdate, showForm, handleSubmit, userinput, answer }
+        return { startPlaying, showPause, player, answerKey, wasItAdded, currentVideo, currentModule, componentKey, percentVid, newVideo, CheckProgress, NowEnded, WhenPaused, ShowUpdate, showForm, handleSubmit, userinput, answer }
     }
 
 }
@@ -210,5 +225,30 @@ export default {
 .video-responsive-item iframe {
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
+}
+
+.overlay-Pause {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    z-index: 500;
+    background-color: white;
+    opacity: .50;
+    cursor: pointer;
+}
+
+.inside-pause{
+    text-align: center;
+    padding:30px;
+    opacity: 1;
+    font-size: 45px;
+    color:black;
 }
 </style>
