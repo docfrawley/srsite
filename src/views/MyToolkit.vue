@@ -1,7 +1,12 @@
 <template>
     <div class="drop-zone" >
-        <div v-for="item in items" :key="item.id" class="drag-el" draggable="true" @dragstart="startDrag($event, item)" @drop="onDrop($event, item)" @dragenter.prevent @dragover.prevent>
-            {{ item.title }}
+        <div v-for="item in items" :key="item.id" class="drag-row" draggable="true" 
+            @dragstart="startDrag($event, item)" @drop="onDrop($event, item)" @dragenter.prevent @dragover.prevent>
+            <div class="drag-el">{{ item.title }}</div>
+            <div v-for="strategy in item.strategies" :key="item.title + strategy" draggable="true" 
+                @dragstart="startDragRow($event, item, strategy)" @drop="onDropRow($event, item, strategy)" @dragenter.prevent @dragover.prevent>
+                <div class="drag-strat">{{ strategy }}</div>
+            </div>
         </div>
     </div>
     
@@ -29,19 +34,44 @@ export default {
             [
                 {
                     id: 0,
-                    title: 'Item A',
+                    title: 'Context',
                     order: 1,
+                    type: 'dimension',
+                    strategies: ['first', 'second', 'third']
                 },
                 {
                     id: 1,
-                    title: 'Item B',
+                    title: 'Behavioral',
                     order: 1,
+                    type: 'dimension',
+                    strategies: ['first', 'second', 'third', 'fourth', 'fifth']
                 },
                 {
                     id: 2,
-                    title: 'Item C',
-                    list: 2,
+                    title: 'Cognitive',
+                    type: 'dimension',
+                    strategies: ['first', 'second', 'third', 'fourth']
                 },
+                {
+                    id: 3,
+                    title: 'Emotions',
+                    order: 1,
+                    type: 'dimension',
+                    strategies: ['first', 'second', 'third']
+                },
+                {
+                    id: 4,
+                    title: 'Motivations',
+                    order: 1,
+                    type: 'dimension',
+                    strategies: ['first', 'second', 'third', 'fourth', 'fifth']
+                },
+                {
+                    id: 5,
+                    title: 'Beliefs',
+                    type: 'dimension',
+                    strategies: ['first', 'second', 'third', 'fourth']
+                }
             ]
         )
 
@@ -63,10 +93,32 @@ export default {
             const tempObject = items.value[whereStarted]
             items.value.splice(whereStarted, 1)
             items.value.splice(whereEnding, 0, tempObject)
-            console.log('items: ', items.value)
         }
 
-        return { getList, startDrag, onDrop, items }
+        const startDragRow = (evt, item, strategy) => {
+            const stringObject = JSON.stringify({
+                title: item.title,
+                strategy: strategy
+            });
+            evt.dataTransfer.dropEffect = 'move'
+            evt.dataTransfer.effectAllowed = 'move'
+            evt.dataTransfer.setData('itemStuffing', stringObject)
+        }
+
+        const onDropRow = (evt, whichitem, whereDrop) => {
+            const itemStuff = JSON.parse(evt.dataTransfer.getData('itemStuffing'))
+            const whereItem = items.value.findIndex(item => item.title === itemStuff.title)
+            if (whichitem.title === items.value[whereItem].title){
+                const whereStarted = whichitem.strategies.findIndex(item => item == itemStuff.strategy)
+                const whereEnding = whichitem.strategies.findIndex(item => item === whereDrop)
+                const tempObject = whichitem.strategies[whereStarted]
+                whichitem.strategies.splice(whereStarted, 1)
+                whichitem.strategies.splice(whereEnding, 0, tempObject)
+                items.value[whereItem].strategies = whichitem.strategies
+            }
+        }
+
+        return { getList, startDrag, onDrop, items, startDragRow, onDropRow }
     }
 
 }
@@ -81,18 +133,34 @@ export default {
     background-color: #ecf0f1;
     margin-bottom: 10px;
     padding: 10px;
-    width:50%;
+    width:70%;
     min-height: 10px;
+}
+
+.drag-row{
+    display: flex;
+    flex-direction: row;
 }
 
 .drag-el {
     background-color: #3498db;
     color:white;
-    margin-bottom: 10px;
+    margin: 5px;
     padding: 5px;
+    width:200px;
+    text-align: center;
 }
 
-.drag-el:nth-last-of-type(1){
-    margin-bottom: 0;
+.drag-strat {
+    background-color: red;
+    color: white;
+    margin: 5px;
+    padding: 5px;
+    width: 200px;
+    text-align: center;
 }
+
+/* .drag-el:nth-last-of-type(1){
+    margin-bottom: 0;
+} */
 </style>
