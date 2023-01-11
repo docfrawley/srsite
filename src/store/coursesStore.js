@@ -15,6 +15,7 @@ export const coursesStore  = defineStore("courses", {
         currentModule:{},
         currentCourseTotal: 0,
         currentVideo: {},
+        originalTechs: [],
         initialPercentage: null
         }
     },
@@ -24,6 +25,9 @@ export const coursesStore  = defineStore("courses", {
         },
         getfullCourse(){
             return this.courseAll
+        },
+        getOriginalTechs(){
+            return this.originalTechs
         }
     },
     actions: {
@@ -62,6 +66,9 @@ export const coursesStore  = defineStore("courses", {
             const totalVidsSecs = ref(0)
             
             this.currentCourse = course
+            this.originalTechs = course.techniques
+            console.log('hello: ', this.originalTechs)
+            console.log("current course: ", this.currentCourse)
             const ustore = userStore()
             const uID = ref(ustore.getUserId)
             let colRef = collection(db, 'course-modules')

@@ -1,13 +1,20 @@
 <template>
-    <div class="drop-zone" >
-        <div v-for="item in items" :key="item.id" class="drag-row" draggable="true" 
-            @dragstart="startDrag($event, item)" @drop="onDrop($event, item)" @dragenter.prevent @dragover.prevent>
-            <div class="drag-el">{{ item.title }}</div>
-            <div v-for="strategy in item.strategies" :key="item.title + strategy" draggable="true" 
-                @dragstart="startDragRow($event, item, strategy)" @drop="onDropRow($event, item, strategy)" @dragenter.prevent @dragover.prevent>
-                <div class="drag-strat">{{ strategy }}</div>
+    <div class="toolkit-container">
+        <div class="drop-zone" >
+            <div v-for="item in items" :key="item.id" class="drag-row" draggable="true" 
+                @dragstart="startDrag($event, item)" @drop="onDrop($event, item)" @dragenter.prevent @dragover.prevent>
+                <div class="drag-el">{{ item.dimension }}</div>
+                <div v-for="strategy in item.techs" :key="item.dimension + strategy" draggable="true" 
+                    @dragstart="startDragRow($event, item, strategy)" @drop="onDropRow($event, item, strategy)" @dragenter.prevent @dragover.prevent>
+                    <div class="drag-strat">{{ strategy }}</div>
+                </div>
             </div>
         </div>
+
+        <div >
+            <button @click="handleReset" class="reset-button">RESET</button>
+        </div>
+
     </div>
     
 
@@ -27,53 +34,15 @@
 
 <script>
 import { ref } from '@vue/reactivity'
+import { userStore } from '@/store/userStore'
+import { coursesStore } from '@/store/coursesStore'
 
 export default {
     setup(){
-        const items = ref(
-            [
-                {
-                    id: 0,
-                    title: 'Context',
-                    order: 1,
-                    type: 'dimension',
-                    strategies: ['first', 'second', 'third']
-                },
-                {
-                    id: 1,
-                    title: 'Behavioral',
-                    order: 1,
-                    type: 'dimension',
-                    strategies: ['first', 'second', 'third', 'fourth', 'fifth']
-                },
-                {
-                    id: 2,
-                    title: 'Cognitive',
-                    type: 'dimension',
-                    strategies: ['first', 'second', 'third', 'fourth']
-                },
-                {
-                    id: 3,
-                    title: 'Emotions',
-                    order: 1,
-                    type: 'dimension',
-                    strategies: ['first', 'second', 'third']
-                },
-                {
-                    id: 4,
-                    title: 'Motivations',
-                    order: 1,
-                    type: 'dimension',
-                    strategies: ['first', 'second', 'third', 'fourth', 'fifth']
-                },
-                {
-                    id: 5,
-                    title: 'Beliefs',
-                    type: 'dimension',
-                    strategies: ['first', 'second', 'third', 'fourth']
-                }
-            ]
-        )
+        const ustore = userStore()
+        const cstore = coursesStore()
+        const items = ref(cstore.currentCourse.techniques)
+        const original_items = ref(JSON.parse(JSON.stringify(items.value)))
 
         const getList = (list) => {
             return items.value.filter((item) => item.list==list)
@@ -88,17 +57,17 @@ export default {
 
         const onDrop = (evt, whereDrop) => {
             const itemStuff = JSON.parse(evt.dataTransfer.getData('itemStuff'))
-            const whereStarted= items.value.findIndex(item => item.id===itemStuff.id)
-            const whereEnding = items.value.findIndex(item => item.id === whereDrop.id)
+            const whereStarted= items.value.findIndex(item => item.dimension===itemStuff.dimension)
+            const whereEnding = items.value.findIndex(item => item.dimension === whereDrop.dimension)
             const tempObject = items.value[whereStarted]
             items.value.splice(whereStarted, 1)
             items.value.splice(whereEnding, 0, tempObject)
         }
 
-        const startDragRow = (evt, item, strategy) => {
+        const startDragRow = (evt, item, tech) => {
             const stringObject = JSON.stringify({
-                title: item.title,
-                strategy: strategy
+                dimension: item.dimension,
+                tech: tech
             });
             evt.dataTransfer.dropEffect = 'move'
             evt.dataTransfer.effectAllowed = 'move'
@@ -107,18 +76,25 @@ export default {
 
         const onDropRow = (evt, whichitem, whereDrop) => {
             const itemStuff = JSON.parse(evt.dataTransfer.getData('itemStuffing'))
-            const whereItem = items.value.findIndex(item => item.title === itemStuff.title)
-            if (whichitem.title === items.value[whereItem].title){
-                const whereStarted = whichitem.strategies.findIndex(item => item == itemStuff.strategy)
-                const whereEnding = whichitem.strategies.findIndex(item => item === whereDrop)
-                const tempObject = whichitem.strategies[whereStarted]
-                whichitem.strategies.splice(whereStarted, 1)
-                whichitem.strategies.splice(whereEnding, 0, tempObject)
-                items.value[whereItem].strategies = whichitem.strategies
+            const whereItem = items.value.findIndex(item => item.dimension === itemStuff.dimension)
+            if (whichitem.dimension === items.value[whereItem].dimension){
+                const whereStarted = whichitem.techs.findIndex(item => item == itemStuff.tech)
+                const whereEnding = whichitem.techs.findIndex(item => item === whereDrop)
+                const tempObject = whichitem.techs[whereStarted]
+                whichitem.techs.splice(whereStarted, 1)
+                whichitem.techs.splice(whereEnding, 0, tempObject)
+                items.value[whereItem].techs = whichitem.techs
             }
         }
 
-        return { getList, startDrag, onDrop, items, startDragRow, onDropRow }
+        const handleReset = () => {
+            
+            items.value = original_items.value
+            original_items.value = JSON.parse(JSON.stringify(items.value))
+            
+        }
+
+        return { getList, startDrag, onDrop, items, startDragRow, onDropRow, handleReset }
     }
 
 }
@@ -126,10 +102,8 @@ export default {
 
 <style>
 .drop-zone {
-    position: relative;
-        top: 175px;
-        display: flex;
-        flex-direction: column;
+    display: flex;
+    flex-direction: column;
     background-color: #ecf0f1;
     margin-bottom: 10px;
     padding: 10px;
@@ -158,6 +132,22 @@ export default {
     padding: 5px;
     width: 200px;
     text-align: center;
+}
+
+.reset-button{
+    background-color: #3498db;
+    color:white;
+    width: 150px;
+    height: 50px;
+    margin-top: 50px;
+
+}
+
+.toolkit-container{
+    padding-top: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
 }
 
 /* .drag-el:nth-last-of-type(1){
