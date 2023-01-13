@@ -21,7 +21,8 @@ export const userStore  = defineStore("user", {
         coursePercentages: [],
         courseSecsTotal: 0,
         courseTotalPercentage: 0,
-        promptAnswers: []
+        promptAnswers: [],
+        UserTechniques: []
         }
     },
     getters: {
@@ -30,6 +31,9 @@ export const userStore  = defineStore("user", {
         },
         getUserId(){
             return this.userID
+        },
+        getUserTechniques(){
+            return this.UserTechniques
         }
     },
     actions: {
@@ -152,6 +156,13 @@ export const userStore  = defineStore("user", {
             } 
             this.promptAnswers.push(ansObject.value)
             
+        },
+        async getTechniques(){
+            const techRef = doc(db, 'users', this.userID)
+            const techSnap = await getDoc(techRef) 
+            if (techSnap.data().techniques){
+                this.UserTechniques = techSnap.data().techniques
+            }
         },
         unsetpromptAnswers(){
             this.promptAnswers = []

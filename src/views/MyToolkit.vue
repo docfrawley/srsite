@@ -43,6 +43,11 @@ export default {
         const cstore = coursesStore()
         const items = ref(cstore.currentCourse.techniques)
         const original_items = ref(JSON.parse(JSON.stringify(items.value)))
+        const UserTechs = ref(ustore.getTechniques)
+
+        if (UserTechs.value.length>0){
+            items.value = UserTechs.value
+        }
 
         const getList = (list) => {
             return items.value.filter((item) => item.list==list)

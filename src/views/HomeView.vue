@@ -57,6 +57,7 @@ export default {
       if (cstore.currentCourse != course){
         await cstore.setCourseAll(course)
         await cstore.setCurrentCourse(course)
+        await ustore.getTechniques()
       }
       if (cstore.currentVideo){
         cstore.unsetCurrentVideo()
