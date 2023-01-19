@@ -57,6 +57,9 @@ export const userStore  = defineStore("user", {
                         if (docSnap.data().answers){
                             this.promptAnswers = docSnap.data().answers
                         }
+                        if (docSnap.data().theTechs){
+                            this.UserTechniques = docSnap.data().theTechs[0].currentAnswers
+                        }
                     }
                 }
             }
@@ -136,7 +139,7 @@ export const userStore  = defineStore("user", {
         },
         async setAnswer(answer, promptId){
 
-            const ansRef = doc(db, 'users', this.userID)
+            const ansRef = await doc(db, 'users', this.userID)
             const ansSnap = await getDoc(ansRef)
             const ansObject = ref({
                 answer:answer, 
@@ -157,11 +160,33 @@ export const userStore  = defineStore("user", {
             this.promptAnswers.push(ansObject.value)
             
         },
+        async setTechniques(){
+            const techsRef = doc(db, 'users', this.userID)
+            const techsSnap = await getDoc(techsRef)
+            console.log('two two', techsSnap.data())
+            const tempObject = ref({
+                course: 'procrastination',
+                createdAt: Timestamp.now(),
+                currentAnswers: this.UserTechniques
+            })
+            if (techsSnap.exists()){
+                let techObject = techsSnap.data().theTechs.find((obj) => obj.course == 'procrastination')
+                if (techObject){
+                    await updateDoc(techsRef, {theTechs: arrayRemove(techObject)})
+                }
+                await updateDoc(techsRef, {theTechs: arrayUnion(tempObject.value)})
+            
+            }
+            
+        },
+        updateTechs(items){
+            this.UserTechniques = items
+        },
         async getTechniques(){
             const techRef = doc(db, 'users', this.userID)
             const techSnap = await getDoc(techRef) 
             if (techSnap.data().techniques){
-                this.UserTechniques = techSnap.data().techniques
+                this.UserTechniques = techSnap.data().theTechs
             }
         },
         unsetpromptAnswers(){

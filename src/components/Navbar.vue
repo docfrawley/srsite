@@ -218,10 +218,13 @@ export default {
           ModuleShow.value=false
         }
 
-        const handleClick =async () => {
+        const handleClick = () => {
+          console.log('three')
+             store.setTechniques()
+          console.log('four')
             store.$reset()
             cstore.$reset()
-            await logout()
+             logout()
             router.push({ name: 'Login'})
             isChecked.value = false
         }

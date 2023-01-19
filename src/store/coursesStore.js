@@ -67,8 +67,6 @@ export const coursesStore  = defineStore("courses", {
             
             this.currentCourse = course
             this.originalTechs = course.techniques
-            console.log('hello: ', this.originalTechs)
-            console.log("current course: ", this.currentCourse)
             const ustore = userStore()
             const uID = ref(ustore.getUserId)
             let colRef = collection(db, 'course-modules')

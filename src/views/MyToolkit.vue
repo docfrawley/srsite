@@ -13,6 +13,7 @@
 
         <div >
             <button @click="handleReset" class="reset-button">RESET</button>
+            <button @click="handleTechs" class="reset-button">SAVE</button>
         </div>
 
     </div>
@@ -43,7 +44,12 @@ export default {
         const cstore = coursesStore()
         const items = ref(cstore.currentCourse.techniques)
         const original_items = ref(JSON.parse(JSON.stringify(items.value)))
-        const UserTechs = ref(ustore.getTechniques)
+        const UserTechs = ref(ustore.getUserTechniques)
+
+        if (UserTechs.value.length>0){
+            console.log('current answers: ', items.value)
+            items.value = UserTechs.value.currentAnswers
+        }
 
         if (UserTechs.value.length>0){
             items.value = UserTechs.value
@@ -89,6 +95,7 @@ export default {
                 whichitem.techs.splice(whereStarted, 1)
                 whichitem.techs.splice(whereEnding, 0, tempObject)
                 items.value[whereItem].techs = whichitem.techs
+                ustore.updateTechs(items.value)
             }
         }
 
@@ -99,7 +106,13 @@ export default {
             
         }
 
-        return { getList, startDrag, onDrop, items, startDragRow, onDropRow, handleReset }
+        const handleTechs = () => {
+
+            ustore.setTechniques()
+
+        }
+
+        return { getList, startDrag, onDrop, items, startDragRow, onDropRow, handleReset, handleTechs }
     }
 
 }
