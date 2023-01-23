@@ -46,13 +46,17 @@
         </div>
         
     </div>
+<div v-if="currentModule.modnumb==3 && currentVideo.order>1">
+    <IndTechRow />
 
+</div>
     
 </template>
 
 <script>
 import ShowVidDetails from '@/components/ShowVidDetails.vue'
 import ShowPromptForm from './ShowPromptForm.vue'
+import IndTechRow from '@/components/IndTechRow.vue'
 import { ref } from '@vue/reactivity'
 import { onMounted } from 'vue'
 import { vueVimeoPlayer } from 'vue-vimeo-player'
@@ -61,7 +65,7 @@ import { userStore } from '@/store/userStore'
 import { timestamp } from '@/firebase/config'
 
 export default {
-    components: { ShowVidDetails, vueVimeoPlayer, ShowPromptForm},
+    components: { ShowVidDetails, vueVimeoPlayer, ShowPromptForm, IndTechRow },
     setup(){
         const cstore = coursesStore()
         const ustore = userStore()

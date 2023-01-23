@@ -30,6 +30,8 @@
         </div>
         <SingleModel :key="componentKey" />
 
+        
+
         <div class="next-previous">
             <div class="np-module" v-if="currentModule.modnumb>1" @click="moveModule(currentModule.modnumb -1)">
 
@@ -69,6 +71,7 @@ import ShowModule from '@/components/ShowModule.vue'
 import { ref, reactive, watchEffect } from 'vue'
 import SingleModel from '@/components/SingleModel.vue'
 import { coursesStore } from '@/store/coursesStore'
+import { userStore } from '@/store/userStore'
 
 
 export default {
@@ -85,11 +88,14 @@ export default {
         
         const componentKey = ref(0)
         const cstore = coursesStore()
+        const ustore = userStore()
         const fullCourse = ref(cstore.courseAll)
         const currentCourse = ref(cstore.currentCourse)
         const currentModule = ref(cstore.currentModule)
         const currentVideo = ref(cstore.currentVideo)
         const numbModules = ref(cstore.courseAll.length)
+        const items = ref(cstore.currentCourse.techniques)
+        
 
         
         watchEffect(() => {
@@ -101,7 +107,6 @@ export default {
         })
         
         
-
         const showvidInfo= (video) =>{
             // whichVid.module = video.module
             // whichVid.order=video.order
@@ -126,13 +131,15 @@ export default {
 
         
 
+        
+
         return { currentCourse, showvidInfo, returnToAll, moveModule, componentKey, fullCourse, currentModule, currentVideo, numbModules}
     }
 }
 </script>
 
 <style scoped>
-    .module-list{
+.module-list{
         display:flex;
         flex-direction: row;
         justify-content: space-between;
@@ -197,5 +204,6 @@ export default {
         cursor: pointer;
         height:100px;
     }
+
 
 </style>

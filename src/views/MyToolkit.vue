@@ -47,7 +47,6 @@ export default {
         const UserTechs = ref(ustore.getUserTechniques)
 
         if (UserTechs.value.length>0){
-            console.log('current answers: ', items.value)
             items.value = UserTechs.value.currentAnswers
         }
 

@@ -163,7 +163,6 @@ export const userStore  = defineStore("user", {
         async setTechniques(){
             const techsRef = doc(db, 'users', this.userID)
             const techsSnap = await getDoc(techsRef)
-            console.log('two two', techsSnap.data())
             const tempObject = ref({
                 course: 'procrastination',
                 createdAt: Timestamp.now(),
