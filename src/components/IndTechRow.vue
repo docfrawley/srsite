@@ -41,23 +41,18 @@ export default {
             switch (cvid.value.order){
             case 2:
                 whichDim.value = 'Context'
-                console.log('got here: ', whichDim.value)
                 break
             case 3:
                 whichDim.value = 'Behavioral'
-                    console.log('got here: ', whichDim.value)
                     break
             case 4:
                 whichDim.value = 'Cognitive'
-                    console.log('got here: ', whichDim.value)
                     break
             case 5:
                 whichDim.value = 'Cognitive'
-                    console.log('got here: ', whichDim.value)
                     break
             case 6:
                 whichDim.value = 'Motivations'
-                    console.log('got here: ', whichDim.value)
                     break
             default:
                 whichDim.value = ''

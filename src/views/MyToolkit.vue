@@ -6,8 +6,11 @@
                 <div class="drag-el">{{ item.dimension }}</div>
                 <div v-for="strategy in item.techs" :key="item.dimension + strategy" draggable="true" 
                     @dragstart="startDragRow($event, item, strategy)" @drop="onDropRow($event, item, strategy)" @dragenter.prevent @dragover.prevent>
-                    <div class="drag-strat">{{ strategy }}</div>
-                </div>
+                    <div class="drag-strat">{{ strategy }}<svg @click="openModel(item.dimension, strategy)" xmlns="http://www.w3.org/2000/svg" height="24" width="24">
+                        <path
+                            d="M11.25 16.75h1.5V11h-1.5ZM12 9.3q.35 0 .575-.238.225-.237.225-.587 0-.325-.225-.563-.225-.237-.575-.237t-.575.237q-.225.238-.225.563 0 .35.225.587.225.238.575.238Zm0 12.2q-1.975 0-3.712-.75Q6.55 20 5.275 18.725T3.25 15.712Q2.5 13.975 2.5 12t.75-3.713Q4 6.55 5.275 5.275T8.288 3.25Q10.025 2.5 12 2.5t3.713.75q1.737.75 3.012 2.025t2.025 3.012q.75 1.738.75 3.713t-.75 3.712q-.75 1.738-2.025 3.013t-3.012 2.025q-1.738.75-3.713.75Zm0-1.5q3.35 0 5.675-2.325Q20 15.35 20 12q0-3.35-2.325-5.675Q15.35 4 12 4 8.65 4 6.325 6.325 4 8.65 4 12q0 3.35 2.325 5.675Q8.65 20 12 20Zm0-8Z" />
+                        </svg>
+                    </div>
             </div>
         </div>
 
@@ -18,18 +21,11 @@
 
     </div>
     
-
-    <!-- <div class="drop-zone" @drop="onDrop($event, 1)" @dragenter.prevent @dragover.prevent>
-        <div v-for="item in getList(1)" :key="item.id" class="drag-el" draggable="true" @dragstart="startDrag($event, item)">
-            {{ item.title }}
-        </div>
-    </div>
-
-    <div class="drop-zone" @drop="onDrop($event, 2)" @dragenter.prevent @dragover.prevent>
-        <div v-for="item in getList(2)" :key="item.id" class="drag-el" draggable="true" @dragstart="startDrag($event, item)">
-            {{ item.title }}
-        </div>
-    </div> -->
+<div v-if="showModal">
+    <TechModal @modalClose="handleClose" :theTech="strategyItems" />
+</div>
+</div>
+ 
 
 </template>
 
@@ -37,14 +33,18 @@
 import { ref } from '@vue/reactivity'
 import { userStore } from '@/store/userStore'
 import { coursesStore } from '@/store/coursesStore'
+import TechModal from '@/components/TechModal.vue'
 
 export default {
+    components: { TechModal },
     setup(){
         const ustore = userStore()
         const cstore = coursesStore()
         const items = ref(cstore.currentCourse.techniques)
         const original_items = ref(JSON.parse(JSON.stringify(items.value)))
         const UserTechs = ref(ustore.getUserTechniques)
+        const showModal= ref(false)
+        const strategyItems = ref({})
 
         if (UserTechs.value.length>0){
             items.value = UserTechs.value.currentAnswers
@@ -98,6 +98,14 @@ export default {
             }
         }
 
+        const openModel = (dimension, strategy)=>{
+            strategyItems.value = {
+                dimension:dimension,
+                strategy:strategy
+            }
+            showModal.value=true
+        }
+
         const handleReset = () => {
             
             items.value = original_items.value
@@ -111,7 +119,11 @@ export default {
 
         }
 
-        return { getList, startDrag, onDrop, items, startDragRow, onDropRow, handleReset, handleTechs }
+        const handleClose = () => {
+            showModal.value = false
+        }
+
+        return { getList, startDrag, onDrop, items, startDragRow, onDropRow, handleReset, handleTechs, showModal, handleClose, strategyItems, openModel }
     }
 
 }
@@ -149,6 +161,7 @@ export default {
     padding: 5px;
     width: 200px;
     text-align: center;
+    display: relative;
 }
 
 .reset-button{
@@ -166,6 +179,14 @@ export default {
     flex-direction: column;
     justify-content: space-around;
 }
+
+svg {
+    display: inline;
+    float: right;
+    fill: white;
+    cursor: pointer;
+}
+
 
 /* .drag-el:nth-last-of-type(1){
     margin-bottom: 0;
