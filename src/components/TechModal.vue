@@ -27,6 +27,9 @@
             <div class="text-2xl text-black opacity-100">
               {{ mItem.strategy }}
             </div>
+            <div class="text-2xl text-black opacity-100">
+              {{ description }}
+            </div>
             <button
               class="text-white mt-8 bg-weather-primary py-2 px-6"
               @click="$emit('modalClose')"
@@ -43,17 +46,28 @@
 <script>
 import { ref } from "@vue/reactivity";
 import { Teleport, watchEffect } from "vue";
+import { coursesStore } from "@/store/coursesStore";
 export default {
   props: ["theTech", "modalActive"],
   emits: ["modalClose"],
   components: { Teleport },
   setup(props, context) {
     const mItem = ref({});
+    const cstore = coursesStore();
+    const description = ref("");
 
     watchEffect(() => {
-      mItem.value = props.theTech;
+      if (props.theTech.dimension != "" && props.theTech.strategy != "") {
+        cstore.findDescription(
+          "procrastination",
+          props.theTech.dimension,
+          props.theTech.strategy
+        );
+        description.value = cstore.getDescription;
+        mItem.value = props.theTech;
+      }
     });
-    return { mItem };
+    return { mItem, description };
   },
 };
 </script>

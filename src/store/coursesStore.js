@@ -16,7 +16,8 @@ export const coursesStore  = defineStore("courses", {
         currentCourseTotal: 0,
         currentVideo: {},
         originalTechs: [],
-        initialPercentage: null
+        initialPercentage: null,
+        currentDescription: '',
         }
     },
     getters: {
@@ -28,6 +29,9 @@ export const coursesStore  = defineStore("courses", {
         },
         getOriginalTechs(){
             return this.originalTechs
+        },
+        getDescription(){
+            return this.currentDescription
         }
     },
     actions: {
@@ -80,7 +84,6 @@ export const coursesStore  = defineStore("courses", {
             })
             
 
-
             let questionRef = await collection(db, 'questions')
 
             let vidRef =  await collection(db, course.col_name)
@@ -122,6 +125,30 @@ export const coursesStore  = defineStore("courses", {
                 this.currentCourseTotal = totalVidsSecs.value
             })
             
+        },
+        
+        async findDescription(course, dimension, tool){
+            if (dimension && tool ){
+                let toolRef = collection(db, 'tools')
+                let tresults = []
+                const description = ref('')
+
+
+                toolRef =  await query(toolRef, where("course", "==", course), where("dimension", "==", dimension), where("tool", "==", tool))
+                const toolsub =  await onSnapshot(toolRef, snap => {
+                    snap.docs.forEach(doc => {
+                    tresults.push({...doc.data(), id: doc.id})
+                    });
+                       this.currentDescription =  tresults[0].description
+                })
+            
+             
+            }
+            
+            //  if (toolSnap.data()){
+            //     console.log(course, dimension, tool)
+            //     return toolSnap.data().description
+            //  }
         },
         setCurrentModule(mod){
             this.currentModule = mod;
