@@ -43,13 +43,17 @@ export const userStore  = defineStore("user", {
                 if (!res) {
                 throw new Error('Could not login')
                 } else {
+                    const cstore = coursesStore();
                     const docRef = doc(db, "users", res.user.uid);
                     const docSnap = await getDoc(docRef);
+                    
                     if (docSnap.exists()){
                         this.admin = docSnap.data().admin
                         this.displayName = docSnap.data().DisplayName
                         this.email = email;
                         this.userID = res.user.uid
+                        cstore.setCourses();
+                        await cstore.setCourseAll("procrastination");
                         if (docSnap.data().completedVids) {
                          this.courseSecsTotal = docSnap.data().completedVids[0].totalSecs
                          this.courseTotalPercentage = docSnap.data().completedVids[0].totalPercentage
@@ -93,7 +97,7 @@ export const userStore  = defineStore("user", {
         },
         async setCoursePercentages(course){
             let colRef = collection(db, 'percentages')
-            colRef =  await query(colRef, where("uid", "==", this.userID), where("col_name", "==", course.col_name))
+            colRef =  await query(colRef, where("uid", "==", this.userID), where("col_name", "==", 'procrastination'))
             const unsub = onSnapshot(colRef, snapshot => {
                 let results = []
                 snapshot.docs.forEach(doc => {

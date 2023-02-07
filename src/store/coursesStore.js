@@ -36,24 +36,12 @@ export const coursesStore  = defineStore("courses", {
     },
     actions: {
          setCourses(){
-            const ustore = userStore()
             let colRef = collection(db, 'courses')
             const unsub = onSnapshot(colRef, snapshot => {
                 let results = []
                 snapshot.docs.forEach(doc => {
                 results.push({ ...doc.data(), id: doc.id })
                 })
-                // for (var i = 0; i < results.length; i++) {
-                //     if (results[i].status=='published'){
-                //         const userObject = ustore.getCourseVidsComp(results[i].col_name)
-                //         if (userObject.length>0){
-                //         results[i].completedVids = (userObject.numVids) ? userObject.numVids :0
-                //         results[i].completedSecs = (userObject.totalSecs) ? userObject.totalSecs :0 
-                //         results[i].percentCompleted = (userObject.totalSecs) ? (userObject.totalSecs / results[i].total_length*100).toFixed(2): 0
-
-                //         }
-                //     }
-                // }
             this.allCourses = results
             })
 
@@ -68,60 +56,69 @@ export const coursesStore  = defineStore("courses", {
             let results = []
             let vidResults = []
             const totalVidsSecs = ref(0)
+            const courseRef =  doc(db, 'courses', 'inxvegSzZpja4SLz5FcT')
+            const courseSnap = await getDoc(courseRef)
+            if (courseSnap.exists()){
+                this.currentCourse = courseSnap.data()
+                this.originalTechs = this.currentCourse.techniques
+            }
             
-            this.currentCourse = course
-            this.originalTechs = course.techniques
             const ustore = userStore()
             const uID = ref(ustore.getUserId)
-            let colRef = collection(db, 'course-modules')
-            colRef =  await query(colRef, where("course", "==", course.col_name))
+            let colRef = await collection(db, 'course-modules')
+            colRef = await  query(colRef, where("course", "==", 'procrastination'))
             
-            const unsub =  await onSnapshot(colRef, snap => {
+            const unsub = await onSnapshot(colRef, snap => {
                 snap.docs.forEach(doc => {
-                results.push({...doc.data(), id: doc.id})
-                });
+                    results.push({ ...doc.data(), id: doc.id })
+                })
                 results.sort((a, b) => (a.modnumb > b.modnumb) ? 1 : -1)
             })
             
 
             let questionRef = await collection(db, 'questions')
 
-            let vidRef =  await collection(db, course.col_name)
+            let vidRef = await collection(db, 'procrastination')
             const unsubVid = onSnapshot(vidRef, snap => {
                 snap.docs.forEach(doc => {
-                    vidResults.push({ ...doc.data(), id: doc.id });
-                });
+                    vidResults.push({ ...doc.data(), id: doc.id })
+                })
+                
                 for (let i = 0; i < results.length; i++) {
-                    let modVids = vidResults.filter(vid => vid.module == results[i].modnumb);
-                    modVids.sort((a, b) => (a.order > b.order) ? 1 : -1);
-                    modVids.forEach( video => {
+                    let modVids = vidResults.filter(vid => vid.module == results[i].modnumb)
+                    modVids.sort((a, b) => (a.order > b.order) ? 1 : -1)
+                    
+                    modVids.forEach(video => {
                         let qresults = []
                         let qRef = query(questionRef, where("vid", "==", video.id))
                         let usub = onSnapshot(qRef, snap => {
                             snap.docs.forEach(doc => {
-                            qresults.push({...doc.data(), id: doc.id})
-                            });
+                                qresults.push({ ...doc.data(), id: doc.id })
+                            })
                             qresults.sort((a, b) => (a.vcue > b.vcue) ? 1 : -1)
                         })
                         totalVidsSecs.value = totalVidsSecs.value + parseInt(video.length)
                         video.questions = qresults
-                       
-                        if (Array.isArray(video.percentages)){
-                            const percentageVid = video.percentages.filter(doc =>
-                                doc.uid === uID.value)
-                            if (percentageVid[0]){
-                            video.percentages = percentageVid[0].percentage
+                        if (Array.isArray(video.percentages)) {
+                            const percentageVid = video.percentages.filter(doc => doc.uid === uID.value)
+                            if (percentageVid[0]) {
+                                video.percentages = percentageVid[0].percentage
+                                
                             } else {
-                                video.percentages= null
+                                video.percentages = null
                             }
                         }
-                        
-                        
-                        
-                    });
-                    results[i].videos = modVids;
+
+
+
+                    })
+                    results[i].videos = modVids
+
+
                 }
                 this.courseAll = results
+                this.currentModule = this.courseAll[0]
+                this.currentVideo = this.currentModule.videos[0]
                 this.currentCourseTotal = totalVidsSecs.value
             })
             
@@ -134,12 +131,12 @@ export const coursesStore  = defineStore("courses", {
                 const description = ref('')
 
 
-                toolRef =  await query(toolRef, where("course", "==", course), where("dimension", "==", dimension), where("tool", "==", tool))
-                const toolsub =  await onSnapshot(toolRef, snap => {
+                toolRef =  query(toolRef, where("course", "==", 'procrastination'), where("dimension", "==", dimension), where("tool", "==", tool))
+                const toolsub =  onSnapshot(toolRef, snap => {
                     snap.docs.forEach(doc => {
-                    tresults.push({...doc.data(), id: doc.id})
-                    });
-                       this.currentDescription =  tresults[0].description
+                        tresults.push({ ...doc.data(), id: doc.id })
+                    })
+                    this.currentDescription = tresults[0].description
                 })
             
              
@@ -178,7 +175,7 @@ export const coursesStore  = defineStore("courses", {
             const ustore = userStore()
             const userID = ref(ustore.getUserId)
             if (p>this.initialPercentage){
-                const docRef = await doc(db, this.currentCourse.col_name, this.currentVideo.id)
+                const docRef = doc(db, this.currentCourse.col_name, this.currentVideo.id)
                 const docSnap = await getDoc(docRef)
                 if (!docSnap.data().percentages){
                    await  updateDoc(docRef, {percentages: [{uid: userID.value, percentage: p}]})
@@ -188,12 +185,9 @@ export const coursesStore  = defineStore("courses", {
                     // this.courseAll[this.currentVideo.module-1].videos[this.currentVideo.order-1].percentages = p
                     let findObject = docSnap.data().percentages.find((obj) => obj.uid===userID.value)
                     if(findObject){
-                        console.log('i am here: ', this.courseAll)
-                        console.log('what object: ', findObject)
                         await updateDoc(docRef, {percentages: arrayRemove(findObject)})
                     }
                     await updateDoc(docRef, {percentages: arrayUnion({uid: userID.value, percentage: p})})
-                console.log('coursefullllasdfasdfasdf: ', this.courseAll)
                 }
                 this.unsetCourseAll()
                 this.setCourseAll(this.currentCourse)
