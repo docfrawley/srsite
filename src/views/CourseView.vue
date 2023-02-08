@@ -8,7 +8,7 @@
         <h4>with {{ currentCourse.instructor }}</h4>
       </div>
     </div>
-    <div>Your Motivations</div>
+    <div>Your Motivations...</div>
     <div>Your Top Tools</div>
 
     <div v-if="currentVideo.iframe">

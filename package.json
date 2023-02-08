@@ -19,6 +19,7 @@
     "vue-vimeo-player": "^1.1.2"
   },
   "devDependencies": {
+    "@babel/parser": "^7.20.5",
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-router": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
