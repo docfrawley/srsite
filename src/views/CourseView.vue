@@ -1,6 +1,7 @@
 <template>
   <div class="page-container">
-    <div class="current-course">
+    <div class="grid-container">
+        <div class="fill-up">
       <div>
         <h1>{{ currentCourse.title }}</h1>
       </div>
@@ -8,8 +9,10 @@
         <h4>with {{ currentCourse.instructor }}</h4>
       </div>
     </div>
-    <div>Your Motivations...</div>
-    <div>Your Top Tools</div>
+    <div class="fill-up">Your Motivations...</div>
+    <div class="fill-up">Your Top Tools</div>
+    </div>
+    
 
     <div v-if="currentVideo.iframe">
       <div class="module-list">
@@ -207,5 +210,21 @@ svg:hover {
   width: 540px;
   cursor: pointer;
   height: 100px;
+}
+
+.grid-container{
+    display: grid;
+    gap: 1rem;
+    padding-block: 2rem;
+    width: min(95%, 70rem);
+    margin-inline: auto;
+}
+
+.fill-up{
+    background-color: lightblue;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 2.5rem 3.75rem 3rem -3rem hsl(var(--clr-secondary-400) / 0.25);
+    
 }
 </style>
