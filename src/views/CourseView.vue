@@ -11,6 +11,10 @@
     </div>
     <div class="fill-up">Your Motivations...</div>
     <div class="fill-up">Your Top Tools</div>
+
+    <div v-if="currentVideo">
+        <SingleModel :key="componentKey" />
+    </div>
     </div>
     
 
@@ -31,9 +35,7 @@
           </span>
         </div>
       </div>
-      <div v-if="currentVideo">
-        <SingleModel :key="componentKey" />
-      </div>
+      
 
       <div class="next-previous">
         <div
@@ -64,23 +66,20 @@
       </div>
     </div>
 
-    <!-- <div v-else>
-        <div v-for="document in documents" :key="document.id">
-            <ShowModule :document="document" @vidInfo="showvidInfo" />
-        </div>
-    </div> -->
+   
 
-    <div v-else>
-      <div v-for="aModule in fullCourse" :key="'B' + aModule.id">
+      <!-- <div v-for="aModule in fullCourse" :key="'B' + aModule.id">
         <ShowModule :theModule="aModule" />
         <br />
-      </div>
-    </div>
+      </div> -->
+    
   </div>
 </template>
 
 <script>
 import ShowModule from "@/components/ShowModule.vue";
+import ShowVidDetails from "@/components/ShowVidDetails.vue";
+
 import { ref, reactive, watchEffect } from "vue";
 import SingleModel from "@/components/SingleModel.vue";
 import { coursesStore } from "@/store/coursesStore";
@@ -88,7 +87,7 @@ import { userStore } from "@/store/userStore";
 
 export default {
   name: "Courseview",
-  components: { ShowModule, SingleModel },
+  components: { ShowModule, SingleModel, ShowVidDetails },
   props: ["course"],
   setup(props) {
     // const { error, documents } = getOrderDocs('course-modules', 'course', props.course)
@@ -222,9 +221,11 @@ svg:hover {
 
 .fill-up{
     background-color: lightblue;
-    padding: 2rem;
+    padding: 1rem;
     border-radius: 0.5rem;
     box-shadow: 2.5rem 3.75rem 3rem -3rem hsl(var(--clr-secondary-400) / 0.25);
     
 }
+
+
 </style>

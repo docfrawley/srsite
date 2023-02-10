@@ -1,6 +1,6 @@
 <template>
   <div class="smcontainer">
-    <div v-if="currentVideo.iframe">
+    <div class="fill-up-now">
       <div class="video-responsive">
         <div v-if="showPause" @click="startPlaying" class="overlay-Pause">
           <div class="inside-pause">press here when ready to resume video</div>
@@ -22,8 +22,8 @@
         <p>{{ currentVideo.description }}</p>
       </div>
     </div>
-    <div class="flex flex-col questions-class">
-      hello {{ currentVideo.questions.length }}
+    <div class="fill-up-now">
+      <div class="flex flex-col questions-class">
       <div v-for="question in currentVideo.questions" :key="'A' + question.id">
         <ShowPromptForm
           :prompt="question"
@@ -40,22 +40,28 @@
                 </div> -->
       </div>
     </div>
-
-    <div class="module-view">
-      <div v-for="video in currentModule.videos" :key="'thisvideo' + video.id">
-        <div @click="newVideo(video)">
-          <ShowVidDetails
-            :theMod="currentModule"
-            :video="video"
-            :percent="percentVid"
-            :key="'hereitis' + componentKey"
-          />
+    </div>
+    
+    <div v-if="currentModule.modnumb == 3 && currentVideo.order > 1">
+      <div class="fill-up-now">
+      <IndTechRow />
+      </div>
+    </div>
+    
+    <div class="fill-up-now">
+      <div class="module-view2">
+        <div v-for="video in currentModule.videos" :key="'thisvideo' + video.id">
+          <div @click="newVideo(video)">
+            <ShowVidDetails
+              :theMod="currentModule"
+              :video="video"
+              :percent="percentVid"
+              :key="'hereitis' + componentKey"
+            />
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <div v-if="currentModule.modnumb == 3 && currentVideo.order > 1">
-    <IndTechRow />
   </div>
 </template>
 
@@ -211,20 +217,36 @@ export default {
   background-color: lightgrey;
 }
 
+.module-view2{
+  background-color: #fff;
+  padding: 20px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+}
+
 .questions-class {
   font-size: 14px;
-  width: 500px;
+  max-width: 500px;
   margin: 20px;
-  height: 500px;
+  max-height: 500px;
   overflow: hidden;
   overflow: -moz-scrollbars-vertical;
   overflow-y: scroll;
 }
 
 .smcontainer {
-  display: flex;
-  flex-wrap: wrap;
-  margin-bottom: 200px;
+  display: grid;
+    gap: 1rem;
+    width: min(100%, 70rem);
+    margin-inline: auto;
+}
+
+.fill-up-now{
+    background-color: lightblue;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 2.5rem 3.75rem 3rem -3rem hsl(var(--clr-secondary-400) / 0.25);
+    
 }
 .video-responsive {
   position: relative;
