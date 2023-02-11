@@ -1,16 +1,18 @@
 <template>
-    <form @submit.prevent="handleSubmit" action="" class="rounded-md border-2 border-black mb-1 h-4.5 bg-gray-100">
+    <div class="form-prompt">
+        <form @submit.prevent="handleSubmit" action="">
         <label>{{ question }} </label>
-        <div v-if="lastUpdated" class="text-xs mt-0.5 text-green-500">Last Updated: {{ lastUpdated }}</div>
+        <div v-if="lastUpdated" class="text-xs mt-0.5 last-updated">Last Updated: {{ lastUpdated }}</div>
         <textarea ref="userinput" autofocus v-model="answer"></textarea>
         <button>SAVE</button>
     </form>
+    </div>
+    
 </template>
 
 <script>
 import { ref } from 'vue'
 import { userStore } from '@/store/userStore'
-import { timestamp } from '@/firebase/config'
 export default {
     props: ['prompt'],
     emits: ['answerAdded'],
@@ -43,12 +45,39 @@ export default {
 
 
 }
-</script>
+</script >
 
-<style>
+<style scoped>
 /* .Active {
     border-color: red;
     border-width: 5px;
     background-color: lightgrey;
 } */
+
+.form-prompt {
+  position:relative;
+  margin: 0 auto;
+  padding: 15px;
+  border-radius: .25rem;
+  box-shadow: 1px 2px 3px rgba(50,50,50,0.05);
+  /* border: solid 2px var(--primegreen); */
+  background-color: var(--lightblue);
+  color: white;
+  margin-bottom: 10px;
+}
+input, textarea {
+  border: 0;
+  border: 1px solid var(--primeblue);
+  padding: 10px;
+  outline: none;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 20px auto;
+  border-radius: .25rem;
+}
+
+.last-updated{
+    color:#c182e9;
+}
 </style>

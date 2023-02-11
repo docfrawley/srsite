@@ -220,9 +220,10 @@ svg:hover {
 }
 
 .fill-up{
-    background-color: lightblue;
-    padding: 1rem;
-    border-radius: 0.5rem;
+    background-color: white;
+    padding: .75rem;
+    border-radius: 0.2rem;
+    border: solid 2px var(--primeblue);
     box-shadow: 2.5rem 3.75rem 3rem -3rem hsl(var(--clr-secondary-400) / 0.25);
     
 }

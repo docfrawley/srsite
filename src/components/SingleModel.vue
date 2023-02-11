@@ -18,12 +18,14 @@
         />
       </div>
       <div class="video-details">
-        <p>{{ currentModule.title }}, {{ currentVideo.title }}</p>
-        <p>{{ currentVideo.description }}</p>
+        <p><u>Module #{{ currentModule.modnumb }}:</u> <i>{{ currentModule.title }}</i></p>
+        <p><u>Video #{{currentVideo.order}}:</u> <i>{{ currentVideo.title }}</i></p>
+        <p><u>Video Description:</u> <i>{{ currentVideo.description }}</i></p>
       </div>
     </div>
     <div class="fill-up-now">
       <div class="flex flex-col questions-class">
+        <div>Video Prompts</div>
       <div v-for="question in currentVideo.questions" :key="'A' + question.id">
         <ShowPromptForm
           :prompt="question"
@@ -92,8 +94,6 @@ export default {
     const answerKey = ref(0);
     const player = ref();
     const showPause = ref(false);
-
-    console.log("third: ", currentVideo.value);
 
     if (currentVideo.value.percentages) {
       percentVid.value = currentVideo.value.percentages;
@@ -212,9 +212,9 @@ export default {
 
 <style scoped>
 .Active {
-  border-color: red;
+  border-color: var(--primegreen);
   border-width: 5px;
-  background-color: lightgrey;
+  background-color: var(--primegreen);
 }
 
 .module-view2{
@@ -225,14 +225,16 @@ export default {
 }
 
 .questions-class {
-  font-size: 14px;
-  max-width: 500px;
-  margin: 20px;
-  max-height: 500px;
+  /* font-size: 14px; */
+  /* max-width: 500px; */
+  /* margin: 20px; */
+  /* max-height: 500px; */
   overflow: hidden;
   overflow: -moz-scrollbars-vertical;
   overflow-y: scroll;
 }
+
+
 
 .smcontainer {
   display: grid;
@@ -241,38 +243,37 @@ export default {
     margin-inline: auto;
 }
 
+
 .fill-up-now{
-    background-color: lightblue;
-    padding: 1rem;
-    border-radius: 0.5rem;
+  background-color: white;
+  border: solid 2px var(--primeblue);
+    padding: .75rem;
+    border-radius: 0.2rem;
     box-shadow: 2.5rem 3.75rem 3rem -3rem hsl(var(--clr-secondary-400) / 0.25);
     
 }
 .video-responsive {
   position: relative;
   display: block;
-  width: 600px;
-  height: 340px;
+  min-width: 80%;
+  min-height: 80%;
   overflow: hidden;
 }
 
 .video-details {
   padding: 20px;
-  background: #fff;
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
-  height: 200px;
+  font-size: 12px;
+  border: solid 1px var(--primegreen)
 }
 
-.video-responsive-item {
+/* .video-responsive-item {
   position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 100%;
-  border: 0;
-}
+  height: 40%;
+} */
 
 .video-responsive-item iframe {
   border-top-left-radius: 8px;
