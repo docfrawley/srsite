@@ -1,6 +1,6 @@
 <template>
   <div class="smcontainer">
-    <div class="fill-up-now">
+    <div class="fill-up">
       <div class="video-responsive">
         <div v-if="showPause" @click="startPlaying" class="overlay-Pause">
           <div class="inside-pause">press here when ready to resume video</div>
@@ -18,12 +18,51 @@
         />
       </div>
       <div class="video-details">
-        <p><u>Module #{{ currentModule.modnumb }}:</u> <i>{{ currentModule.title }}</i></p>
-        <p><u>Video #{{currentVideo.order}}:</u> <i>{{ currentVideo.title }}</i></p>
+        <div class="mod-row">
+          <div class="mod-des"><u>Module #{{ currentModule.modnumb }}:</u> <i>{{ currentModule.title }}</i></div>
+          <div class="next-previous">
+            <div
+              class="np-module"
+              v-if="currentModule.modnumb > 1"
+              @click="moveModule(currentModule.modnumb - 1)"
+            >
+              &#x2190; Previous Module
+            </div>
+
+            <div
+              class="np-module"
+              v-if="currentModule.modnumb < numbModules"
+              @click="moveModule(currentModule.modnumb + 1)"
+            >
+              Next Module &#x2192; 
+            </div>
+          </div>
+        </div>
+        <div class="mod-row">
+          <div class="mod-des"><u>Video #{{ currentVideo.order }}:</u> <i>{{ currentVideo.title }}</i></div>
+          <div class="next-previous">
+            <div
+              class="np-module"
+              v-if="currentVideo.order > 1"
+              @click="moveVideo(currentVideo.order - 1)"
+            >
+              &#x2190; Previous Video
+            </div>
+
+            <div
+              class="np-module"
+              v-if="currentVideo.order < numbModules"
+              @click="moveVideo(currentVideo.order + 1)"
+            >
+              Next Video &#x2192; 
+            </div>
+          </div>
+        </div>
+        
         <p><u>Video Description:</u> <i>{{ currentVideo.description }}</i></p>
       </div>
     </div>
-    <div class="fill-up-now">
+    <div class="fill-up">
       <div class="flex flex-col questions-class">
         <div>Video Prompts</div>
       <div v-for="question in currentVideo.questions" :key="'A' + question.id">
@@ -33,24 +72,18 @@
           @answerAdded="wasItAdded"
           :key="'Y' + answerKey"
         />
-        <!-- <div :class="{Active: question.active}"> -->
-        <!-- <form @submit.prevent="handleSubmit" action="" class="rounded-md border-2 border-black mb-1 h-4.5 bg-gray-100" :class="{Active: question.active}">
-                        <label>{{ question.prompt }}</label>
-                        <textarea ref="userinput" autofocus v-model="answer"></textarea>
-                        <button >SAVE</button>
-                    </form>
-                </div> -->
+
       </div>
     </div>
     </div>
     
     <div v-if="currentModule.modnumb == 3 && currentVideo.order > 1">
-      <div class="fill-up-now">
+      <div class="fill-up">
       <IndTechRow />
       </div>
     </div>
     
-    <div class="fill-up-now">
+    <div class="fill-up vid-mod-module">
       <div class="module-view2">
         <div v-for="video in currentModule.videos" :key="'thisvideo' + video.id">
           <div @click="newVideo(video)">
@@ -61,6 +94,22 @@
               :key="'hereitis' + componentKey"
             />
           </div>
+        </div>
+      </div>
+      <div class="module-list">
+        <div v-for="mod in fullCourse" :key="'A' + mod.id">
+          <span
+            v-if="currentModule.modnumb != mod.modnumb"
+            class="ind-mod np-module"
+            @click="moveModule(mod.modnumb)"
+            >{{ mod.title }}
+          </span>
+          <span
+            v-else
+            class="ind-mod np-active"
+            @click="moveModule(mod.modnumb)"
+            >{{ mod.title }}
+          </span>
         </div>
       </div>
     </div>
@@ -94,6 +143,9 @@ export default {
     const answerKey = ref(0);
     const player = ref();
     const showPause = ref(false);
+    const numbModules = ref(cstore.courseAll.length);
+    const fullCourse = ref(cstore.courseAll);
+
 
     if (currentVideo.value.percentages) {
       percentVid.value = currentVideo.value.percentages;
@@ -186,6 +238,24 @@ export default {
       answerKey.value++;
     };
 
+    const moveModule = (theMod) => {
+      let whichElement = theMod - 1;
+
+      currentModule.value = cstore.courseAll[whichElement];
+      currentVideo.value = currentModule.value.videos[0];
+      cstore.setCurrentVideo(currentVideo.value);
+      cstore.setCurrentModule(currentModule.value);
+      componentKey.value++;
+    };
+
+    const moveVideo = (order) => {
+      let whichElement = order - 1;
+
+      currentVideo.value = currentModule.value.videos[whichElement];
+      cstore.setCurrentVideo(currentVideo.value);
+      componentKey.value++;
+    };
+
     return {
       startPlaying,
       showPause,
@@ -205,6 +275,10 @@ export default {
       handleSubmit,
       userinput,
       answer,
+      moveModule,
+      numbModules,
+      moveVideo,
+      fullCourse
     };
   },
 };
@@ -222,6 +296,7 @@ export default {
   padding: 20px;
   margin-bottom: 10px;
   border-radius: 8px;
+  width:60%;
 }
 
 .questions-class {
@@ -246,7 +321,7 @@ export default {
 
 .fill-up-now{
   background-color: white;
-  border: solid 2px var(--primeblue);
+  border: solid 1px var(--primeblue);
     padding: .75rem;
     border-radius: 0.2rem;
     box-shadow: 2.5rem 3.75rem 3rem -3rem hsl(var(--clr-secondary-400) / 0.25);
@@ -265,15 +340,6 @@ export default {
   font-size: 12px;
   border: solid 1px var(--primegreen)
 }
-
-/* .video-responsive-item {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 40%;
-} */
 
 .video-responsive-item iframe {
   border-top-left-radius: 8px;
@@ -304,4 +370,76 @@ export default {
   font-size: 45px;
   color: black;
 }
+
+
+.next-previous {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.np-module {
+  cursor: pointer;
+  color: #000;
+  display: flex;
+  align-items: center;
+  padding-right: 5px;
+  
+}
+
+.np-module:hover {
+  color: var(--primegreen);
+}
+
+.mod-row{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.mod-des{
+  margin-right: 10px;
+}
+
+.module-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--lines);
+  margin-bottom: 30px;
+  background-color: #fff;
+}
+
+.module-list svg {
+  cursor: pointer;
+  fill: #001e41;
+  margin-left: 20px;
+}
+.ind-mod {
+  display: inline-block;
+  cursor: pointer;
+}
+
+
+.np-active {
+  cursor: pointer;
+  margin: 0 15px;
+  color: #ffffff;
+  background-color: #001e41;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.np-module svg {
+  height: 45px;
+  width: 45px;
+}
+
+.vid-mod-module{
+  display: flex;
+  justify-content: space-between;
+}
+
 </style>

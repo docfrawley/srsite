@@ -9,6 +9,7 @@
   --primeblue: #001e41;
   --primegreen: #aaea82;
   --lightblue: #a3ceff;
+  --primepurple: #c182e9;
 }
 
 /* base styles  */
@@ -28,7 +29,7 @@ a {
 /* buttons */
 button, .btn { 
   background: var(--secondary);
-  border-radius: 8px;
+  border-radius: .25rem;
   border: 0;
   padding: 8px 12px;
   font-weight: 600;
@@ -40,7 +41,7 @@ button, .btn {
 }
 
 button:hover, .btn:hover, .btn:active {
-  background: var(--primary);
+  background: var(--primeblue);
   color: white;
 }
 button:disabled {
@@ -48,6 +49,15 @@ button:disabled {
   color: var(--primary);
   background: var(--secondary);
   cursor: not-allowed;
+}
+
+.fill-up{
+  background-color: white;
+  padding: .75rem;
+  border-radius: 0.2rem;
+  border: solid 1px var(--primeblue);
+  box-shadow: 2.5rem 3.75rem 3rem -3rem hsl(var(--clr-secondary-400) / 0.25);
+  
 }
 
 

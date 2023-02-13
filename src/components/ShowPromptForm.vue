@@ -78,6 +78,6 @@ input, textarea {
 }
 
 .last-updated{
-    color:#c182e9;
+    color:var(--primepurple);
 }
 </style>
