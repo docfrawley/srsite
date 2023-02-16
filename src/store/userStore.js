@@ -22,7 +22,8 @@ export const userStore  = defineStore("user", {
         courseSecsTotal: 0,
         courseTotalPercentage: 0,
         promptAnswers: [],
-        UserTechniques: []
+        UserTechniques: [],
+        positiveMov: {}
         }
     },
     getters: {
@@ -34,6 +35,16 @@ export const userStore  = defineStore("user", {
         },
         getUserTechniques(){
             return this.UserTechniques
+        },
+        getPromptAnswers(){
+            return this.promptAnswers
+        },
+        getPositiveMotivations(){
+            const positiveMov = this.promptAnswers.find((mov)=>{
+                mov.promptId=="zEfmgpumIi2gbGCG8eJt"
+               })
+               console.log('what: ', positiveMov)
+            return positiveMov.answer
         }
     },
     actions: {

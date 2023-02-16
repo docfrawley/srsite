@@ -51,7 +51,7 @@
 
             <div
               class="np-module"
-              v-if="currentVideo.order < numbModules"
+              v-if="currentVideo.order < currentModule.videos.length"
               @click="moveVideo(currentVideo.order + 1)"
             >
               Next Video &#x2192; 
@@ -100,7 +100,7 @@
         <div v-for="mod in fullCourse" :key="'A' + mod.id">
           <span
             v-if="currentModule.modnumb != mod.modnumb"
-            class="ind-mod np-module"
+            class="ind-mod"
             @click="moveModule(mod.modnumb)"
             >{{ mod.title }}
           </span>
@@ -399,18 +399,23 @@ export default {
 
 .mod-des{
   margin-right: 10px;
+  min-width: 220px;
 }
 
 .module-list {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-around;
+  align-content: center;
   padding: 10px;
-  border-radius: 8px;
+  border-radius: .25rem;
   border: 1px solid var(--lines);
-  margin-bottom: 30px;
-  background-color: #fff;
+  text-align: center;
+  min-height: 400px;
+  min-width:220px;
 }
+
+
 
 .module-list svg {
   cursor: pointer;
@@ -418,18 +423,23 @@ export default {
   margin-left: 20px;
 }
 .ind-mod {
-  display: inline-block;
   cursor: pointer;
+}
+
+.ind-mod:hover {
+  color: var(--primegreen);
 }
 
 
 .np-active {
   cursor: pointer;
-  margin: 0 15px;
+  margin: auto;
   color: #ffffff;
   background-color: #001e41;
-  padding: 15px;
-  border-radius: 8px;
+  padding: 10px;
+  border-radius: .25rem;
+  min-width: 100px;
+  text-align: center;
 }
 
 .np-module svg {
