@@ -153,6 +153,16 @@ button:disabled {
       background: linear-gradient(to right, #a3ceff 10%, #001e41 90%);
   }
 
+  /* grids */
+
+  .grid-col-span-2{
+    grid-column: span 2;
+  }
+
+  .grid-col-span-3{
+    grid-column: span 3;
+  }
+
   @media screen and (max-width: 600px){
     
     .page-container{

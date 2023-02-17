@@ -2,18 +2,18 @@
   <div class="page-container">
     <div class="grid-container">
         <div class="fill-up">
-      <div>
-        <h1>{{ currentCourse.title }}</h1>
-      </div>
-      <div>
-        <h4>with {{ currentCourse.instructor }}</h4>
-      </div>
-    </div>
-    <PossMotivations />
-    <TopTools />
+          <div>
+            <h1>{{ currentCourse.title }}</h1>
+          </div>
+          <div>
+            <h4>with {{ currentCourse.instructor }}</h4>
+          </div>
+        </div>
+        <PossMotivations />
+        <TopTools />
 
-    <div v-if="currentVideo">
-        <SingleModel :key="componentKey" />
+    <div v-if="currentVideo" class="grid-col-span-3">
+        <SingleModel :key="componentKey + 'courseview' + currentVideo.id" />
     </div>
     </div>
     
@@ -51,6 +51,7 @@ export default {
     const currentModule = ref(cstore.currentModule);
     const currentVideo = ref(cstore.currentVideo);
     const items = ref(cstore.currentCourse.techniques);
+    console.log("current video: ", currentVideo.value)
 
     
 
@@ -100,6 +101,8 @@ export default {
     padding-block: 2rem;
     width: min(95%, 70rem);
     margin-inline: auto;
+    grid-template-columns: repeat(3, 1fr);
+
 }
 
 

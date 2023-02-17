@@ -65,10 +65,10 @@ export const coursesStore  = defineStore("courses", {
             
             const ustore = userStore()
             const uID = ref(ustore.getUserId)
-            let colRef = await collection(db, 'course-modules')
-            colRef = await  query(colRef, where("course", "==", 'procrastination'))
+            let colRef = collection(db, 'course-modules')
+            colRef = query(colRef, where("course", "==", 'procrastination'))
             
-            const unsub = await onSnapshot(colRef, snap => {
+            const unsub = onSnapshot(colRef, snap => {
                 snap.docs.forEach(doc => {
                     results.push({ ...doc.data(), id: doc.id })
                 })
@@ -76,9 +76,9 @@ export const coursesStore  = defineStore("courses", {
             })
             
 
-            let questionRef = await collection(db, 'questions')
+            let questionRef = collection(db, 'questions')
 
-            let vidRef = await collection(db, 'procrastination')
+            let vidRef = collection(db, 'procrastination')
             const unsubVid = onSnapshot(vidRef, snap => {
                 snap.docs.forEach(doc => {
                     vidResults.push({ ...doc.data(), id: doc.id })
@@ -99,6 +99,7 @@ export const coursesStore  = defineStore("courses", {
                         })
                         totalVidsSecs.value = totalVidsSecs.value + parseInt(video.length)
                         video.questions = qresults
+                        
                         if (Array.isArray(video.percentages)) {
                             const percentageVid = video.percentages.filter(doc => doc.uid === uID.value)
                             if (percentageVid[0]) {
@@ -119,6 +120,7 @@ export const coursesStore  = defineStore("courses", {
                 this.courseAll = results
                 this.currentModule = this.courseAll[0]
                 this.currentVideo = this.currentModule.videos[0]
+                console.log("got videos: ", this.currentVideo)
                 this.currentCourseTotal = totalVidsSecs.value
             })
             

@@ -40,11 +40,11 @@ export const userStore  = defineStore("user", {
             return this.promptAnswers
         },
         getPositiveMotivations(){
-            const positiveMov = this.promptAnswers.find((mov)=>{
+            const positiveMov =  this.promptAnswers.find((mov)=>{
                 mov.promptId=="zEfmgpumIi2gbGCG8eJt"
                })
                console.log('what: ', positiveMov)
-            return positiveMov.answer
+            return positiveMov
         }
     },
     actions: {
@@ -71,6 +71,7 @@ export const userStore  = defineStore("user", {
                         }
                         if (docSnap.data().answers){
                             this.promptAnswers = docSnap.data().answers
+                            console.log("I am here: ", this.promptAnswers)
                         }
                         if (docSnap.data().theTechs){
                             this.UserTechniques = docSnap.data().theTechs[0].currentAnswers

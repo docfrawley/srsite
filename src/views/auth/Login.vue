@@ -29,6 +29,7 @@ export default {
     const cstore = coursesStore();
 
     const handleSubmit = async () => {
+      
       await ustore.login(email.value, password.value);
       await ustore.getTechniques();
 
