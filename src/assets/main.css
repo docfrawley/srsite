@@ -163,6 +163,10 @@ button:disabled {
     grid-column: span 3;
   }
 
+  .grid-col-span-1{
+    grid-column: span 1;
+  }
+
   @media screen and (max-width: 600px){
     
     .page-container{

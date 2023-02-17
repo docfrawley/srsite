@@ -1,6 +1,6 @@
 <template>
   <div class="smcontainer">
-    <div class="fill-up">
+    <div class="fill-up grid-col-span-2">
       <div class="video-responsive">
         <div v-if="showPause" @click="startPlaying" class="overlay-Pause">
           <div class="inside-pause">press here when ready to resume video</div>
@@ -77,13 +77,13 @@
     </div>
     </div>
     
-    <div v-if="currentModule.modnumb == 3 && currentVideo.order > 1">
-      <div class="fill-up">
+    <div v-if="currentModule.modnumb == 3 && currentVideo.order > 1" class="fill-up grid-col-span-3">
+      
       <IndTechRow />
-      </div>
+      
     </div>
     
-    <div class="fill-up vid-mod-module">
+    <div class="fill-up vid-mod-module grid-col-span-3">
       <div class="module-view2">
         <div v-for="video in currentModule.videos" :key="'thisvideo' + video.id">
           <div @click="newVideo(video)">
@@ -312,6 +312,7 @@ export default {
   overflow: hidden;
   overflow: -moz-scrollbars-vertical;
   overflow-y: scroll;
+  max-height: 450px;
 }
 
 
@@ -321,7 +322,7 @@ export default {
     gap: 1rem;
     width: min(100%, 70rem);
     margin-inline: auto;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
 }
 
 

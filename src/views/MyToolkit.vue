@@ -173,11 +173,13 @@ export default {
 .drop-zone {
   display: flex;
   flex-direction: column;
-  background-color: #ecf0f1;
-  margin-bottom: 10px;
-  padding: 10px;
-  width: 70%;
-  min-height: 10px;
+  background-color: white;
+  padding: .75rem;
+  border-radius: 0.2rem;
+  border: solid 1px var(--primeblue);
+  box-shadow: 2.5rem 3.75rem 3rem -3rem hsl(var(--clr-secondary-400) / 0.25);
+  width:95vw;
+  margin:auto;
 }
 
 .drag-row {
@@ -186,26 +188,29 @@ export default {
 }
 
 .drag-el {
-  background-color: #3498db;
+  background-color: var(--primeblue);
   color: white;
   margin: 5px;
   padding: 5px;
-  width: 200px;
+  min-width: 200px;
   text-align: center;
+  border-radius: .25rem;
 }
 
 .drag-strat {
-  background-color: red;
+  background-color: var(--primegreen);
   color: white;
   margin: 5px;
   padding: 5px;
   width: 200px;
   text-align: center;
   display: relative;
+  min-width: 200px;
+  border-radius: .25rem;
 }
 
 .reset-button {
-  background-color: #3498db;
+  background-color: var(--primeblue);
   color: white;
   width: 150px;
   height: 50px;
@@ -216,7 +221,7 @@ export default {
   padding-top: 200px;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: center;
 }
 
 svg {
