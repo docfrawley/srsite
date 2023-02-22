@@ -1,10 +1,10 @@
 <template>
-  <div class="fill-up"><span class="top-title">MY TOP TOOLS</span>
+  <div class="fill-up"><h1 class="top-title">MY TOP TOOLS</h1>
   <div v-if="topArray.length==0">
     <p>You have yet to set your toolbox</p>
   </div>
   <div v-else>
-    <div v-for="item in topArray" :key="item.tool + item.dimension">
+    <div v-for="item in topArray" :key="item.tool + item.dimension" class="top-tools">
       <div class="tool-element">{{ item.tool }}<svg
               @click="openModel(item.dimension, item.tool)"
               xmlns="http://www.w3.org/2000/svg"
@@ -70,8 +70,10 @@ export default {
 
 <style>
 .top-title{
-  font-size: 18px;
   font-weight: bold;
+  font-size: 18px;
+  margin: auto;
+  text-align: center;
 }
 
 .tool-element {
@@ -82,6 +84,12 @@ export default {
   width: 200px;
   text-align: center;
   border-radius: .25rem;
+}
+
+.top-tools{
+  display: flex;
+  flex-direction: colum;
+  justify-content: center;
 }
 
 </style>

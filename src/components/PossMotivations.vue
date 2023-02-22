@@ -1,7 +1,7 @@
 <template>
   <div class="fill-up">
-    <div>MY POSITIVE MOTIVATIONS</div>
-    <div>{{ helpMov }}</div>
+    <div class="top-title">MY POSITIVE MOTIVATIONS</div>
+    <div class="split-lines">{{ helpMov }}</div>
   </div>
 </template>
 
@@ -36,5 +36,9 @@ export default {
 </script>
 
 <style>
- 
+
+.split-lines{
+  white-space: pre-line;
+  padding:10px;
+}
 </style>

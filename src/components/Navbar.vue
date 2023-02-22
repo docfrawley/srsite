@@ -381,10 +381,10 @@ nav .links button {
   position: fixed;
   right: 0px;
   width: 160px;
-  margin-top: 45px;
+  margin-top: 40px;
   transform: translateX(250px);
   transition: transform 250ms ease-in-out;
-  background: grey;
+  background: var(--primeblue);
 }
 .sidebarMenuInner {
   margin: 0;
@@ -403,10 +403,10 @@ nav .links button {
 .sidebarMenuInner li span {
   display: block;
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.75);
 }
 .sidebarMenuInner li a {
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.75);
   text-transform: uppercase;
   font-weight: bold;
   cursor: pointer;
@@ -415,7 +415,9 @@ nav .links button {
 
 .sidebarMenuInner li a:hover,
 .sidebarMenuInner li span:hover {
-  color: #fff;
+  color: white;
+  font-weight: bold;
+  
 }
 input[type="checkbox"]:checked ~ #sidebarMenu {
   transform: translateX(0);

@@ -9,8 +9,10 @@
   --primeblue: #001e41;
   --primegreen: #aaea82;
   --lightblue: #a3ceff;
-  --primepurple: #c182e9;
+  --primepurple: #a782e9 ;
 }
+
+/* #aaea82 #c182e9  */
 
 /* base styles  */
 * {
@@ -28,15 +30,14 @@ a {
 
 /* buttons */
 button, .btn { 
-  background: var(--secondary);
+  background: var(--lightblue);
   border-radius: .25rem;
   border: 0;
-  padding: 8px 12px;
+  padding: 6px;
   font-weight: 600;
   cursor: pointer;
   display: inline-block;
-  font-size: 14px;
-  margin-left: 16px;
+  font-size: 10px;
   pointer-events: auto;
 }
 
@@ -165,6 +166,13 @@ button:disabled {
 
   .grid-col-span-1{
     grid-column: span 1;
+  }
+
+  .top-title{
+    font-weight: bold;
+    font-size: 18px;
+    margin: auto;
+    text-align: center;
   }
 
   @media screen and (max-width: 600px){

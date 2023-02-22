@@ -2,18 +2,22 @@
   <div class="page-container">
     <div class="grid-container">
         <div class="fill-up">
-          <div>
+          <div class="top-title title-cap">
             <h1>{{ currentCourse.title }}</h1>
           </div>
-          <div>
+          <div class="top-title">
             <h4>with {{ currentCourse.instructor }}</h4>
           </div>
+          <div class="total-percentage">You have completed {{ totalPercentage }}% of the course</div>
+              <div class="loading-bar">
+                <div class="percentage" :style="{ 'width': totalPercentage + '%'}"></div>
+              </div>
         </div>
         <PossMotivations />
         <TopTools />
 
     <div v-if="currentVideo" class="grid-col-span-3">
-        <SingleModel :key="componentKey + 'courseview' + currentVideo.id" />
+        <Suspense><SingleModel :key="componentKey + 'courseview' + currentVideo.id" /></Suspense>
     </div>
     </div>
     
@@ -30,6 +34,7 @@ import { ref, reactive, watchEffect } from "vue";
 import SingleModel from "@/components/SingleModel.vue";
 import { coursesStore } from "@/store/coursesStore";
 import { userStore } from "@/store/userStore";
+
 
 export default {
   name: "Courseview",
@@ -51,6 +56,8 @@ export default {
     const currentModule = ref(cstore.currentModule);
     const currentVideo = ref(cstore.currentVideo);
     const items = ref(cstore.currentCourse.techniques);
+    const totalPercentage = ref(ustore.TotalPercentage)
+
     console.log("current video: ", currentVideo.value)
 
     
@@ -78,12 +85,19 @@ export default {
       componentKey,
       currentModule,
       currentVideo,
+      totalPercentage
     };
   },
 };
 </script>
 
 <style scoped>
+
+.title-cap{
+  text-transform: capitalize;
+  font-size: 20px;
+  font-weight: bold;
+}
 
 .current-course {
   background-color: white;
@@ -103,6 +117,12 @@ export default {
     margin-inline: auto;
     grid-template-columns: repeat(3, 1fr);
 
+}
+
+.total-percentage{
+  margin-top: 25px;
+  font-size: 15px;
+  line-height: 40px;
 }
 
 

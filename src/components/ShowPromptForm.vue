@@ -57,24 +57,25 @@ export default {
 .form-prompt {
   position:relative;
   margin: 0 auto;
-  padding: 15px;
+  padding: 10px;
   border-radius: .25rem;
   box-shadow: 1px 2px 3px rgba(50,50,50,0.05);
-  /* border: solid 2px var(--primegreen); */
-  background-color: var(--lightblue);
+  border: solid 1px var(--primeblue);
   color: white;
   margin-bottom: 10px;
+  font-size: 14px;
 }
 input, textarea {
   border: 0;
-  border: 1px solid var(--primeblue);
-  padding: 10px;
+  border: 1px solid var(--lightblue);
+  padding: 5px;
   outline: none;
   display: block;
   width: 100%;
   box-sizing: border-box;
-  margin: 20px auto;
+  margin: 10px auto;
   border-radius: .25rem;
+  font-size: 12px;
 }
 
 .last-updated{

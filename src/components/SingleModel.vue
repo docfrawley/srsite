@@ -64,7 +64,8 @@
     </div>
     <div class="fill-up">
       <div class="flex flex-col questions-class">
-        <div>Video Prompts</div>
+        <div class="v-prompts">VIDEO PROMPTS</div>
+        <div>hey there Jason</div>
       <div v-for="question in currentVideo.questions" :key="'A' + question.id">
         <ShowPromptForm
           :prompt="question"
@@ -118,7 +119,7 @@
 
 <script>
 import ShowVidDetails from "@/components/ShowVidDetails.vue";
-import { ref, onBeforeMount } from "vue";
+import { ref, onMounted  } from "vue";
 import ShowPromptForm from "./ShowPromptForm.vue";
 import IndTechRow from "@/components/IndTechRow.vue";
 import { vueVimeoPlayer } from "vue-vimeo-player";
@@ -127,7 +128,7 @@ import { userStore } from "@/store/userStore";
 
 export default {
   components: { ShowVidDetails, vueVimeoPlayer, ShowPromptForm, IndTechRow },
-  setup() {
+    setup() {
     const cstore = coursesStore();
     const ustore = userStore();
     // const theVideo =  getLesson(props.specifics.course, props.specifics.module, props.specifics.order)
@@ -136,7 +137,7 @@ export default {
     const percentVid = ref(0);
     const smKey = ref(0);
     const currentModule = ref(cstore.currentModule);
-    const currentVideo = ref(cstore.currentVideo);
+    const currentVideo =  ref(cstore.currentVideo);
     const showForm = ref(false);
     const userinput = ref(null);
     const answer = ref();
@@ -146,8 +147,9 @@ export default {
     const numbModules = ref(cstore.courseAll.length);
     const fullCourse = ref(cstore.courseAll);
 
-    onBeforeMount(()=>{
-      console.log("questions: ", ustore.getPromptAnswers)
+    onMounted(()=>{
+      console.log("questions: ", cstore.getfullCourse)
+
     })
 
 
@@ -293,7 +295,6 @@ export default {
 .Active {
   border-color: var(--primegreen);
   border-width: 5px;
-  background-color: var(--primegreen);
 }
 
 .module-view2{
@@ -457,6 +458,13 @@ export default {
 .vid-mod-module{
   display: flex;
   justify-content: space-between;
+}
+
+.v-prompts{
+  text-align: center;
+  padding-bottom:10px;
+  font-weight: bold;
+  font-size: 18px;
 }
 
 </style>

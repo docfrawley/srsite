@@ -70,6 +70,7 @@ export const coursesStore  = defineStore("courses", {
             
             const unsub = onSnapshot(colRef, snap => {
                 snap.docs.forEach(doc => {
+                    console.log('1')
                     results.push({ ...doc.data(), id: doc.id })
                 })
                 results.sort((a, b) => (a.modnumb > b.modnumb) ? 1 : -1)
