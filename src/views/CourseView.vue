@@ -17,7 +17,7 @@
         <TopTools />
 
     <div v-if="currentVideo" class="grid-col-span-3">
-        <Suspense><SingleModel :key="componentKey + 'courseview' + currentVideo.id" /></Suspense>
+        <SingleModel/>
     </div>
     </div>
     
@@ -30,7 +30,7 @@ import ShowVidDetails from "@/components/ShowVidDetails.vue";
 import PossMotivations from "@/components/PossMotivations.vue";
 import TopTools from "@/components/TopTools.vue";
 
-import { ref, reactive, watchEffect } from "vue";
+import { ref } from "vue";
 import SingleModel from "@/components/SingleModel.vue";
 import { coursesStore } from "@/store/coursesStore";
 import { userStore } from "@/store/userStore";
@@ -48,7 +48,6 @@ export default {
     //     order: null
     // })
 
-    const componentKey = ref(0);
     const cstore = coursesStore();
     const ustore = userStore();
    
@@ -58,7 +57,6 @@ export default {
     const items = ref(cstore.currentCourse.techniques);
     const totalPercentage = ref(ustore.TotalPercentage)
 
-    console.log("current video: ", currentVideo.value)
 
     
 
@@ -75,14 +73,12 @@ export default {
       currentVideo.value = currentModule.value.videos[0];
       cstore.setCurrentVideo(currentVideo.value);
       cstore.setCurrentModule(currentModule.value);
-      componentKey.value++;
     };
 
     return {
       currentCourse,
       showvidInfo,
       moveModule,
-      componentKey,
       currentModule,
       currentVideo,
       totalPercentage

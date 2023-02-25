@@ -270,7 +270,7 @@
 import useLogout from "../composables/useLogout";
 import { useRouter } from "vue-router";
 import getUser from "@/composables/getUser";
-import { ref, watch, watchEffect, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import { userStore } from "@/store/userStore";
 import { coursesStore } from "@/store/coursesStore";
 import ModalMenu from "./ModalMenu.vue";

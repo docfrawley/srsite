@@ -45,7 +45,7 @@ export default {
 
         const setVideo = () =>{
           cstore.setCurrentVideo(props.video)
-          cstore.setCurrentModule(props.theMod)
+          // cstore.setCurrentModule(props.theMod)
           // context.emit('logInfo', {'vidinfo':props.video})
           
         }

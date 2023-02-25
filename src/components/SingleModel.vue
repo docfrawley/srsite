@@ -65,13 +65,11 @@
     <div class="fill-up">
       <div class="flex flex-col questions-class">
         <div class="v-prompts">VIDEO PROMPTS</div>
-        <div>hey there Jason</div>
       <div v-for="question in currentVideo.questions" :key="'A' + question.id">
         <ShowPromptForm
           :prompt="question"
           :class="{ Active: question.active }"
           @answerAdded="wasItAdded"
-          :key="'Y' + answerKey + question.id"
         />
 
       </div>
@@ -86,13 +84,12 @@
     
     <div class="fill-up vid-mod-module grid-col-span-3">
       <div class="module-view2">
-        <div v-for="video in currentModule.videos" :key="'thisvideo' + video.id">
+        <div v-for="video in currentModule.videos" :key="'thisvideo' + video.description">
           <div @click="newVideo(video)">
             <ShowVidDetails
               :theMod="currentModule"
               :video="video"
               :percent="percentVid"
-              :key="'hereitis' + smKey + 'singmod' +video.id"
             />
           </div>
         </div>
@@ -119,7 +116,7 @@
 
 <script>
 import ShowVidDetails from "@/components/ShowVidDetails.vue";
-import { ref, onMounted  } from "vue";
+import { ref  } from "vue";
 import ShowPromptForm from "./ShowPromptForm.vue";
 import IndTechRow from "@/components/IndTechRow.vue";
 import { vueVimeoPlayer } from "vue-vimeo-player";
@@ -135,22 +132,17 @@ export default {
     // const { error, documents: videos } = getOrderDocs(props.specifics.course, 'module', props.specifics.module)
     const ElementNum = ref(0);
     const percentVid = ref(0);
-    const smKey = ref(0);
     const currentModule = ref(cstore.currentModule);
     const currentVideo =  ref(cstore.currentVideo);
     const showForm = ref(false);
     const userinput = ref(null);
     const answer = ref();
-    const answerKey = ref(0);
     const player = ref();
     const showPause = ref(false);
     const numbModules = ref(cstore.courseAll.length);
     const fullCourse = ref(cstore.courseAll);
 
-    onMounted(()=>{
-      console.log("questions: ", cstore.getfullCourse)
-
-    })
+    
 
 
 
@@ -173,7 +165,6 @@ export default {
       percentVid.value = currentVideo.value.percentages
         ? currentVideo.value.percentages
         : 0;
-      smKey.value++;
     };
 
     const CheckProgress = (e, d, p) => {
@@ -186,7 +177,6 @@ export default {
         percentVid.value = e.percent;
       }
 
-      smKey.value++;
     };
 
     const NowEnded = () => {
@@ -195,11 +185,11 @@ export default {
         ElementNum.value = 0;
       }
       currentVideo.value = currentModule.value.videos[ElementNum.value];
-      smKey.value++;
     };
 
     const WhenPaused = () => {
       cstore.setPercentage(percentVid.value);
+     
     };
 
     const handleSubmit = () => {
@@ -242,7 +232,7 @@ export default {
     };
 
     const wasItAdded = (addedYes) => {
-      answerKey.value++;
+      console.log('added')    
     };
 
     const moveModule = (theMod) => {
@@ -250,9 +240,10 @@ export default {
 
       currentModule.value = cstore.courseAll[whichElement];
       currentVideo.value = currentModule.value.videos[0];
+      cstore.unsetCurrentVideo()
+      cstore.unsetCurrentModule()
       cstore.setCurrentVideo(currentVideo.value);
       cstore.setCurrentModule(currentModule.value);
-      smKey.value++;
     };
 
     const moveVideo = (order) => {
@@ -260,18 +251,15 @@ export default {
 
       currentVideo.value = currentModule.value.videos[whichElement];
       cstore.setCurrentVideo(currentVideo.value);
-      smKey.value++;
     };
 
     return {
       startPlaying,
       showPause,
       player,
-      answerKey,
       wasItAdded,
       currentVideo,
       currentModule,
-      smKey,
       percentVid,
       newVideo,
       CheckProgress,

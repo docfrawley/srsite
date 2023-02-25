@@ -1,7 +1,7 @@
 <template>
 <div class="t-container">
         <div v-for="item in items" :key="item.id" >
-            <div v-if="item.dimension == whichDim" class="drag-row" :key="componentkey">
+            <div v-if="item.dimension == whichDim" class="drag-row">
                 <div class="drag-el">{{ item.dimension }}</div>
                 <div v-for="strategy in item.techs" :key="item.dimension + strategy" draggable="true"
                     @dragstart="startDragRow($event, item, strategy)" @drop="onDropRow($event, item, strategy)"
@@ -27,7 +27,6 @@ export default {
 
 
     setup() {
-        const componentKey = ref(0)
         const cstore = coursesStore()
         const ustore = userStore()
         const items = ref(cstore.currentCourse.techniques)
@@ -36,7 +35,6 @@ export default {
         const whichDim = ref('')
 
         watchEffect(() => {
-            componentKey.value++
             cvid.value = cstore.currentVideo
             switch (cvid.value.order){
             case 2:
@@ -99,7 +97,7 @@ export default {
         }
 
 
-        return { items, startDragRow, onDropRow, handleTechs, whichDim, cvid, componentKey}
+        return { items, startDragRow, onDropRow, handleTechs, whichDim, cvid}
 
     }
 

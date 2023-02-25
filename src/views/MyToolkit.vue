@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import { ref, watchEffect } from "@vue/reactivity";
+import { ref } from "@vue/reactivity";
 import { userStore } from "@/store/userStore";
 import { coursesStore } from "@/store/coursesStore";
 import TechModal from "@/components/TechModal.vue";
@@ -254,7 +254,7 @@ export default {
 svg {
   display: inline;
   float: right;
-  fill: white;
+  fill: var(--primeblue);
   cursor: pointer;
 }
 

@@ -36,7 +36,7 @@
 import { useRouter } from 'vue-router'
 import { userStore } from '@/store/userStore'
 import { coursesStore } from '@/store/coursesStore'
-import { ref, watchEffect } from 'vue'
+import { ref } from 'vue'
 
 export default {
   name: 'HomeView',
@@ -48,10 +48,7 @@ export default {
     const allCourses = ref(cstore.allCourses)
     const totalPercentage = ref(ustore.TotalPercentage)
     
-    watchEffect(() =>{
-      allCourses.value = cstore.allCourses
-      totalPercentage.value = ustore.TotalPercentage
-    })
+ 
     
     const sendview = async (course) => {
       if (cstore.currentCourse != course){

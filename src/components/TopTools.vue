@@ -43,7 +43,7 @@ export default {
     const modalActive = ref(false);
 
 
-    if (UserTechs.value){
+    if (UserTechs.value.length>0){
       topArray.value.push({dimension:UserTechs.value[0].dimension, tool: UserTechs.value[0].techs[0]})
       topArray.value.push({dimension:UserTechs.value[0].dimension, tool: UserTechs.value[0].techs[1]})
       topArray.value.push({dimension:UserTechs.value[1].dimension, tool: UserTechs.value[1].techs[0]})
@@ -77,8 +77,8 @@ export default {
 }
 
 .tool-element {
-  background-color: var(--primepurple);
-  color: white;
+  background-color: var(--lightblue);
+  color: var(--primeblue);
   margin: 5px;
   padding: 5px;
   width: 200px;

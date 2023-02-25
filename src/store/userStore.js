@@ -1,5 +1,4 @@
 import {defineStore} from "pinia"
-import { watchEffect } from 'vue'
 
 // firebase imports
 import { auth, timestamp } from '../firebase/config'
@@ -43,7 +42,6 @@ export const userStore  = defineStore("user", {
             const positiveMov =  this.promptAnswers.find((mov)=>{
                 mov.promptId=="zEfmgpumIi2gbGCG8eJt"
                })
-               console.log('what: ', positiveMov)
             return positiveMov
         }
     },
@@ -71,7 +69,6 @@ export const userStore  = defineStore("user", {
                         }
                         if (docSnap.data().answers){
                             this.promptAnswers = docSnap.data().answers
-                            console.log("I am here: ", this.promptAnswers)
                         }
                         if (docSnap.data().theTechs){
                             this.UserTechniques = docSnap.data().theTechs[0].currentAnswers
@@ -117,10 +114,6 @@ export const userStore  = defineStore("user", {
                 })
             this.coursePercentages = results
             })
-
-            watchEffect((onInvalidate) => {
-                onInvalidate(() => unsub());
-            });
         },
         // getCourseVidsComp(course){
         //     let searchObject= []
@@ -130,7 +123,7 @@ export const userStore  = defineStore("user", {
         //     return searchObject
         // },
         async updateCompVids(p, secs, course){
-            const compRef = await doc(db, 'users', this.userID)
+            const compRef = doc(db, 'users', this.userID)
             const compSnap = await getDoc(compRef)
             const totalSecs = ref(0)
             const totalPer = ref(0)
