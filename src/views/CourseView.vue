@@ -1,7 +1,7 @@
 <template>
   <div class="page-container">
     <div class="grid-container">
-        <div class="fill-up">
+        <div class="fill-up course-stuff">
           <div class="top-title title-cap">
             <h1>{{ currentCourse.title }}</h1>
           </div>
@@ -111,8 +111,21 @@ export default {
     padding-block: 2rem;
     width: min(95%, 70rem);
     margin-inline: auto;
-    grid-template-columns: repeat(3, 1fr);
+    
 
+}
+
+.course-stuff{
+  display:none;
+}
+@media (min-width: 50em){
+  .grid-container{
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .course-stuff{
+  display:block;
+}
+  
 }
 
 .total-percentage{

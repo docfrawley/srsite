@@ -155,18 +155,20 @@ button:disabled {
   }
 
   /* grids */
-
-  .grid-col-span-2{
-    grid-column: span 2;
+  @media (min-width: 50em){
+    .grid-col-span-2{
+      grid-column: span 2;
+    }
+  
+    .grid-col-span-3{
+      grid-column: span 3;
+    }
+  
+    .grid-col-span-1{
+      grid-column: span 1;
+    }
   }
-
-  .grid-col-span-3{
-    grid-column: span 3;
-  }
-
-  .grid-col-span-1{
-    grid-column: span 1;
-  }
+  
 
   .top-title{
     font-weight: bold;

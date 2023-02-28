@@ -28,6 +28,7 @@
             >
               &#x2190; Previous Module
             </div>
+            <div class="np-module" v-else>&#x2190; Previous Module</div>
 
             <div
               class="np-module"
@@ -36,6 +37,7 @@
             >
               Next Module &#x2192; 
             </div>
+            <div class="np-module" v-else>Next Module &#x2192;</div>
           </div>
         </div>
         <div class="mod-row">
@@ -48,6 +50,7 @@
             >
               &#x2190; Previous Video
             </div>
+            <div class="np-module" v-else>&#x2190; Previous Video</div>
 
             <div
               class="np-module"
@@ -56,6 +59,7 @@
             >
               Next Video &#x2192; 
             </div>
+            <div class="np-module" v-else>Next Video &#x2192;</div>
           </div>
         </div>
         
@@ -311,7 +315,11 @@ export default {
     gap: 1rem;
     width: min(100%, 70rem);
     margin-inline: auto;
+}
+@media (min-width: 50em){
+  .smcontainer {
     grid-template-columns: 1fr 1fr 1fr;
+}
 }
 
 
