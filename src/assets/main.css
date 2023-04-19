@@ -125,7 +125,7 @@ button:disabled {
 
 .loading-bar {
   position: relative;
-  width: 100%;
+  width: 85%;
   height: 12px;
   border-radius: 18px;
   overflow: hidden;

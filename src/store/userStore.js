@@ -64,8 +64,11 @@ export const userStore  = defineStore("user", {
                         cstore.setCourses();
                         await cstore.setCourseAll("procrastination");
                         if (docSnap.data().completedVids) {
+                            const courseTotalSecs = cstore.getCourseSeconds
+
                          this.courseSecsTotal = docSnap.data().completedVids[0].totalSecs
-                         this.courseTotalPercentage = docSnap.data().completedVids[0].totalPercentage
+                         this.courseTotalPercentage = this.courseSecsTotal/courseTotalSecs*100
+                         console.log("course percentage: ",this.courseSecsTotal, courseTotalSecs, this.courseTotalPercentage)
                         }
                         if (docSnap.data().answers){
                             this.promptAnswers = docSnap.data().answers

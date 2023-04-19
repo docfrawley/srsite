@@ -24,8 +24,7 @@
             <div
               class="np-module"
               v-if="currentModule.modnumb > 1"
-              @click="moveModule(currentModule.modnumb - 1)"
-            >
+              @click="moveModule(currentModule.modnumb - 1)">
               &#x2190; Previous Module
             </div>
             <div class="np-module" v-else>&#x2190; Previous Module</div>
@@ -88,6 +87,7 @@
     
     <div class="fill-up vid-mod-module grid-col-span-3">
       <div class="module-view2">
+      <p class="mod-vid-head">Module #{{ currentModule.modnumb }} Videos</p>
         <div v-for="video in currentModule.videos" :key="'thisvideo' + video.description">
           <div @click="newVideo(video)">
             <ShowVidDetails
@@ -99,6 +99,7 @@
         </div>
       </div>
       <div class="module-list grid-col-span-3">
+      <div>CHANGE MODULES</div>
         <div v-for="mod in fullCourse" :key="'A' + mod.id">
           <span
             v-if="currentModule.modnumb != mod.modnumb"
@@ -293,8 +294,9 @@ export default {
   background-color: #fff;
   padding: 20px;
   margin-bottom: 10px;
-  border-radius: 8px;
-  width:60%;
+  border-radius: .25rem;
+  width:70%;
+  border: solid 1px var(--primegreen);
 }
 
 .questions-class {
@@ -413,10 +415,10 @@ export default {
   align-content: center;
   padding: 10px;
   border-radius: .25rem;
-  border: 1px solid var(--lines);
+  border: 1px solid var(--primegreen);
   text-align: center;
-  min-height: 400px;
-  min-width:220px;
+  min-width:28%;
+  max-height:400px;
 }
 
 
@@ -461,6 +463,11 @@ export default {
   padding-bottom:10px;
   font-weight: bold;
   font-size: 18px;
+}
+
+.mod-vid-head{
+  font-size: 22px;
+  font-weight: bold;
 }
 
 </style>

@@ -96,6 +96,7 @@ export const coursesStore  = defineStore("courses", {
             this.currentVideo = this.currentModule.videos[0]
             this.addQuestions()
             this.currentCourseTotal = totalVidsSecs.value
+            console.log("total seconds: ", this.currentCourseTotal)
         },
         async addQuestions(){
             let qresults = []

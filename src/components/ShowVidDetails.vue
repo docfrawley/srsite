@@ -1,20 +1,23 @@
 <template>
+  <div class="vid-whole">
   <div class="show-vid-details" @click="setVideo">
-
-
-
-    <p>#{{ video.order }}: {{ video.title }}</p>
+    <div class="flex">
+      <div v-if="isComplete" class="complete-circle">&#10003;</div>
+      <div v-else class="circle"></div>
+      <div>
+        <p>#{{ video.order }}: {{ video.title }}</p>
+      </div>
+    
+    </div>
     <p>{{vidLength}}</p>
 
 
     <!-- <div class="video-responsive" v-html="video.iframe"></div> -->
   </div>
-    <div class="loading-bar">
-      <div class="percentage" :style="{'width' : percentage + '%'}"></div>
+    <div class="loading-bar-vid">
+      <div class="percentage-vid" :style="{'width' : percentage + '%'}"></div>
     </div>
-    <div v-if="isComplete">
-      <p>&#10003; COMPLETE!</p>
-    </div>
+  </div>
 </template>
 
 <script>
@@ -26,8 +29,14 @@ export default {
     setup(props){
       const cstore=coursesStore()
       const video = ref(props.video)
-      let minutes = Math.floor(parseInt(video.value.length)/60)
+      let minutes = Math.floor(parseInt(video.value.length)/60).toString()
       let seconds = parseInt(video.value.length) - minutes*60
+
+      if (seconds<10){
+        seconds = "0" + seconds.toString()
+      } else {
+        seconds = seconds.toString()
+      }
       const vidLength = ref(minutes +':'+seconds)
       const percentage = ref(0)
       const isComplete = ref(false)
@@ -62,15 +71,80 @@ export default {
 .show-vid-details {
   padding: 10px;
   display: flex;
-  justify-content: space-between;
-  width: 500px;
+  justify-content:space-between;
+  width: 90%;
   background-color: #fff;
   cursor: pointer;
   text-decoration: none;
-}
+  }
 
 .show-vid-details p:hover {
   text-decoration: none;
 }
+
+.circle {
+    background-color:#fff;
+    border:1px solid var(--primeblue);    
+    height:25px;
+    border-radius:50%;
+    -moz-border-radius:50%;
+    -webkit-border-radius:50%;
+    width:25px;
+    margin-right:10px;
+    display: inline-block;
+}
+
+.complete-circle {
+  display: inline-block;
+  background-color:var(--primegreen);
+    border:1px solid var(--primeblue);    
+    height:25px;
+    border-radius:50%;
+    -moz-border-radius:50%;
+    -webkit-border-radius:50%;
+    width:25px;
+    text-align: center;
+    margin-right:10px;
+}
+
+.vid-whole{
+  padding: 5px 10px 15px 10px;
+  border: solid 1px var(--primeblue);
+  border-radius: .25rem;
+}
+
+.loading-bar-vid {
+  position: relative;
+  margin-left:60px;
+  width: 80%;
+  height: 12px;
+  border-radius: 18px;
+  overflow: hidden;
+  background-color: #ececec;
+  border-bottom: 1px solid #ddd;
+  box-shadow: inset 0 1px 2px rgba( #000, .4),
+    0 -1px 1px #fff, 0 1px 0 #fff;
+}
+
+  .percentage-vid {
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    right: 1px;
+    display: block;
+    height: 100%;
+    width: 100%;
+    border-radius: 18px;
+    background-color: #a5df41;
+    background: #001e41;
+      /* Old browsers */
+      background: -moz-linear-gradient( #a3ceff, #001e41);
+      /* FF3.6-15 */
+      background: -webkit-linear-gradient( #a3ceff, #001e41);
+      /* Chrome10-25,Safari5.1-6 */
+      background: linear-gradient(to right, #a3ceff 10%, #001e41 90%);
+  }
+
+
 
 </style>
