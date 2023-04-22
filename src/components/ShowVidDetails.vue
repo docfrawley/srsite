@@ -9,7 +9,7 @@
       </div>
     
     </div>
-    <p>{{vidLength}}</p>
+    <p>{{whatShow}}</p>
 
 
     <!-- <div class="video-responsive" v-html="video.iframe"></div> -->
@@ -23,14 +23,19 @@
 <script>
 import { ref } from '@vue/reactivity'
 import { coursesStore } from '@/store/coursesStore'
+import { watchEffect } from 'vue'
 
 export default {
     props: ['theMod', 'video', 'percent'],
     setup(props){
       const cstore=coursesStore()
+      const currentVideo = ref(cstore.getcurrentVideo)
+      console.log("current video: ", currentVideo.value)
       const video = ref(props.video)
       let minutes = Math.floor(parseInt(video.value.length)/60).toString()
       let seconds = parseInt(video.value.length) - minutes*60
+
+
 
       if (seconds<10){
         seconds = "0" + seconds.toString()
@@ -38,18 +43,33 @@ export default {
         seconds = seconds.toString()
       }
       const vidLength = ref(minutes +':'+seconds)
+      const whatShow = ref(vidLength.value)
       const percentage = ref(0)
       const isComplete = ref(false)
       if (video.value.percentages){
         percentage.value = video.value.percentages*100
       }
-      if (video.value.order == cstore.currentVideo.order){
-        vidLength.value = "Now Playing"
-        percentage.value = props.percent*100
-      }
+      
       if (percentage.value >= 100){
         isComplete.value = true
       }
+
+      
+
+      watchEffect(()=>{
+        if (video.value.order == cstore.currentVideo.order){
+        whatShow.value = "Now Playing"
+        if (props.percent*100>percentage.value){
+          percentage.value = props.percent*100
+        }
+        if (percentage.value >= 100){
+        isComplete.value = true
+      } 
+      } else {
+        whatShow.value = vidLength.value
+      }
+        
+      })
       
 
         const setVideo = () =>{
@@ -58,7 +78,7 @@ export default {
           // context.emit('logInfo', {'vidinfo':props.video})
           
         }
-      return { video, setVideo, vidLength, percentage, isComplete }
+      return { video, setVideo, whatShow, percentage, isComplete }
     }
 
 }

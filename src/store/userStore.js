@@ -26,7 +26,7 @@ export const userStore  = defineStore("user", {
         }
     },
     getters: {
-        TotalPercentage(){
+        getTotalPercentage(){
             return this.courseTotalPercentage
         },
         getUserId(){

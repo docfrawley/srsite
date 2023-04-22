@@ -32,6 +32,9 @@ export const coursesStore  = defineStore("courses", {
         },
         getDescription(){
             return this.currentDescription
+        },
+        getCurrentVideo(){
+            return this.currentVideo
         }
     },
     actions: {

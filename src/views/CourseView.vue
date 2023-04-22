@@ -55,8 +55,8 @@ export default {
     const currentModule = ref(cstore.currentModule);
     const currentVideo = ref(cstore.currentVideo);
     const items = ref(cstore.currentCourse.techniques);
-    const totalPercentage = ref(ustore.TotalPercentage.toFixed(2))
-
+    const totalPercentage = ref(ustore.getTotalPercentage)
+totalPercentage.value = totalPercentage.value.toFixed(2)
 
     
 

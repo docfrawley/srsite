@@ -56,9 +56,6 @@ export default {
                 whichDim.value = ''
         }
         })
-
-        console.log('here now: ', cvid.value.order)
-
         
 
 

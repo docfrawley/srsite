@@ -167,9 +167,10 @@ export default {
       currentVideo.value = specs;
       cstore.unsetCurrentVideo();
       cstore.setCurrentVideo(specs);
-      percentVid.value = currentVideo.value.percentages
-        ? currentVideo.value.percentages
-        : 0;
+      percentVid.value = 0
+      // percentVid.value = currentVideo.value.percentages
+      //   ? currentVideo.value.percentages
+      //   : 0;
     };
 
     const CheckProgress = (e, d, p) => {
@@ -181,7 +182,6 @@ export default {
       } else {
         percentVid.value = e.percent;
       }
-
     };
 
     const NowEnded = () => {
@@ -242,13 +242,14 @@ export default {
 
     const moveModule = (theMod) => {
       let whichElement = theMod - 1;
-
+      percentVid.value = 0
       currentModule.value = cstore.courseAll[whichElement];
       currentVideo.value = currentModule.value.videos[0];
       cstore.unsetCurrentVideo()
       cstore.unsetCurrentModule()
-      cstore.setCurrentVideo(currentVideo.value);
-      cstore.setCurrentModule(currentModule.value);
+      cstore.setCurrentVideo(currentVideo.value)
+      cstore.setCurrentModule(currentModule.value)
+      
     };
 
     const moveVideo = (order) => {
@@ -256,6 +257,7 @@ export default {
 
       currentVideo.value = currentModule.value.videos[whichElement];
       cstore.setCurrentVideo(currentVideo.value);
+      percentVid.value = 0
     };
 
     return {
