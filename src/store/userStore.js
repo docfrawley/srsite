@@ -68,7 +68,6 @@ export const userStore  = defineStore("user", {
 
                          this.courseSecsTotal = docSnap.data().completedVids[0].totalSecs
                          this.courseTotalPercentage = this.courseSecsTotal/courseTotalSecs*100
-                         console.log("course percentage: ",this.courseSecsTotal, courseTotalSecs, this.courseTotalPercentage)
                         }
                         if (docSnap.data().answers){
                             this.promptAnswers = docSnap.data().answers

@@ -30,7 +30,6 @@ export default {
     setup(props){
       const cstore=coursesStore()
       const currentVideo = ref(cstore.getcurrentVideo)
-      console.log("current video: ", currentVideo.value)
       const video = ref(props.video)
       let minutes = Math.floor(parseInt(video.value.length)/60).toString()
       let seconds = parseInt(video.value.length) - minutes*60
@@ -59,6 +58,7 @@ export default {
       watchEffect(()=>{
         if (video.value.order == cstore.currentVideo.order){
         whatShow.value = "Now Playing"
+        percentage.value=0
         if (props.percent*100>percentage.value){
           percentage.value = props.percent*100
         }
@@ -76,7 +76,6 @@ export default {
           cstore.setCurrentVideo(props.video)
           // cstore.setCurrentModule(props.theMod)
           // context.emit('logInfo', {'vidinfo':props.video})
-          
         }
       return { video, setVideo, whatShow, percentage, isComplete }
     }

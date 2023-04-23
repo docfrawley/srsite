@@ -99,7 +99,6 @@ export const coursesStore  = defineStore("courses", {
             this.currentVideo = this.currentModule.videos[0]
             this.addQuestions()
             this.currentCourseTotal = totalVidsSecs.value
-            console.log("total seconds: ", this.currentCourseTotal)
         },
         async addQuestions(){
             let qresults = []
@@ -175,6 +174,7 @@ export const coursesStore  = defineStore("courses", {
                     }
                     await updateDoc(docRef, {percentages: arrayUnion({uid: userID.value, percentage: p})})
                 }
+                this.currentVideo.percentages=p
                 ustore.updateCompVids(p, docSnap.data().length, this.currentCourse.col_name)
             }
             

@@ -121,7 +121,7 @@
 
 <script>
 import ShowVidDetails from "@/components/ShowVidDetails.vue";
-import { ref  } from "vue";
+import { ref, watch  } from "vue";
 import ShowPromptForm from "./ShowPromptForm.vue";
 import IndTechRow from "@/components/IndTechRow.vue";
 import { vueVimeoPlayer } from "vue-vimeo-player";
@@ -147,7 +147,14 @@ export default {
     const numbModules = ref(cstore.courseAll.length);
     const fullCourse = ref(cstore.courseAll);
 
-    
+    watch(currentVideo, ()=>{
+          currentVideo.value = cstore.currentVideo
+          percentVid.value = 0
+          if (currentVideo.value.percentages) {
+      percentVid.value = currentVideo.value.percentages;
+    }
+          
+      })
 
 
 
