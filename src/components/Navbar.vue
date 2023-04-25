@@ -254,9 +254,9 @@
             </ul>
           </div>
         </div>
-        <div v-else>
-          <router-link class="btn" :to="{ name: 'Signup' }">Signup</router-link>
-          <router-link class="btn" :to="{ name: 'Login' }">Login</router-link>
+        <div v-else class="space-buttons">
+          <router-link class="log-button" :to="{ name: 'Signup' }">Signup</router-link>
+          <router-link class="log-button" :to="{ name: 'Login' }">Login</router-link>
         </div>
       </div>
     </nav>
@@ -374,6 +374,12 @@ nav .links {
 nav .links button {
   margin-left: 16px;
   font-size: 14px;
+}
+
+.space-buttons{
+  width:150px;
+  display: flex;
+  justify-content: space-around;
 }
 
 #sidebarMenu {

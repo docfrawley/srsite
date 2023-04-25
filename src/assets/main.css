@@ -41,7 +41,21 @@ button, .btn {
   pointer-events: auto;
 }
 
-button:hover, .btn:hover, .btn:active {
+
+
+.log-button { 
+  background: var(--lightblue);
+  border-radius: .25rem;
+  border: 0;
+  padding: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 15px;
+  pointer-events: auto;
+}
+
+.log-button:hover, button:hover, .btn:hover, .btn:active {
   background: var(--primeblue);
   color: white;
 }

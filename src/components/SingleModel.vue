@@ -18,9 +18,13 @@
         />
       </div>
       <div class="video-details">
-        <div class="mod-row">
-          <div class="mod-des"><u>Module #{{ currentModule.modnumb }}:</u> <i>{{ currentModule.title }}</i></div>
-          <div class="next-previous">
+      <div class="left-col-stuff">
+        <div class="mod-des"><u>Module #{{ currentModule.modnumb }}:</u> <i>{{ currentModule.title }}</i></div>
+        <div class="mod-des"><u>Video #{{ currentVideo.order }}:</u> <i>{{ currentVideo.title }}</i></div>
+        <div><u>Video Description:</u> <i>{{ currentVideo.description }}</i></div>
+      </div>
+      <div class="right-col-stuff">
+        <div class="next-previous">
             <div
               class="np-module"
               v-if="currentModule.modnumb > 1"
@@ -38,9 +42,7 @@
             </div>
             <div class="np-module" v-else>Next Module &#x2192;</div>
           </div>
-        </div>
-        <div class="mod-row">
-          <div class="mod-des"><u>Video #{{ currentVideo.order }}:</u> <i>{{ currentVideo.title }}</i></div>
+
           <div class="next-previous">
             <div
               class="np-module"
@@ -60,9 +62,8 @@
             </div>
             <div class="np-module" v-else>Next Video &#x2192;</div>
           </div>
-        </div>
+      </div>
         
-        <p><u>Video Description:</u> <i>{{ currentVideo.description }}</i></p>
       </div>
     </div>
     <div class="fill-up">
@@ -99,7 +100,7 @@
         </div>
       </div>
       <div class="module-list grid-col-span-3">
-      <div>CHANGE MODULES</div>
+      <div class="mod-vid-head">CHANGE MODULES</div>
         <div v-for="mod in fullCourse" :key="'A' + mod.id">
           <span
             v-if="currentModule.modnumb != mod.modnumb"
@@ -309,10 +310,6 @@ export default {
 }
 
 .questions-class {
-  /* font-size: 14px; */
-  /* max-width: 500px; */
-  /* margin: 20px; */
-  /* max-height: 500px; */
   overflow: hidden;
   overflow: -moz-scrollbars-vertical;
   overflow-y: scroll;
@@ -351,6 +348,9 @@ export default {
 }
 
 .video-details {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   padding: 20px;
   font-size: 12px;
   border: solid 1px var(--primegreen)
@@ -404,6 +404,18 @@ export default {
 
 .np-module:hover {
   color: var(--primegreen);
+}
+
+.left-col-stuff{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.right-col-stuff{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-ecenternd;
 }
 
 .mod-row{

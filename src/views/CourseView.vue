@@ -8,10 +8,13 @@
           <div class="top-title">
             <h4>with {{ currentCourse.instructor }}</h4>
           </div>
-          <div class="total-percentage">You have completed {{ totalPercentage }}% of the course</div>
-              <div class="loading-bar">
-                <div class="percentage" :style="{ 'width': totalPercentage + '%'}"></div>
-              </div>
+          <div class="show-completed">
+            <div class="total-percentage">You have completed {{ totalPercentage }}% of the course</div>
+            <div class="loading-bar">
+              <div class="percentage" :style="{ 'width': totalPercentage + '%'}"></div>
+            </div>
+          </div>
+          
         </div>
         <PossMotivations />
         <TopTools />
@@ -131,6 +134,12 @@ export default {
   margin-top: 25px;
   font-size: 15px;
   line-height: 40px;
+}
+
+.show-completed{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 
