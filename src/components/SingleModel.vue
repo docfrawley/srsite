@@ -29,18 +29,20 @@
               class="np-module"
               v-if="currentModule.modnumb > 1"
               @click="moveModule(currentModule.modnumb - 1)">
-              &#x2190; Previous Module
+              <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 96 960 960" width="20"><path d="M304 744V408h20v336h-20Zm352-24L428 576l228-144v288Z"/></svg>
             </div>
-            <div class="np-module" v-else>&#x2190; Previous Module</div>
-
+            <div class="np-module" v-else><svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 96 960 960" width="20"><path d="M304 744V408h20v336h-20Zm352-24L428 576l228-144v288Z"/></svg></div>
+            <div class="text-sm">MODULE</div>
             <div
               class="np-module"
               v-if="currentModule.modnumb < numbModules"
               @click="moveModule(currentModule.modnumb + 1)"
             >
-              Next Module &#x2192; 
+            <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 96 960 960" width="20"><path d="M636 744V408h20v336h-20Zm-332-24V432l228 144-228 144Z"/></svg>
+ 
             </div>
-            <div class="np-module" v-else>Next Module &#x2192;</div>
+            <div class="np-module" v-else><svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 96 960 960" width="20"><path d="M636 744V408h20v336h-20Zm-332-24V432l228 144-228 144Z"/></svg>
+</div>
           </div>
 
           <div class="next-previous">
@@ -49,18 +51,21 @@
               v-if="currentVideo.order > 1"
               @click="moveVideo(currentVideo.order - 1)"
             >
-              &#x2190; Previous Video
+              <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 96 960 960" width="20"><path d="M304 744V408h20v336h-20Zm352-24L428 576l228-144v288Z"/></svg>
             </div>
-            <div class="np-module" v-else>&#x2190; Previous Video</div>
-
+            <div class="np-module" v-else>
+              <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 96 960 960" width="20"><path d="M304 744V408h20v336h-20Zm352-24L428 576l228-144v288Z"/></svg>
+            </div>
+            <div class="text-sm">VIDEO</div>
             <div
               class="np-module"
               v-if="currentVideo.order < currentModule.videos.length"
               @click="moveVideo(currentVideo.order + 1)"
             >
-              Next Video &#x2192; 
+            <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 96 960 960" width="20"><path d="M636 744V408h20v336h-20Zm-332-24V432l228 144-228 144Z"/></svg>
             </div>
-            <div class="np-module" v-else>Next Video &#x2192;</div>
+            <div class="np-module" v-else>            <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 96 960 960" width="20"><path d="M636 744V408h20v336h-20Zm-332-24V432l228 144-228 144Z"/></svg>
+</div>
           </div>
       </div>
         
@@ -86,21 +91,10 @@
       
     </div>
     
-    <div class="fill-up vid-mod-module grid-col-span-3">
+    <div class="fill-up vid-mod-module grid-col-span-2">
       <div class="module-view2">
-      <p class="mod-vid-head">Module #{{ currentModule.modnumb }} Videos</p>
-        <div v-for="video in currentModule.videos" :key="'thisvideo' + video.description">
-          <div @click="newVideo(video)">
-            <ShowVidDetails
-              :theMod="currentModule"
-              :video="video"
-              :percent="percentVid"
-            />
-          </div>
-        </div>
-      </div>
-      <div class="module-list grid-col-span-3">
-      <div class="mod-vid-head">CHANGE MODULES</div>
+      <div class="module-list">
+        <div class="mod-title-row"> MODULES: </div>
         <div v-for="mod in fullCourse" :key="'A' + mod.id">
           <span
             v-if="currentModule.modnumb != mod.modnumb"
@@ -116,7 +110,19 @@
           </span>
         </div>
       </div>
+        <div v-for="video in currentModule.videos" :key="'thisvideo' + video.description">
+          <div @click="newVideo(video)">
+            <ShowVidDetails
+              :theMod="currentModule"
+              :video="video"
+              :percent="percentVid"
+            />
+          </div>
+        </div>
+      </div>
+      
     </div>
+    <div class="fill-up grid-col-span-1">Module #{{ currentModule.modnumb }} Stuff</div>
   </div>
 </template>
 
@@ -305,7 +311,7 @@ export default {
   padding: 20px;
   margin-bottom: 10px;
   border-radius: .25rem;
-  width:70%;
+  width:100%;
   border: solid 1px var(--primegreen);
 }
 
@@ -351,9 +357,10 @@ export default {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  padding: 20px;
+  padding: 10px;
   font-size: 12px;
-  border: solid 1px var(--primegreen)
+  border: solid 1px var(--primegreen);
+  border-radius: .25rem;
 }
 
 .video-responsive-item iframe {
@@ -390,7 +397,8 @@ export default {
 .next-previous {
   margin: 0;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  align-content: center;
 }
 
 .np-module {
@@ -431,17 +439,17 @@ export default {
 
 .module-list {
   display: flex;
-  flex-direction: column;
-  justify-content: space-around;
+  flex-direction: row;
+  justify-content: space-between;
   align-content: center;
   padding: 10px;
-  border-radius: .25rem;
-  border: 1px solid var(--primegreen);
+  padding-bottom: 25px;
   text-align: center;
-  min-width:28%;
-  max-height:400px;
 }
 
+.mod-title-row{
+  font-weight: 900;
+}
 
 
 .module-list svg {
@@ -489,6 +497,14 @@ export default {
 .mod-vid-head{
   font-size: 22px;
   font-weight: bold;
+}
+
+svg{
+  fill: var(--primeblue);
+  margin-top:-15px;
+}
+svg:hover{
+  fill: var(--primegreen);
 }
 
 </style>
