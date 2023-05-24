@@ -1,6 +1,6 @@
 <template>
   <div class="fill-up">
-    <div class="top-title">MY POSITIVE MOTIVATIONS</div>
+    <div class="top-title title-header">{{the_title}}</div>
     <div class="split-lines">{{ helpMov }}</div>
   </div>
 </template>
@@ -9,20 +9,23 @@
 import { userStore } from '@/store/userStore';
 import { ref } from 'vue';
 export default {
-  setup(){
+  props: ['title', 'qprompt'],
+  setup(props){
     const ustore = userStore();
-    const pmotivations = ref(ustore.getPositiveMotivations)
     const motivations = ustore.getPromptAnswers
+    const the_title = props.title
     const helpMov = ref('')
     const positiveMov = motivations.find((mov)=>{
-                mov.promptId==="zEfmgpumIi2gbGCG8eJt"
-                if (mov.promptId=="zEfmgpumIi2gbGCG8eJt"){
+                mov.promptId===props.qprompt
+                if (mov.promptId==props.qprompt){
                   helpMov.value = mov.answer
                 }
                })
 
+    
 
-    return {helpMov}
+
+    return {helpMov, the_title}
     
   }
 
@@ -34,5 +37,11 @@ export default {
 .split-lines{
   white-space: pre-line;
   padding:10px;
+}
+
+.title-header{
+  color: var(--primeblue);
+  background-color: var(--primegreen);
+  border-bottom: 2px solid var(--primegreen);
 }
 </style>

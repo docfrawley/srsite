@@ -16,7 +16,7 @@
           </div>
           
         </div>
-        <PossMotivations />
+        <Motivations title="WHY OVERCOME PROCRASTINATION" qprompt="uwi6QJH5wozGZOF8oVbd" />
         <TopTools />
 
     <div v-if="currentVideo" class="grid-col-span-3">
@@ -30,7 +30,7 @@
 <script>
 import ShowModule from "@/components/ShowModule.vue";
 import ShowVidDetails from "@/components/ShowVidDetails.vue";
-import PossMotivations from "@/components/PossMotivations.vue";
+import Motivations from "@/components/Motivations.vue";
 import TopTools from "@/components/TopTools.vue";
 
 import { ref } from "vue";
@@ -41,7 +41,7 @@ import { userStore } from "@/store/userStore";
 
 export default {
   name: "Courseview",
-  components: { ShowModule, SingleModel, ShowVidDetails, PossMotivations, TopTools },
+  components: { ShowModule, SingleModel, ShowVidDetails, Motivations, TopTools },
   props: ["course"],
   setup(props) {
     // const { error, documents } = getOrderDocs('course-modules', 'course', props.course)

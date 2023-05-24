@@ -122,7 +122,10 @@
       </div>
       
     </div>
-    <div class="fill-up grid-col-span-1">Module #{{ currentModule.modnumb }} Stuff</div>
+    <div class="fill-up grid-col-span-1">
+      <Motivations class="bottom-fill" title="MY POSITIVE MOTIVATIONS" qprompt="zEfmgpumIi2gbGCG8eJt" />
+      <Motivations title="MY ADVERSIVE MOTIVATIONS" qprompt="ZGj0zkpmyaboew0yVJkP" />
+    </div>
   </div>
 </template>
 
@@ -131,12 +134,13 @@ import ShowVidDetails from "@/components/ShowVidDetails.vue";
 import { ref, watch  } from "vue";
 import ShowPromptForm from "./ShowPromptForm.vue";
 import IndTechRow from "@/components/IndTechRow.vue";
+import Motivations from "./Motivations.vue";
 import { vueVimeoPlayer } from "vue-vimeo-player";
 import { coursesStore } from "@/store/coursesStore";
 import { userStore } from "@/store/userStore";
 
 export default {
-  components: { ShowVidDetails, vueVimeoPlayer, ShowPromptForm, IndTechRow },
+  components: { ShowVidDetails, vueVimeoPlayer, ShowPromptForm, IndTechRow, Motivations },
     setup() {
     const cstore = coursesStore();
     const ustore = userStore();
@@ -505,6 +509,10 @@ svg{
 }
 svg:hover{
   fill: var(--primegreen);
+}
+
+.bottom-fill{
+  margin-bottom: 50px;
 }
 
 </style>
