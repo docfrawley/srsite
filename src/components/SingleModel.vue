@@ -1,6 +1,6 @@
 <template>
   <div class="smcontainer">
-    <div class="fill-up grid-col-span-2">
+    <div class="fill-up-vid grid-col-span-2">
       <div class="video-responsive">
         <div v-if="showPause" @click="startPlaying" class="overlay-Pause">
           <div class="inside-pause">press here when ready to resume video</div>
@@ -73,23 +73,25 @@
     </div>
     <div class="fill-up">
       <div class="flex flex-col questions-class">
-        <div class="v-prompts">VIDEO PROMPTS</div>
-      <div v-for="question in currentVideo.questions" :key="'A' + question.id">
-        <ShowPromptForm
-          :prompt="question"
-          :class="{ Active: question.active }"
-          @answerAdded="wasItAdded"
-        />
-
+      <div v-if="showStrategies">
+        <IndTechRow />
       </div>
+      <div v-else>
+        <div class="v-prompts">VIDEO #{{ currentVideo.order }} PROMPTS</div>
+        <div v-for="question in currentVideo.questions" :key="'A' + question.id">
+          <ShowPromptForm
+            :prompt="question"
+            :class="{ Active: question.active }"
+            @answerAdded="wasItAdded"
+          />
+
+        </div>
+      </div>
+        
     </div>
     </div>
     
-    <div v-if="currentModule.modnumb == 3 && currentVideo.order > 1" class="fill-up grid-col-span-3">
-      
-      <IndTechRow />
-      
-    </div>
+   
     
     <div class="fill-up vid-mod-module grid-col-span-2">
       <div class="module-view2">
@@ -123,8 +125,7 @@
       
     </div>
     <div class="fill-up grid-col-span-1">
-      <Motivations class="bottom-fill" title="MY POSITIVE MOTIVATIONS" qprompt="zEfmgpumIi2gbGCG8eJt" />
-      <Motivations title="MY ADVERSIVE MOTIVATIONS" qprompt="ZGj0zkpmyaboew0yVJkP" />
+      <p class="v-prompts">Module # {{ currentModule.modnumb }} General Notes</p>
     </div>
   </div>
 </template>
@@ -157,17 +158,25 @@ export default {
     const showPause = ref(false);
     const numbModules = ref(cstore.courseAll.length);
     const fullCourse = ref(cstore.courseAll);
+    const showStrategies = ref(false)
 
     watch(currentVideo, ()=>{
           currentVideo.value = cstore.currentVideo
           percentVid.value = 0
           if (currentVideo.value.percentages) {
-      percentVid.value = currentVideo.value.percentages;
-    }
+            percentVid.value = currentVideo.value.percentages;
+          }
+
+          if (currentVideo.value.order>1 && currentModule.value.modnumb==3){
+            showStrategies.value=true
+            console.log('here we go')
+          } else {
+            showStrategies.value=false
+          }
           
       })
 
-
+     
 
     if (currentVideo.value.percentages) {
       percentVid.value = currentVideo.value.percentages;
@@ -298,13 +307,23 @@ export default {
       moveModule,
       numbModules,
       moveVideo,
-      fullCourse
+      fullCourse,
+      showStrategies
     };
   },
 };
 </script>
 
 <style scoped>
+
+.fill-up-vid{
+  background-color: white;
+  padding: .75rem;
+  border-radius: 0.2rem;
+  border: solid 3px var(--primeblue);
+  box-shadow: 2.5rem 3.75rem 3rem -3rem hsl(var(--clr-secondary-400) / 0.25);
+  
+}
 .Active {
   border-color: var(--primegreen);
   border-width: 5px;

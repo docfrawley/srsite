@@ -21,6 +21,8 @@ export default {
         const ustore= userStore()
         const question = ref(props.prompt.prompt)
         const lastUpdated = ref()
+        const whichVideo = ref(props.whichVid)
+        const whichModule = ref(props.whichMod)
 
         if (ustore.promptAnswers.length>0){
             const found = ustore.promptAnswers.find(element => props.prompt.id===element.promptId)

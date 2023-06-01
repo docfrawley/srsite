@@ -68,7 +68,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .top-title{
   font-weight: bold;
   font-size: 18px;
@@ -79,17 +79,26 @@ export default {
 .tool-element {
   background-color: var(--lightblue);
   color: var(--primeblue);
-  margin: 5px;
-  padding: 5px;
-  width: 200px;
-  text-align: center;
-  border-radius: .25rem;
+    margin: 5px;
+    padding: 5px;
+    width: 200px;
+    text-align: center;
+    display: relative;
+    min-width: 200px;
+    border-radius: .25rem;
 }
 
 .top-tools{
   display: flex;
   flex-direction: colum;
   justify-content: center;
+}
+
+svg {
+  display: inline;
+  float: right;
+  fill: var(--primeblue);
+  cursor: pointer;
 }
 
 </style>

@@ -1,20 +1,21 @@
 <template>
   <div class="toolkit-container">
-    <div>
-      <div>Top Tools</div>
-      <div v-for="itemtool in topArray" :key="itemtool.tool + itemtool.dimension">
-      <div class="tool-element">{{ itemtool.tool }}<svg
-              @click="openModel(itemtool.dimension, itemtool.tool)"
-              xmlns="http://www.w3.org/2000/svg"
-              height="24"
-              width="24"
-            >
-              <path
-                d="M11.25 16.75h1.5V11h-1.5ZM12 9.3q.35 0 .575-.238.225-.237.225-.587 0-.325-.225-.563-.225-.237-.575-.237t-.575.237q-.225.238-.225.563 0 .35.225.587.225.238.575.238Zm0 12.2q-1.975 0-3.712-.75Q6.55 20 5.275 18.725T3.25 15.712Q2.5 13.975 2.5 12t.75-3.713Q4 6.55 5.275 5.275T8.288 3.25Q10.025 2.5 12 2.5t3.713.75q1.737.75 3.012 2.025t2.025 3.012q.75 1.738.75 3.713t-.75 3.712q-.75 1.738-2.025 3.013t-3.012 2.025q-1.738.75-3.713.75Zm0-1.5q3.35 0 5.675-2.325Q20 15.35 20 12q0-3.35-2.325-5.675Q15.35 4 12 4 8.65 4 6.325 6.325 4 8.65 4 12q0 3.35 2.325 5.675Q8.65 20 12 20Zm0-8Z"
-              />
-            </svg>
-    </div>
-  </div>
+    <div class="grid-container">
+        <div class="grid-col-span-3 fill-background">
+            <div>
+              <p class="top-title">{{ currentCourse.title }}</p>
+              <p class="top-title">TOOLKIT</p>
+            </div>
+            <div class="show-completed">
+              <div class="total-percentage">You have completed {{ totalPercentage }}% of the course</div>
+              <div class="loading-bar-top">
+                <div class="percentage" :style="{ 'width': totalPercentage + '%'}"></div>
+              </div>
+            </div>
+        </div>
+        <Motivations title="GOALS FOR THIS COURSE" qprompt="uwi6QJH5wozGZOF8oVbd" />
+        <TopTools />
+        <Motivations class="bottom-fill" title="MY POSITIVE MOTIVATIONS" qprompt="zEfmgpumIi2gbGCG8eJt" />
     </div>
     <div class="drop-zone">
       <div
@@ -72,18 +73,25 @@ import { ref } from "@vue/reactivity";
 import { userStore } from "@/store/userStore";
 import { coursesStore } from "@/store/coursesStore";
 import TechModal from "@/components/TechModal.vue";
+import Motivations from "@/components/Motivations.vue";
+import TopTools from "@/components/TopTools.vue";
 
 export default {
-  components: { TechModal },
+  components: { TechModal, Motivations, TopTools },
   setup() {
     const ustore = userStore();
     const cstore = coursesStore();
+    const currentCourse = ref(cstore.currentCourse);
+    const currentModule = ref(cstore.currentModule);
+    const currentVideo = ref(cstore.currentVideo);
     const items = ref(cstore.currentCourse.techniques);
     const original_items = ref(JSON.parse(JSON.stringify(items.value)));
     const UserTechs = ref(ustore.getUserTechniques);
     const modalActive = ref(false);
     const strategyItems = ref({});
     const topArray = ref([])
+    const totalPercentage = ref(ustore.getTotalPercentage)
+    totalPercentage.value = parseInt(totalPercentage.value).toFixed(2)
 
     if (UserTechs.value.length > 0) {
       items.value = UserTechs.value.currentAnswers;
@@ -190,13 +198,17 @@ export default {
       toggleModal,
       strategyItems,
       openModel,
-      topArray
+      topArray,
+      currentModule,
+      currentVideo,
+      currentCourse,
+      totalPercentage
     };
   },
 };
 </script>
 
-<style>
+<style scoped>
 .drop-zone {
   display: flex;
   flex-direction: column;
@@ -214,27 +226,7 @@ export default {
   flex-direction: row;
 }
 
-.drag-el {
-  background-color: var(--primeblue);
-  color: white;
-  margin: 5px;
-  padding: 5px;
-  min-width: 200px;
-  text-align: center;
-  border-radius: .25rem;
-}
 
-.drag-strat {
-  background-color: var(--primegreen);
-  color: var(--primeblue);
-  margin: 5px;
-  padding: 5px;
-  width: 200px;
-  text-align: center;
-  display: relative;
-  min-width: 200px;
-  border-radius: .25rem;
-}
 
 .reset-button {
   background-color: var(--primeblue);
@@ -245,7 +237,7 @@ export default {
 }
 
 .toolkit-container {
-  padding-top: 200px;
+  padding-top: 75px;
   display: flex;
   flex-direction: column;
   justify-content: center;

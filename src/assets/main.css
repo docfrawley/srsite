@@ -9,7 +9,7 @@
   --primeblue: #001e41;
   --primegreen: #aaea82;
   --lightblue: #a3ceff;
-  --primepurple: #a782e9 ;
+  --primepurple: #745BA3;
 }
 
 /* #aaea82 #c182e9  */
@@ -89,10 +89,79 @@ button:disabled {
 
 .page-container{
   position:relative;
-  top:115px;
+  top:75px;
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.grid-container{
+  display: grid;
+  gap: 1rem;
+  padding-block: 2rem;
+  width: min(95%, 70rem);
+  margin-inline: auto;
+}
+
+.fill-background{
+  display: none;
+}
+
+@media (min-width: 50em){
+  .grid-container{
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .fill-background{
+    display:flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: white;
+    padding: .85rem;
+    border-radius: 0.2rem;
+    border: solid 1px var(--primeblue);
+    box-shadow: 2.5rem 3.75rem 3rem -3rem hsl(var(--clr-secondary-400) / 0.25);
+  }
+  
+}
+
+.loading-bar-top {
+  position: relative;
+  width: 100%;
+  height: 12px;
+  border-radius: 18px;
+  overflow: hidden;
+  background-color: #ececec;
+  border-bottom: 1px solid #ddd;
+  box-shadow: inset 0 1px 2px rgba( #000, .4),
+    0 -1px 1px #fff, 0 1px 0 #fff;
+}
+
+
+
+.title-cap{
+  text-transform: capitalize;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.current-course {
+  background-color: white;
+  margin-bottom: 5px;
+  border-radius: 10px;
+  padding: 20px;
+  width: 540px;
+  cursor: pointer;
+  height: 100px;
+}
+
+
+
+
+
+
+.total-percentage{
+  font-size: 15px;
+  line-height: 30px;
 }
 
 
@@ -168,6 +237,28 @@ button:disabled {
       background: linear-gradient(to right, #a3ceff 10%, #001e41 90%);
   }
 
+
+  .drag-el {
+    background-color: var(--primeblue);
+    color: white;
+    margin: 5px;
+    padding: 5px;
+    min-width: 200px;
+    text-align: center;
+    border-radius: .25rem;
+  }
+  
+  .drag-strat {
+    background-color: var(--primegreen);
+    color: var(--primeblue);
+    margin: 5px;
+    padding: 5px;
+    width: 200px;
+    text-align: center;
+    display: relative;
+    min-width: 200px;
+    border-radius: .25rem;
+  }
   /* grids */
   @media (min-width: 50em){
     .grid-col-span-2{

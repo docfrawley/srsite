@@ -1,23 +1,22 @@
 <template>
   <div class="page-container">
     <div class="grid-container">
-        <div class="fill-up course-stuff">
-          <div class="top-title title-cap">
-            <h1>{{ currentCourse.title }}</h1>
-          </div>
-          <div class="top-title">
-            <h4>with {{ currentCourse.instructor }}</h4>
-          </div>
-          <div class="show-completed">
-            <div class="total-percentage">You have completed {{ totalPercentage }}% of the course</div>
-            <div class="loading-bar">
-              <div class="percentage" :style="{ 'width': totalPercentage + '%'}"></div>
+        <div class="grid-col-span-3 fill-background">
+            <div>
+              <p class="top-title">{{ currentCourse.title }}</p>
+              <p>with {{ currentCourse.instructor }}</p>
             </div>
-          </div>
-          
+            <div class="show-completed">
+              <div class="total-percentage">You have completed {{ totalPercentage }}% of the course</div>
+              <div class="loading-bar-top">
+                <div class="percentage" :style="{ 'width': totalPercentage + '%'}"></div>
+              </div>
+            </div>
         </div>
-        <Motivations title="WHY OVERCOME PROCRASTINATION" qprompt="uwi6QJH5wozGZOF8oVbd" />
+        <Motivations title="GOALS FOR THIS COURSE" qprompt="uwi6QJH5wozGZOF8oVbd" />
         <TopTools />
+        <Motivations class="bottom-fill" title="MY POSITIVE MOTIVATIONS" qprompt="zEfmgpumIi2gbGCG8eJt" />
+
 
     <div v-if="currentVideo" class="grid-col-span-3">
         <SingleModel/>
@@ -91,56 +90,17 @@ export default {
 
 <style scoped>
 
-.title-cap{
-  text-transform: capitalize;
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.current-course {
-  background-color: white;
-  margin-bottom: 5px;
-  border-radius: 10px;
-  padding: 20px;
-  width: 540px;
-  cursor: pointer;
-  height: 100px;
-}
-
-.grid-container{
-    display: grid;
-    gap: 1rem;
-    padding-block: 2rem;
-    width: min(95%, 70rem);
-    margin-inline: auto;
-    
-
-}
-
-.course-stuff{
-  display:none;
-}
-@media (min-width: 50em){
-  .grid-container{
-    grid-template-columns: repeat(3, 1fr);
-  }
-  .course-stuff{
-  display:block;
-}
-  
-}
-
-.total-percentage{
-  margin-top: 25px;
-  font-size: 15px;
-  line-height: 40px;
-}
-
 .show-completed{
   display: flex;
   flex-direction: column;
   align-items: center;
 }
+
+.top-title{
+  font-size: 24px;
+  font-weight: bold;
+}
+
 
 
 </style>
