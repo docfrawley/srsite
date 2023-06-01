@@ -4,21 +4,23 @@
       <div
         v-show="modalActive"
         class="
-          absolute
+          
           w-full
           bg-black bg-opacity-30
           h-screen
           top-0
           left-0
+          fixed
           flex
           justify-center
+          items-center
           px-8
         "
       >
         <Transition name="modal-inner">
           <div
             v-if="modalActive"
-            class="p-4 bg-white self-start mt-32 max-w-screen-md rounded-sm"
+            class="p-4 bg-white self-start max-w-screen-md rounded-sm fixed get-margin"
           >
             <div class="text-2xl text-black opacity-100">Hello there</div>
             <div class="text-2xl text-black opacity-100">
@@ -98,5 +100,9 @@ export default {
 
 .modal-inner-leave-to {
   transform: scale(0.8);
+}
+
+.get-margin{
+  margin-top: 200px;
 }
 </style>

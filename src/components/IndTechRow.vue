@@ -27,14 +27,14 @@
     <div>
         <button @click="handleTechs" class="reset-button">SAVE</button>
     </div>
-
-</div>
-
-<TechModal
+    <TechModal
       @modalClose="toggleModal"
       :theTech="strategyItems"
       :modalActive="modalActive"
     />
+</div>
+
+
 </template>
 
 <script>
