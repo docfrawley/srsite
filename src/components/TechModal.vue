@@ -22,16 +22,19 @@
             v-if="modalActive"
             class="p-4 bg-white self-start max-w-screen-md rounded-sm fixed get-margin"
           >
-            <div class="text-2xl text-black opacity-100">Hello there</div>
             <div class="text-2xl text-black opacity-100">
-              {{ mItem.dimension }}
+              Dimension: {{ theTech.dimension }}
             </div>
             <div class="text-2xl text-black opacity-100">
-              {{ mItem.strategy }}
+              Strategy: {{ theTech.strategy }}
             </div>
+
             <div class="text-2xl text-black opacity-100">
-              {{ description }}
+              description: {{ description }}
             </div>
+            <!-- <div class="text-2xl text-black opacity-100">
+              Description: {{ description }}
+            </div> -->
             <button
               class="text-white mt-8 bg-weather-primary py-2 px-6"
               @click="$emit('modalClose')"
@@ -54,22 +57,22 @@ export default {
   emits: ["modalClose"],
   components: { Teleport },
   setup(props, context) {
-    const mItem = ref({});
     const cstore = coursesStore();
-    const description = ref("");
+    const description = ref('');
+    const strategy = ref(props.theTech.strategy)
+    const dimension = ref(props.theTech.dimension)
 
-    watchEffect(() => {
-      if (props.theTech.dimension != "" && props.theTech.strategy != "") {
-        cstore.findDescription(
-          "procrastination",
-          props.theTech.dimension,
-          props.theTech.strategy
-        );
+    watchEffect( ()=>{
+      description.value = ''
+      if (props.modalActive){
         description.value = cstore.getDescription;
-        mItem.value = props.theTech;
       }
-    });
-    return { mItem, description };
+      
+    })
+
+
+
+    return { description };
   },
 };
 </script>

@@ -50,12 +50,13 @@ export default {
       topArray.value.push({dimension:UserTechs.value[1].dimension, tool: UserTechs.value[1].techs[0]})
     }
 
-    const openModel = (dimension, strategy) => {
-      strategyItems.value = {
-        dimension: dimension,
-        strategy: strategy,
-      };
-      modalActive.value = true;
+    const openModel =  async (dimension, strategy) => {
+            await cstore.findDescription(dimension, strategy)
+            strategyItems.value = {
+                dimension: dimension,
+                strategy: strategy,
+            };
+        modalActive.value = true;
     };
 
     const toggleModal = () => {

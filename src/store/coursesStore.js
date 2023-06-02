@@ -17,7 +17,7 @@ export const coursesStore  = defineStore("courses", {
         currentVideo: {},
         originalTechs: [],
         initialPercentage: null,
-        currentDescription: '',
+        currentDescription: ''
         }
     },
     getters: {
@@ -112,22 +112,22 @@ export const coursesStore  = defineStore("courses", {
             this.currentVideo.questions = qresults
         },
         
-        async findDescription(course, dimension, tool){
+        async findDescription(dimension, tool){
             if (dimension && tool ){
                 let toolRef = collection(db, 'tools')
                 let tresults = []
-                const description = ref('')
 
 
                 toolRef =  query(toolRef, where("course", "==", 'procrastination'), where("dimension", "==", dimension), where("tool", "==", tool))
-                const toolsub =  onSnapshot(toolRef, snap => {
+                const toolsub = await onSnapshot(toolRef, snap => {
                     snap.docs.forEach(doc => {
                         tresults.push({ ...doc.data(), id: doc.id })
                     })
                     this.currentDescription = tresults[0].description
                 })
-            
-             
+                
+
+                
             }
         },
         setCurrentModule(mod){

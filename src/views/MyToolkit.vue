@@ -164,7 +164,8 @@ export default {
       }
     };
 
-    const openModel = (dimension, strategy) => {
+    const openModel =  async (dimension, strategy) => {
+      await cstore.findDescription(dimension, strategy)
       strategyItems.value = {
         dimension: dimension,
         strategy: strategy,
