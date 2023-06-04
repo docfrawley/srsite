@@ -126,6 +126,7 @@
     </div>
     <div class="fill-up grid-col-span-1">
       <p class="v-prompts">Module # {{ currentModule.modnumb }} General Notes</p>
+      <ShowModuleForm @noteAdded="wasNoteAdded"/>
     </div>
   </div>
 </template>
@@ -134,6 +135,7 @@
 import ShowVidDetails from "@/components/ShowVidDetails.vue";
 import { ref, watch  } from "vue";
 import ShowPromptForm from "./ShowPromptForm.vue";
+import ShowModuleForm from "./ShowModuleForm.vue";
 import IndTechRow from "@/components/IndTechRow.vue";
 import Motivations from "./Motivations.vue";
 import { vueVimeoPlayer } from "vue-vimeo-player";
@@ -141,7 +143,7 @@ import { coursesStore } from "@/store/coursesStore";
 import { userStore } from "@/store/userStore";
 
 export default {
-  components: { ShowVidDetails, vueVimeoPlayer, ShowPromptForm, IndTechRow, Motivations },
+  components: { ShowVidDetails, vueVimeoPlayer, ShowPromptForm, IndTechRow, Motivations, ShowModuleForm },
     setup() {
     const cstore = coursesStore();
     const ustore = userStore();
@@ -267,6 +269,10 @@ export default {
       console.log('added')    
     };
 
+    const wasNoteAdded = () =>{
+      consol.log('note added')
+    }
+
     const moveModule = (theMod) => {
       let whichElement = theMod - 1;
       percentVid.value = 0
@@ -308,7 +314,8 @@ export default {
       numbModules,
       moveVideo,
       fullCourse,
-      showStrategies
+      showStrategies,
+      wasNoteAdded
     };
   },
 };

@@ -30,7 +30,7 @@
 <script>
 import { userStore } from '@/store/userStore';
 import { coursesStore } from '@/store/coursesStore';
-import { ref } from 'vue';
+import { ref, watchEffect } from 'vue';
 import TechModal from "@/components/TechModal.vue";
 
 export default {
@@ -43,12 +43,15 @@ export default {
     const strategyItems = ref({})
     const modalActive = ref(false);
 
-
-    if (UserTechs.value.length>0){
+    watchEffect(()=>{
+      topArray.value = []
+      if (UserTechs.value.length>0){
       topArray.value.push({dimension:UserTechs.value[0].dimension, tool: UserTechs.value[0].techs[0]})
       topArray.value.push({dimension:UserTechs.value[0].dimension, tool: UserTechs.value[0].techs[1]})
       topArray.value.push({dimension:UserTechs.value[1].dimension, tool: UserTechs.value[1].techs[0]})
     }
+    })
+    
 
     const openModel =  async (dimension, strategy) => {
             await cstore.findDescription(dimension, strategy)

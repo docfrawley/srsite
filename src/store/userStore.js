@@ -22,7 +22,8 @@ export const userStore  = defineStore("user", {
         courseTotalPercentage: 0,
         promptAnswers: [],
         UserTechniques: [],
-        positiveMov: {}
+        positiveMov: {},
+        moduleNotes: []
         }
     },
     getters: {
@@ -74,6 +75,9 @@ export const userStore  = defineStore("user", {
                         }
                         if (docSnap.data().theTechs){
                             this.UserTechniques = docSnap.data().theTechs[0].currentAnswers
+                        }
+                        if (docSnap.data().moduleNotes){
+                            this.moduleNotes = docSnap.data().moduleNotes
                         }
                     }
                 }
@@ -170,6 +174,28 @@ export const userStore  = defineStore("user", {
             } 
             this.promptAnswers.push(ansObject.value)
             
+        },
+        async setNote(modnote, modnumb){
+            console.log('user: ', modnote, modnumb)
+            const noteRef = await doc(db, 'users', this.userID)
+            const noteSnap = await getDoc(noteRef)
+            const noteObject = ref({
+                modnote: modnote, 
+                createdAt: Timestamp.now(),
+                modnumb:modnumb
+            })            
+            if (noteSnap.exists()){
+                let nObject = this.moduleNotes.find((obj) => obj.modnumb==modnumb)
+                if(nObject){
+                    await updateDoc(noteRef, {modNotes: arrayRemove(nObject)})
+                    let filtered = this.moduleNotes.filter((noteObj)=> noteObj.modnumb != modnumb)
+                    this.moduleNotes = filtered
+                }
+                await updateDoc(noteRef, {modNotes: arrayUnion(noteObject.value)})
+               
+
+            } 
+            this.moduleNotes.push(noteObject.value)
         },
         async setTechniques(){
             const techsRef = doc(db, 'users', this.userID)
