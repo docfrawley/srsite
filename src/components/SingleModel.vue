@@ -364,6 +364,8 @@ export default {
   .smcontainer {
     grid-template-columns: 1fr 1fr 1fr;
 }
+
+
 }
 
 
@@ -471,11 +473,20 @@ export default {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-content: center;
   padding: 10px;
   padding-bottom: 25px;
   text-align: center;
 }
+
+@media screen and (max-width: 600px){
+    
+  .module-list {
+  padding: 10px;
+  padding-bottom: 15px;
+  text-align: center;
+  font-size: 10px;
+}
+  }
 
 .mod-title-row{
   font-weight: 900;

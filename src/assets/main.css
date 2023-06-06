@@ -89,7 +89,7 @@ button:disabled {
 
 .page-container{
   position:relative;
-  top:75px;
+  top:35px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -282,9 +282,9 @@ button:disabled {
     text-align: center;
   }
 
-  @media screen and (max-width: 600px){
+  @media screen and (min-width: 600px){
     
     .page-container{
-      top:125px;
+      top:75px;
     }
   }
