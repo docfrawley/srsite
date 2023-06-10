@@ -4,7 +4,7 @@
         <label>{{ question }} </label>
         <div v-if="lastUpdated" class="text-xs mt-0.5 last-updated">Last Updated: {{ lastUpdated }}</div>
         <textarea ref="userinput" autofocus v-model="answer"></textarea>
-        <button>SAVE</button>
+        <button class="save-btn">SAVE</button>
     </form>
     </div>
     

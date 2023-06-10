@@ -1,23 +1,12 @@
 <template>
-  <div class="toolkit-container">
+  <div class="page-container">
     <div class="grid-container">
-        <div class="grid-col-span-3 fill-background">
-            <div>
-              <p class="top-title">{{ currentCourse.title }}</p>
-              <p class="top-title">TOOLKIT</p>
-            </div>
-            <div class="show-completed">
-              <div class="total-percentage">You have completed {{ totalPercentage }}% of the course</div>
-              <div class="loading-bar-top">
-                <div class="percentage" :style="{ 'width': totalPercentage + '%'}"></div>
-              </div>
-            </div>
-        </div>
+        
         <Motivations title="GOALS FOR THIS COURSE" qprompt="uwi6QJH5wozGZOF8oVbd" />
         <TopTools />
         <Motivations class="bottom-fill" title="MY POSITIVE MOTIVATIONS" qprompt="zEfmgpumIi2gbGCG8eJt" />
     </div>
-    <div class="drop-zone">
+    <div class="drop-zone grid-container">
       <div
         v-for="item in items"
         :key="item.id"
@@ -28,7 +17,7 @@
         @dragenter.prevent
         @dragover.prevent
       >
-        <div class="drag-el">{{ item.dimension }}</div>
+        <div class="drag-el-tk">{{ item.dimension }}</div>
         <div
           v-for="strategy in item.techs"
           :key="item.dimension + strategy"
@@ -38,7 +27,7 @@
           @dragenter.prevent
           @dragover.prevent
         >
-          <div class="drag-strat">
+          <div class="drag-strat-tk">
             {{ strategy
             }}<svg
               @click="openModel(item.dimension, strategy)"
@@ -58,7 +47,8 @@
         <button @click="handleReset" class="reset-button">RESET</button>
         <button @click="handleTechs" class="reset-button">SAVE</button>
       </div>
-    </div>
+  </div>
+
 
     <TechModal
       @modalClose="toggleModal"
@@ -66,6 +56,7 @@
       :modalActive="modalActive"
     />
   </div>
+
 </template>
 
 <script>
@@ -218,7 +209,6 @@ export default {
   border-radius: 0.2rem;
   border: solid 1px var(--primeblue);
   box-shadow: 2.5rem 3.75rem 3rem -3rem hsl(var(--clr-secondary-400) / 0.25);
-  width:95vw;
   margin:auto;
 }
 
@@ -232,9 +222,14 @@ export default {
 .reset-button {
   background-color: var(--primeblue);
   color: white;
-  width: 150px;
-  height: 50px;
+  width: 100px;
+  height: 40px;
   margin-top: 50px;
+  margin-right:10px;
+}
+
+.reset-button:hover{
+  color: var(--primegreen);
 }
 
 .toolkit-container {
@@ -250,6 +245,29 @@ svg {
   fill: var(--primeblue);
   cursor: pointer;
 }
+
+.drag-el-tk {
+    background-color: var(--primeblue);
+    color: white;
+    margin: 5px;
+    padding: 5px;
+    min-width: 100px;
+    text-align: center;
+    border-radius: .25rem;
+    font-size: 12px;
+  }
+  
+  .drag-strat-tk {
+    background-color: var(--primegreen);
+    color: var(--primeblue);
+    margin: 5px;
+    padding: 5px;
+    min-width: 120px;
+    text-align: center;
+    display: relative;
+    border-radius: .25rem;
+    font-size:12px;
+  }
 
 /* .drag-el:nth-last-of-type(1){
     margin-bottom: 0;

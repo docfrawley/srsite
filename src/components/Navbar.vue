@@ -442,7 +442,6 @@ input[type="checkbox"] {
   z-index: 99;
   height: 100%;
   width: 100%;
-  top: 45px;
   right: 45px;
   height: 30px;
   width: 30px;

@@ -5,7 +5,7 @@
       <div v-if="isComplete" class="complete-circle">&#10003;</div>
       <div v-else class="circle"></div>
       <div>
-        <p>#{{ video.order }}: {{ video.title }}</p>
+        <p>Video #{{ video.order }}: <u>{{ video.title }}</u></p>
       </div>
     
     </div>

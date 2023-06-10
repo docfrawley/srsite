@@ -3,7 +3,7 @@
         <form @submit.prevent="handleSubmit" action="">
         <div v-if="lastUpdated" class="text-xs mt-0.5 last-updated">Last Updated: {{ lastUpdated }}</div>
         <textarea ref="userinput" autofocus v-model="modNote"></textarea>
-        <button>SAVE</button>
+        <button class="save-btn">SAVE</button>
     </form>
     </div>
     
@@ -78,7 +78,7 @@ input, textarea {
   margin: 10px auto;
   border-radius: .25rem;
   font-size: 12px;
-  min-height: 400px;
+  min-height: 300px;
   overflow-y: scroll;
 }
 

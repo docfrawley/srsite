@@ -30,7 +30,7 @@ a {
 
 /* buttons */
 button, .btn { 
-  background: var(--lightblue);
+  background: var(--primeblue);
   border-radius: .25rem;
   border: 0;
   padding: 6px;
@@ -39,7 +39,26 @@ button, .btn {
   display: inline-block;
   font-size: 10px;
   pointer-events: auto;
+  color:white;
 }
+
+.save-btn{
+    background: var(--primeblue);
+    border-radius: .25rem;
+    border: 0;
+    padding: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 10px;
+    pointer-events: auto;
+    color:white;
+}
+
+.save-btn:hover{
+  color:var(--primegreen)
+}
+
 
 
 

@@ -17,118 +17,61 @@
           @timeupdate="ShowUpdate"
         />
       </div>
-      <div class="video-details">
-      <div class="left-col-stuff">
-        <div class="mod-des"><u>Module #{{ currentModule.modnumb }}:</u> <i>{{ currentModule.title }}</i></div>
-        <div class="mod-des"><u>Video #{{ currentVideo.order }}:</u> <i>{{ currentVideo.title }}</i></div>
-        <div><u>Video Description:</u> <i>{{ currentVideo.description }}</i></div>
-      </div>
-      <div class="right-col-stuff">
-        <div class="next-previous">
-            <div
-              class="np-module"
-              v-if="currentModule.modnumb > 1"
-              @click="moveModule(currentModule.modnumb - 1)">
-              <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 96 960 960" width="20"><path d="M304 744V408h20v336h-20Zm352-24L428 576l228-144v288Z"/></svg>
+        <div class="module-view2">
+          <div class="module-list">
+            <div class="mod-title-row"> MODULES: </div>
+            <div v-for="mod in fullCourse" :key="'A' + mod.id">
+              <span
+                v-if="currentModule.modnumb != mod.modnumb"
+                class="ind-mod"
+                @click="moveModule(mod.modnumb)"
+                >{{ mod.title }}
+              </span>
+              <span
+                v-else
+                class="ind-mod np-active"
+                @click="moveModule(mod.modnumb)"
+                >{{ mod.title }}
+              </span>
             </div>
-            <div class="np-module" v-else><svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 96 960 960" width="20"><path d="M304 744V408h20v336h-20Zm352-24L428 576l228-144v288Z"/></svg></div>
-            <div class="text-sm">MODULE</div>
-            <div
-              class="np-module"
-              v-if="currentModule.modnumb < numbModules"
-              @click="moveModule(currentModule.modnumb + 1)"
-            >
-            <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 96 960 960" width="20"><path d="M636 744V408h20v336h-20Zm-332-24V432l228 144-228 144Z"/></svg>
- 
-            </div>
-            <div class="np-module" v-else><svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 96 960 960" width="20"><path d="M636 744V408h20v336h-20Zm-332-24V432l228 144-228 144Z"/></svg>
-</div>
           </div>
-
-          <div class="next-previous">
-            <div
-              class="np-module"
-              v-if="currentVideo.order > 1"
-              @click="moveVideo(currentVideo.order - 1)"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 96 960 960" width="20"><path d="M304 744V408h20v336h-20Zm352-24L428 576l228-144v288Z"/></svg>
+          <div v-for="video in currentModule.videos" :key="'thisvideo' + video.description">
+            <div @click="newVideo(video)">
+              <ShowVidDetails
+                :theMod="currentModule"
+                :video="video"
+                :percent="percentVid"
+              />
             </div>
-            <div class="np-module" v-else>
-              <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 96 960 960" width="20"><path d="M304 744V408h20v336h-20Zm352-24L428 576l228-144v288Z"/></svg>
-            </div>
-            <div class="text-sm">VIDEO</div>
-            <div
-              class="np-module"
-              v-if="currentVideo.order < currentModule.videos.length"
-              @click="moveVideo(currentVideo.order + 1)"
-            >
-            <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 96 960 960" width="20"><path d="M636 744V408h20v336h-20Zm-332-24V432l228 144-228 144Z"/></svg>
-            </div>
-            <div class="np-module" v-else>            <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 96 960 960" width="20"><path d="M636 744V408h20v336h-20Zm-332-24V432l228 144-228 144Z"/></svg>
-</div>
           </div>
-      </div>
-        
-      </div>
-    </div>
-    <div class="fill-up">
-      <div class="flex flex-col questions-class">
-      <div v-if="showStrategies">
-        <IndTechRow />
-      </div>
-      <div v-else>
-        <div class="v-prompts">VIDEO #{{ currentVideo.order }} PROMPTS</div>
-        <div v-for="question in currentVideo.questions" :key="'A' + question.id">
-          <ShowPromptForm
-            :prompt="question"
-            :class="{ Active: question.active }"
-            @answerAdded="wasItAdded"
-          />
-
-        </div>
-      </div>
-        
-    </div>
-    </div>
-    
-   
-    
-    <div class="fill-up vid-mod-module grid-col-span-2">
-      <div class="module-view2">
-      <div class="module-list">
-        <div class="mod-title-row"> MODULES: </div>
-        <div v-for="mod in fullCourse" :key="'A' + mod.id">
-          <span
-            v-if="currentModule.modnumb != mod.modnumb"
-            class="ind-mod"
-            @click="moveModule(mod.modnumb)"
-            >{{ mod.title }}
-          </span>
-          <span
-            v-else
-            class="ind-mod np-active"
-            @click="moveModule(mod.modnumb)"
-            >{{ mod.title }}
-          </span>
-        </div>
-      </div>
-        <div v-for="video in currentModule.videos" :key="'thisvideo' + video.description">
-          <div @click="newVideo(video)">
-            <ShowVidDetails
-              :theMod="currentModule"
-              :video="video"
-              :percent="percentVid"
-            />
-          </div>
-        </div>
-      </div>
-      
-    </div>
-    <div class="fill-up grid-col-span-1">
-      <p class="v-prompts">Module # {{ currentModule.modnumb }} General Notes</p>
-      <ShowModuleForm @noteAdded="wasNoteAdded"/>
     </div>
   </div>
+    <div class="fill-up grid-col-span-1 all-questions">
+      <div class="flex flex-col questions-class">
+        <div v-if="showStrategies">
+          <IndTechRow />
+        </div>
+        <div v-else>
+          <div class="v-prompts">VIDEO #{{ currentVideo.order }} PROMPTS</div>
+          <div v-for="question in currentVideo.questions" :key="'A' + question.id">
+            <ShowPromptForm
+              :prompt="question"
+              :class="{ Active: question.active }"
+              @answerAdded="wasItAdded"
+            />
+          </div> 
+        </div>
+      </div>
+      <div class="questions-class-bottom">
+          <p class="v-prompts">Module # {{ currentModule.modnumb }} General Notes</p>
+          <ShowModuleForm @noteAdded="wasNoteAdded"/>
+      </div>
+          
+        
+        
+    
+    </div>
+    </div>
 </template>
 
 <script>
@@ -323,6 +266,12 @@ export default {
 
 <style scoped>
 
+.all-questions{
+ display: flex;
+ flex-direction: column;
+ align-content: space-between;
+flex-wrap: wrap;
+}
 .fill-up-vid{
   background-color: white;
   padding: .75rem;
@@ -349,7 +298,13 @@ export default {
   overflow: hidden;
   overflow: -moz-scrollbars-vertical;
   overflow-y: scroll;
-  max-height: 450px;
+  min-height: 300px;
+  max-height: 500px;
+  padding-bottom: 40px;
+}
+
+.questions-class-bottom {
+  margin-top: 30px;
 }
 
 
@@ -381,7 +336,6 @@ export default {
   position: relative;
   display: block;
   min-width: 80%;
-  min-height: 80%;
   overflow: hidden;
 }
 
