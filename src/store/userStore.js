@@ -76,8 +76,9 @@ export const userStore  = defineStore("user", {
                         if (docSnap.data().theTechs){
                             this.UserTechniques = docSnap.data().theTechs[0].currentAnswers
                         }
-                        if (docSnap.data().moduleNotes){
-                            this.moduleNotes = docSnap.data().moduleNotes
+                        if (docSnap.data().modNotes){
+                            console.log('here: ', docSnap.data().modNotes)
+                            this.moduleNotes = docSnap.data().modNotes
                         }
                     }
                 }

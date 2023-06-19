@@ -39,9 +39,5 @@ export default {
   padding:10px;
 }
 
-.title-header{
-  color: var(--primeblue);
-  background-color: var(--primegreen);
-  border-bottom: 2px solid var(--primegreen);
-}
+
 </style>

@@ -1,12 +1,25 @@
 <template>
   <div class="page-container">
     <div class="grid-container">
-        
-        <Motivations title="GOALS FOR THIS COURSE" qprompt="uwi6QJH5wozGZOF8oVbd" />
+      <div class="fill-up">
+        <div class="top-title title-header">GOALS FOR THIS COURSE</div>
+          <ShowPromptTK
+                :prompt="goalstuff"
+                @answerAdded="wasItAdded"
+              />
+        </div>
+      
         <TopTools />
-        <Motivations class="bottom-fill" title="MY POSITIVE MOTIVATIONS" qprompt="zEfmgpumIi2gbGCG8eJt" />
+        <div class="fill-up">
+          <div class="top-title title-header">MY POSITIVE MOTIVATIONS</div>
+          <ShowPromptTK
+              :prompt="motstuff"
+              @answerAdded="wasItAdded"
+            />
+        </div>
+        
     </div>
-    <div class="drop-zone grid-container">
+    <div class="drop-zone grid-container2">
       <div
         v-for="item in items"
         :key="item.id"
@@ -48,6 +61,9 @@
         <button @click="handleTechs" class="reset-button">SAVE</button>
       </div>
   </div>
+  <div>
+  <a class="download-stuff" href="../src/assets/static/VA_scenario.pdf" target="_blank" rel="noopener noreferrer">DOWNLOAD WORKSHEET</a>
+  </div>
 
 
     <TechModal
@@ -66,9 +82,10 @@ import { coursesStore } from "@/store/coursesStore";
 import TechModal from "@/components/TechModal.vue";
 import Motivations from "@/components/Motivations.vue";
 import TopTools from "@/components/TopTools.vue";
+import ShowPromptTK from "@/components/ShowPromptTK.vue";
 
 export default {
-  components: { TechModal, Motivations, TopTools },
+  components: { TechModal, Motivations, TopTools, ShowPromptTK },
   setup() {
     const ustore = userStore();
     const cstore = coursesStore();
@@ -81,6 +98,14 @@ export default {
     const modalActive = ref(false);
     const strategyItems = ref({});
     const topArray = ref([])
+    const goalstuff =  {
+      prompt:"",
+      id:"uwi6QJH5wozGZOF8oVbd"
+    }
+    const motstuff = {
+      prompt: "",
+      id: "zEfmgpumIi2gbGCG8eJt"
+    }
     const totalPercentage = ref(ustore.getTotalPercentage)
     totalPercentage.value = parseInt(totalPercentage.value).toFixed(2)
 
@@ -176,6 +201,9 @@ export default {
     const toggleModal = () => {
       modalActive.value = !modalActive.value;
     };
+    const wasItAdded = (addedYes) => {
+      console.log('added')    
+    };
 
     return {
       getList,
@@ -194,7 +222,10 @@ export default {
       currentModule,
       currentVideo,
       currentCourse,
-      totalPercentage
+      totalPercentage,
+      goalstuff,
+      motstuff,
+      wasItAdded
     };
   },
 };
@@ -268,6 +299,19 @@ svg {
     border-radius: .25rem;
     font-size:12px;
   }
+
+  .grid-container2{
+  display: grid;
+  padding-block: 2rem;
+  width: min(95%, 70rem);
+  margin-inline: auto;
+}
+
+.download-stuff{
+  background-color: var(--primeblue);
+  padding:10px;
+  color: white;
+}
 
 /* .drag-el:nth-last-of-type(1){
     margin-bottom: 0;
