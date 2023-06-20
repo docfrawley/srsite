@@ -48,10 +48,10 @@
   </div>
     <div class="fill-up grid-col-span-1 all-questions">
       <div class="flex flex-col questions-class">
-        <div v-if="showStrategies">
+        <div v-if="showStrategies == 'strategies'">
           <IndTechRow />
         </div>
-        <div v-else>
+        <div v-if="showStrategies =='prompts'">
           <div class="v-prompts">VIDEO #{{ currentVideo.order }} PROMPTS</div>
           <div v-for="question in currentVideo.questions" :key="'A' + question.id">
             <ShowPromptForm
@@ -60,6 +60,11 @@
               @answerAdded="wasItAdded"
             />
           </div> 
+        </div>
+        <div v-if="showStrategies=='worksheet'">
+          <div class="worksheet-vid">
+            <a class="download-stuff2" href="https://storage.cloud.google.com/self-relationality.appspot.com/VA_scenario.pdf?authuser=3" target="_blank" rel="noopener noreferrer">DOWNLOAD WORKSHEET</a>
+          </div>
         </div>
       </div>
       <div class="questions-class-bottom">
@@ -103,7 +108,7 @@ export default {
     const showPause = ref(false);
     const numbModules = ref(cstore.courseAll.length);
     const fullCourse = ref(cstore.courseAll);
-    const showStrategies = ref(false)
+    const showStrategies = ref('prompts')
 
     watch(currentVideo, ()=>{
           currentVideo.value = cstore.currentVideo
@@ -113,10 +118,14 @@ export default {
           }
 
           if (currentVideo.value.order>1 && currentModule.value.modnumb==3){
-            showStrategies.value=true
+            showStrategies.value='strategies'
             console.log('here we go')
           } else {
-            showStrategies.value=false
+            if (currentVideo.value.order==4 && currentModule.value.modnumb==4){
+              showStrategies.value = 'worksheet'
+            } else{
+              showStrategies.value = 'prompts'
+            }
           }
           
       })
@@ -265,7 +274,31 @@ export default {
 </script>
 
 <style scoped>
+.worksheet-vid{
+  margin-top: 35px;
+  display: flex;
+  flex-direction: column;
+}
 
+.download-stuff2{
+  background-color: var(--primeblue);
+  color: white;
+  text-align: center;
+  border-radius: .25rem;
+  border: 0;
+  padding: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 15px;
+  pointer-events: auto;
+  color:white;
+  width: 95%;
+  display: inline-block;
+}
+
+.download-stuff2:hover{
+  color: var(--primegreen);
+}
 .all-questions{
  display: flex;
  flex-direction: column;
@@ -301,6 +334,7 @@ flex-wrap: wrap;
   min-height: 300px;
   max-height: 500px;
   padding-bottom: 40px;
+  width:100%;
 }
 
 .questions-class-bottom {

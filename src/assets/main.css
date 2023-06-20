@@ -63,7 +63,7 @@ button, .btn {
 
 
 .log-button { 
-  background: var(--lightblue);
+  background: var(--primeblue);
   border-radius: .25rem;
   border: 0;
   padding: 8px;
@@ -72,7 +72,14 @@ button, .btn {
   display: inline-block;
   font-size: 15px;
   pointer-events: auto;
+  color:white;
 }
+
+.log-button:hover{
+  color: var(--primegreen)
+}
+
+
 
 .log-button:hover, button:hover, .btn:hover, .btn:active {
   background: var(--primeblue);

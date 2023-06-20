@@ -61,10 +61,10 @@
         <button @click="handleTechs" class="reset-button">SAVE</button>
       </div>
   </div>
-  <div>
-  <a class="download-stuff" href="../src/assets/static/VA_scenario.pdf" target="_blank" rel="noopener noreferrer">DOWNLOAD WORKSHEET</a>
+  
+  <div class="grid-container2">
+  <a class="download-stuff" href="https://storage.cloud.google.com/self-relationality.appspot.com/VA_scenario.pdf?authuser=3" target="_blank" rel="noopener noreferrer">DOWNLOAD WORKSHEET</a>
   </div>
-
 
     <TechModal
       @modalClose="toggleModal"
@@ -72,7 +72,7 @@
       :modalActive="modalActive"
     />
   </div>
-
+  
 </template>
 
 <script>
@@ -309,8 +309,20 @@ svg {
 
 .download-stuff{
   background-color: var(--primeblue);
-  padding:10px;
   color: white;
+  text-align: center;
+  border-radius: .25rem;
+  border: 0;
+  padding: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 15px;
+  pointer-events: auto;
+  color:white;
+}
+
+.download-stuff:hover{
+  color: var(--primegreen);
 }
 
 /* .drag-el:nth-last-of-type(1){
