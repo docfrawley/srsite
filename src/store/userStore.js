@@ -3,7 +3,7 @@ import {defineStore} from "pinia"
 // firebase imports
 import { auth, timestamp } from '../firebase/config'
 import { onAuthStateChanged } from 'firebase/auth'
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword  } from 'firebase/auth'
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail  } from 'firebase/auth'
 import { db } from '../firebase/config'
 import { collection, onSnapshot, query, where, addDoc, updateDoc, doc, getDoc, setDoc, Timestamp, arrayUnion, arrayRemove } from 'firebase/firestore'
 import { ref } from "vue"
@@ -52,6 +52,7 @@ export const userStore  = defineStore("user", {
                 const res = await signInWithEmailAndPassword(auth, email, password)
                 if (!res) {
                 throw new Error('Could not login')
+                return false
                 } else {
                     const cstore = coursesStore();
                     const docRef = doc(db, "users", res.user.uid);
@@ -77,14 +78,14 @@ export const userStore  = defineStore("user", {
                             this.UserTechniques = docSnap.data().theTechs[0].currentAnswers
                         }
                         if (docSnap.data().modNotes){
-                            console.log('here: ', docSnap.data().modNotes)
                             this.moduleNotes = docSnap.data().modNotes
                         }
                     }
+                    return true
                 }
             }
             catch(err) {
-                    console.log(err.message)
+                    console.log('error message: ', err.message)
                 }
         },
         async signup(e, pw, dn){
@@ -110,6 +111,23 @@ export const userStore  = defineStore("user", {
             catch(err) {
             console.log(err.message)
             }
+        },
+        async sendPRemail(email){
+            console.log('one: ', email)
+            try {
+                const res = await sendPasswordResetEmail(auth, email)
+                console.log('two')
+                if (!res) {
+                throw new Error('Could not send')
+                return false
+                } else {
+                    return true
+                }
+            }
+            catch(err) {
+                    console.log('error message: ', err.message)
+                }
+
         },
         async setCoursePercentages(course){
             let colRef = collection(db, 'percentages')

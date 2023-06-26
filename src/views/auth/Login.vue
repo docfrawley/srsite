@@ -5,15 +5,18 @@
       <input type="email" placeholder="Email" v-model="email" />
       <input type="password" placeholder="Password" v-model="password" />
       <div v-if="error" class="error">{{ error }}</div>
-      <button class="log-button" v-if="!isPending">Log in</button>
-      <button v-if="isPending" disabled>Loading</button>
+      <div v-if="!isPending" class="log-flex">
+        <button class="log-button">Submit</button>
+        <router-link class="forgot-password" :to="{ name: 'ForgotPassword' }">Forgot Password</router-link>
+      </div>
+      
+      <div v-if="isPending" disabled>Loading</div>
     </form>
   </div>
 </template>
 
 <script>
 // using @ means start at the project src root
-import useLogin from "@/composables/useLogin";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { userStore } from "@/store/userStore";
@@ -21,22 +24,30 @@ import { coursesStore } from "@/store/coursesStore";
 
 export default {
   setup() {
-    const { error, login, isPending } = useLogin();
     const email = ref("");
     const password = ref("");
     const router = useRouter();
     const ustore = userStore();
     const cstore = coursesStore();
+    const error = ref('')
+    const isPending = ref(false)
 
     const handleSubmit = async () => {
-      
-      await ustore.login(email.value, password.value);
-      await ustore.getTechniques();
+      isPending.value=true
+       let didlogin = await ustore.login(email.value, password.value);
+       if (didlogin){
+        isPending.value=false
+        await ustore.getTechniques();
 
       router.push({
         name: "CourseView",
         params: { course: "procrastination" },
       });
+       } else {
+        error.value = "Sorry, could not recognize your email or password"
+        isPending.value=false
+       }
+      
     };
     return { email, password, handleSubmit, error, isPending };
   },
@@ -47,6 +58,21 @@ export default {
 .login-stuff {
   padding-top: 150px;
 }
+.log-flex{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding:5px;
+}
+
+.forgot-password{
+  color: var(--primeblue);
+}
+.forgot-password:hover{
+  color:var(--primegreen)
+}
+
+
 
 form {
   position:relative;

@@ -7,6 +7,7 @@ import VideoAdmin from '../views/VideoAdmin.vue'
 import ToolkitAdmin from '../views/ToolkitAdmin.vue'
 import MyToolkit from '../views/MyToolkit.vue'
 import MemAccount from '../views/MemAccount.vue'
+import ForgotPassword from '../views/auth/ForgotPassword.vue'
 import { auth } from '@/firebase/config'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 
@@ -91,6 +92,12 @@ const routes = [
     name: 'MemAccount',
     component: MemAccount,
     beforeEnter: requiresAuth,
+    props:true
+  },
+  {
+    path: '/forgotpassword',
+    name: 'ForgotPassword',
+    component: ForgotPassword,
     props:true
   }
 ]
