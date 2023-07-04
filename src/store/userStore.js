@@ -2,7 +2,7 @@ import {defineStore} from "pinia"
 
 // firebase imports
 import { auth, timestamp } from '../firebase/config'
-import { onAuthStateChanged } from 'firebase/auth'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail  } from 'firebase/auth'
 import { db } from '../firebase/config'
 import { collection, onSnapshot, query, where, addDoc, updateDoc, doc, getDoc, setDoc, Timestamp, arrayUnion, arrayRemove } from 'firebase/firestore'
@@ -17,6 +17,7 @@ export const userStore  = defineStore("user", {
         admin:null,
         email:"",
         userID:"",
+        userCreated: "",
         coursePercentages: [],
         courseSecsTotal: 0,
         courseTotalPercentage: 0,
@@ -33,17 +34,27 @@ export const userStore  = defineStore("user", {
         getUserId(){
             return this.userID
         },
+        getUserEmail(){
+            return this.email
+        },
         getUserTechniques(){
             return this.UserTechniques
         },
         getPromptAnswers(){
             return this.promptAnswers
         },
+        getDisplayName(){
+            console.log('now: ', this.displayName)
+            return this.displayName
+        },
         getPositiveMotivations(){
             const positiveMov =  this.promptAnswers.find((mov)=>{
                 mov.promptId=="zEfmgpumIi2gbGCG8eJt"
                })
             return positiveMov
+        },
+        getWhenCreatedAt(){
+            return this.userCreated
         }
     },
     actions: {
@@ -57,7 +68,8 @@ export const userStore  = defineStore("user", {
                     const cstore = coursesStore();
                     const docRef = doc(db, "users", res.user.uid);
                     const docSnap = await getDoc(docRef);
-                    
+                    this.userCreated = res.user.metadata.creationTime
+                    console.log('log in: ', res.user.metadata.lastSignInTime)
                     if (docSnap.exists()){
                         this.admin = docSnap.data().admin
                         this.displayName = docSnap.data().DisplayName
@@ -91,6 +103,7 @@ export const userStore  = defineStore("user", {
         async signup(e, pw, dn){
             try {
                 const res = await createUserWithEmailAndPassword(auth, e, pw)
+                
                 if (!res) {
                 throw new Error('Could not complete signup')
                 } else {

@@ -333,8 +333,9 @@ flex-wrap: wrap;
   overflow-y: scroll;
   min-height: 300px;
   max-height: 500px;
-  padding-bottom: 40px;
+  padding-bottom: 20px;
   width:100%;
+  border-bottom: solid 4px var(--primegreen);
 }
 
 .questions-class-bottom {
