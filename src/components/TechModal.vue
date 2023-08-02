@@ -22,19 +22,37 @@
             v-if="modalActive"
             class="p-4 bg-white self-start max-w-screen-md rounded-sm fixed get-margin"
           >
-            <div class="text-2xl text-black opacity-100">
-              Dimension: {{ theTech.dimension }}
-            </div>
-            <div class="text-2xl text-black opacity-100">
-              Strategy: {{ theTech.strategy }}
-            </div>
 
-            <div class="text-2xl text-black opacity-100">
-              description: {{ description }}
+            <div class="modal-inside">
+              <div class="modal-line">
+                <div class="modal-which">
+                  Dimension:
+                </div>
+                <div>
+                  {{ theTech.dimension }}
+                </div>
+              </div>
+
+              <div class="modal-line">
+                <div class="modal-which">
+                  Strategy:
+                </div>
+                <div>
+                  {{ theTech.strategy }}
+                </div>
+              </div>
+              
+              <div class="modal-line">
+                <div class="modal-which">
+                  Description:
+                </div>
+                <div>
+                  {{ description }}
+                </div>
+              </div>
             </div>
-            <!-- <div class="text-2xl text-black opacity-100">
-              Description: {{ description }}
-            </div> -->
+            
+            
             <button
               class="text-white mt-8 bg-weather-primary py-2 px-6"
               @click="$emit('modalClose')"
@@ -107,5 +125,23 @@ export default {
 
 .get-margin{
   margin-top: 200px;
+}
+
+.modal-inside{
+  display: flex;
+  flex-direction: column;
+  align-content: space-around;
+}
+
+.modal-line{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  padding-bottom: 15px;
+}
+
+.modal-which{
+  width:100px;
+  font-weight:900;
 }
 </style>
