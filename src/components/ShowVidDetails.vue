@@ -3,7 +3,7 @@
   <div class="show-vid-details" @click="setVideo">
     <div class="flex">
       <div v-if="isComplete" class="complete-circle">&#10003;</div>
-      <div v-else class="circle"></div>
+      <div v-if="!isComplete" class="circle"></div>
       <div>
         <p>Video #{{ video.order }}: <u>{{ video.title }}</u></p>
       </div>

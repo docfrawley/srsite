@@ -282,10 +282,9 @@ svg {
     color: white;
     margin: 5px;
     padding: 5px;
-    min-width: 100px;
+    min-width: 180px;
     text-align: center;
     border-radius: .25rem;
-    font-size: 12px;
   }
   
   .drag-strat-tk {
@@ -293,11 +292,10 @@ svg {
     color: var(--primeblue);
     margin: 5px;
     padding: 5px;
-    min-width: 120px;
+    min-width: 170px;
     text-align: center;
     display: relative;
     border-radius: .25rem;
-    font-size:12px;
   }
 
   .grid-container2{

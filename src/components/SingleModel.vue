@@ -183,33 +183,36 @@ export default {
     };
 
     const ShowUpdate = (e, d, p) => {
-      for (let i = 0; i < currentVideo.value.questions.length; i++) {
-        if (i + 1 != currentVideo.value.questions.length) {
+        for (let i = 0; i < currentVideo.value.questions.length; i++) {
           if (
-            e.seconds > currentVideo.value.questions[i].vcue - 0.1 &&
-            e.seconds < currentVideo.value.questions[i].vcue + 0.1
+            e.seconds > currentVideo.value.questions[i].vcue  &&
+            e.seconds < currentVideo.value.questions[i].vcue + .3
           ) {
             player.value.pause();
             showPause.value = true;
+            console.log('pausing: ', e.seconds)
           }
+          if (currentVideo.value.questions.length==1){
+            if (currentVideo.value.questions[i].vcue <= e.seconds){
+              currentVideo.value.questions[i].active = true;
+            }
+          } else {
           if (
-            currentVideo.value.questions[i].vcue <= e.seconds &&
-            e.seconds <= currentVideo.value.questions[i + 1].vcue
+            currentVideo.value.questions[i].vcue <= e.seconds <= currentVideo.value.questions[i + 1].vcue
           ) {
             currentVideo.value.questions.forEach((element) => {
               element.active = false;
             });
             currentVideo.value.questions[i].active = true;
           }
-        } else {
-          if (currentVideo.value.questions[i].vcue <= e.seconds) {
-            currentVideo.value.questions.forEach((element) => {
-              element.active = false;
-            });
-            currentVideo.value.questions[i].active = true;
-          }
-        }
-      }
+          // if (currentVideo.value.questions[i].vcue <= e.seconds) {
+          //   currentVideo.value.questions.forEach((element) => {
+          //     element.active = false;
+          //   });
+          //   currentVideo.value.questions[i].active = true;
+          // }
+        } 
+      }     
     };
 
     const startPlaying = () => {
