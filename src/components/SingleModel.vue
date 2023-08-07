@@ -167,6 +167,7 @@ export default {
 
     const NowEnded = () => {
       ElementNum.value++;
+      console.log('ended: ', ElementNum.value)
       if (ElementNum.value == currentModule.value.videos.length) {
         ElementNum.value = 0;
       }
@@ -186,32 +187,39 @@ export default {
         for (let i = 0; i < currentVideo.value.questions.length; i++) {
           if (
             e.seconds > currentVideo.value.questions[i].vcue  &&
-            e.seconds < currentVideo.value.questions[i].vcue + .3
-          ) {
-            player.value.pause();
-            showPause.value = true;
-            console.log('pausing: ', e.seconds)
-          }
-          if (currentVideo.value.questions.length==1){
-            if (currentVideo.value.questions[i].vcue <= e.seconds){
-              currentVideo.value.questions[i].active = true;
-            }
-          } else {
-          if (
-            currentVideo.value.questions[i].vcue <= e.seconds <= currentVideo.value.questions[i + 1].vcue
+            e.seconds <  currentVideo.value.questions[i].vcue +.3
           ) {
             currentVideo.value.questions.forEach((element) => {
               element.active = false;
             });
             currentVideo.value.questions[i].active = true;
+            player.value.pause();
+            showPause.value = true;
+            console.log('pausing: ', e.seconds, showPause.value, i, currentVideo.value.questions[i].vcue)
           }
+          // if (i+1 == currentVideo.value.questions.length){
+          //   currentVideo.value.questions.forEach((element) => {
+          //     element.active = false;
+          //   });
+          //   if (currentVideo.value.questions[i].vcue <= e.seconds){
+          //     currentVideo.value.questions[i].active = true;
+          //   }
+          // } else {
+          // if (
+          //   currentVideo.value.questions[i].vcue <= e.seconds <= currentVideo.value.questions[i + 1].vcue
+          // ) {
+          //   currentVideo.value.questions.forEach((element) => {
+          //     element.active = false;
+          //   });
+          //   currentVideo.value.questions[i].active = true;
+          // }
           // if (currentVideo.value.questions[i].vcue <= e.seconds) {
           //   currentVideo.value.questions.forEach((element) => {
           //     element.active = false;
           //   });
           //   currentVideo.value.questions[i].active = true;
           // }
-        } 
+        // } 
       }     
     };
 
