@@ -13,9 +13,9 @@
               </div>
             </div>
         </div>
-        <Motivations title="GOALS FOR THIS COURSE" qprompt="uwi6QJH5wozGZOF8oVbd" />
+        <Motivations title="GOALS FOR THIS COURSE" qprompt="uwi6QJH5wozGZOF8oVbd" :key="goalCounter"/>
         <TopTools />
-        <Motivations class="bottom-fill" title="MY POSITIVE MOTIVATIONS" qprompt="zEfmgpumIi2gbGCG8eJt" />
+        <Motivations class="bottom-fill" title="MY POSITIVE MOTIVATIONS" qprompt="zEfmgpumIi2gbGCG8eJt" :key="motCounter"/>
 
 
     <div v-if="currentVideo" class="grid-col-span-3">
@@ -32,7 +32,7 @@ import ShowVidDetails from "@/components/ShowVidDetails.vue";
 import Motivations from "@/components/Motivations.vue";
 import TopTools from "@/components/TopTools.vue";
 
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import SingleModel from "@/components/SingleModel.vue";
 import { coursesStore } from "@/store/coursesStore";
 import { userStore } from "@/store/userStore";
@@ -57,8 +57,15 @@ export default {
     const currentModule = ref(cstore.currentModule);
     const currentVideo = ref(cstore.currentVideo);
     const items = ref(cstore.currentCourse.techniques);
+    const motCounter = ref(0)
+    const goalCounter = ref(0)
     const totalPercentage = ref(ustore.getTotalPercentage)
     totalPercentage.value = parseInt(totalPercentage.value).toFixed(2)
+
+    watch(ustore, ()=>{
+      motCounter.value++
+      goalCounter.value++
+    })
     
 
     const showvidInfo = (video) => {
@@ -82,7 +89,9 @@ export default {
       moveModule,
       currentModule,
       currentVideo,
-      totalPercentage
+      totalPercentage,
+      motCounter,
+      goalCounter
     };
   },
 };

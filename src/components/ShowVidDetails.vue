@@ -3,7 +3,7 @@
   <div class="show-vid-details" @click="setVideo">
     <div class="flex">
       <div v-if="isComplete" class="complete-circle">&#10003;</div>
-      <div v-if="!isComplete" class="circle"></div>
+      <div v-else class="circle"></div>
       <div>
         <p>Video #{{ video.order }}: <u>{{ video.title }}</u></p>
       </div>
@@ -23,7 +23,8 @@
 <script>
 import { ref } from '@vue/reactivity'
 import { coursesStore } from '@/store/coursesStore'
-import { watchEffect } from 'vue'
+import { watchEffect, watch } from 'vue'
+import { connectFirestoreEmulator } from 'firebase/firestore'
 
 export default {
     props: ['theMod', 'video', 'percent'],
@@ -53,19 +54,16 @@ export default {
         isComplete.value = true
       }
 
+
+
+
       
 
       watchEffect(()=>{
         if (video.value.order == cstore.currentVideo.order){
         whatShow.value = "Now Playing"
-        percentage.value=0
-        if (props.percent*100>percentage.value){
-          percentage.value = props.percent*100
-        }
-        if (percentage.value >= 100){
-        isComplete.value = true
-      } 
-      } else {
+        percentage.value = cstore.getcurrentVidPercentage*100
+         } else {
         whatShow.value = vidLength.value
       }
         

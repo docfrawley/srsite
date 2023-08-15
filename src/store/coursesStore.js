@@ -38,6 +38,9 @@ export const coursesStore  = defineStore("courses", {
         },
         getCurrentModule(){
             return this.currentModule
+        },
+        getcurrentVidPercentage(){
+            return this.initialPercentage
         }
     },
     actions: {
@@ -182,7 +185,12 @@ export const coursesStore  = defineStore("courses", {
             }
             
          
-        }
+        },
+        updateProgress(p){
+            if (p>this.initialPercentage) {
+                this.initialPercentage=p
+            }
+        },
     },
     persist:true,
 });

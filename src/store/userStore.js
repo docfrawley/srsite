@@ -69,7 +69,6 @@ export const userStore  = defineStore("user", {
                     const docRef = doc(db, "users", res.user.uid);
                     const docSnap = await getDoc(docRef);
                     this.userCreated = res.user.metadata.creationTime
-                    console.log('log in: ', res.user.metadata.lastSignInTime)
                     if (docSnap.exists()){
                         this.admin = docSnap.data().admin
                         this.displayName = docSnap.data().DisplayName
@@ -181,6 +180,7 @@ export const userStore  = defineStore("user", {
             await updateDoc(compRef, {completedVids: arrayUnion(newObject)})
             this.courseSecsTotal = totalSecs.value
             this.courseTotalPercentage = totalPer.value
+            console.log('user total secs = ', totalSecs.value)
             
             
         },
@@ -194,10 +194,10 @@ export const userStore  = defineStore("user", {
                 promptId:promptId
             })            
             if (ansSnap.exists()){
-                let answerObject = this.promptAnswers.find((obj) => obj.promptId==ansObject.value.promptId)
+                let answerObject = this.promptAnswers.find((obj) => obj.promptId==promptId)
                 if(answerObject){
                     await updateDoc(ansRef, {answers: arrayRemove(answerObject)})
-                    let filtered = this.promptAnswers.filter((ansObj)=> ansObj.promptId != ansObject.value.promptId)
+                    let filtered = this.promptAnswers.filter((ansObj)=> ansObj.promptId != promptId)
                     this.promptAnswers = filtered
                 }
                 await updateDoc(ansRef, {answers: arrayUnion(ansObject.value)})

@@ -7,7 +7,7 @@
 
 <script>
 import { userStore } from '@/store/userStore';
-import { ref } from 'vue';
+import { ref, watchEffect } from 'vue';
 export default {
   props: ['title', 'qprompt'],
   setup(props){
@@ -15,14 +15,21 @@ export default {
     const motivations = ustore.getPromptAnswers
     const the_title = props.title
     const helpMov = ref('')
-    const positiveMov = motivations.find((mov)=>{
+    let positiveMov = motivations.find((mov)=>{
                 mov.promptId===props.qprompt
                 if (mov.promptId==props.qprompt){
                   helpMov.value = mov.answer
                 }
                })
 
-    
+    watchEffect(()=>{
+      positiveMov = motivations.find((mov)=>{
+                mov.promptId===props.qprompt
+                if (mov.promptId==props.qprompt){
+                  helpMov.value = mov.answer
+                }
+               })
+    })
 
 
     return {helpMov, the_title}

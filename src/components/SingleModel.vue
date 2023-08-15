@@ -112,16 +112,12 @@ export default {
 
     watch(currentVideo, ()=>{
           currentVideo.value = cstore.currentVideo
-          percentVid.value = 0
-          if (currentVideo.value.percentages) {
-            percentVid.value = currentVideo.value.percentages;
-          }
+          console.log('this working?')
 
           if (currentVideo.value.order>1 && currentModule.value.modnumb==3){
             showStrategies.value='strategies'
-            console.log('here we go')
           } else {
-            if (currentVideo.value.order==4 && currentModule.value.modnumb==4){
+            if ((currentVideo.value.order==4 && currentModule.value.modnumb==4 )||(currentVideo.value.order==6 && currentModule.value.modnumb==2 )){
               showStrategies.value = 'worksheet'
             } else{
               showStrategies.value = 'prompts'
@@ -145,24 +141,19 @@ export default {
       //         cstore.setPercentage(percentVid.value)
       //     }
       // }
+      // percentVid.value = 0
       currentVideo.value = specs;
       cstore.unsetCurrentVideo();
       cstore.setCurrentVideo(specs);
-      percentVid.value = 0
+      
+     
       // percentVid.value = currentVideo.value.percentages
       //   ? currentVideo.value.percentages
       //   : 0;
     };
 
     const CheckProgress = (e, d, p) => {
-      if (currentVideo.value.percentages) {
-        percentVid.value =
-          currentVideo.value.percentages > e.percent
-            ? currentVideo.value.percentages
-            : e.percent;
-      } else {
-        percentVid.value = e.percent;
-      }
+      cstore.updateProgress(e.percent)
     };
 
     const NowEnded = () => {
@@ -174,8 +165,11 @@ export default {
       currentVideo.value = currentModule.value.videos[ElementNum.value];
     };
 
-    const WhenPaused = () => {
-      cstore.setPercentage(percentVid.value);
+    const WhenPaused = (e,d,p) => {
+      if (currentVideo.value.percentages<e.percent){
+        cstore.setPercentage(e.percent);
+      }
+      
      
     };
 
