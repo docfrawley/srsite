@@ -17,6 +17,7 @@ export const coursesStore  = defineStore("courses", {
         currentVideo: {},
         originalTechs: [],
         initialPercentage: null,
+        currentPercentage: 0,
         currentDescription: ''
         }
     },
@@ -40,6 +41,9 @@ export const coursesStore  = defineStore("courses", {
             return this.currentModule
         },
         getcurrentVidPercentage(){
+            return this.currentPercentage
+        },
+        getInitPercentage(){
             return this.initialPercentage
         }
     },
@@ -166,30 +170,34 @@ export const coursesStore  = defineStore("courses", {
         async setPercentage(p){
             const ustore = userStore()
             const userID = ref(ustore.getUserId)
-            if (p>this.initialPercentage){
+            if (p>this.currentPercentage) {
+                this.currentPercentage=p
+            }
+            if (this.currentPercentage>this.initialPercentage){
                 const docRef = doc(db, this.currentCourse.col_name, this.currentVideo.id)
                 const docSnap = await getDoc(docRef)
                 if (!docSnap.data().percentages){
-                   await  updateDoc(docRef, {percentages: [{uid: userID.value, percentage: p}]})
+                   await  updateDoc(docRef, {percentages: [{uid: userID.value, percentage: this.currentPercentage}]})
                    
-                    this.currentVideo.percentages = p
+                    this.currentVideo.percentages = this.currentPercentage
                 } else {
                     let findObject = docSnap.data().percentages.find((obj) => obj.uid===userID.value)
                     if(findObject){
                         await updateDoc(docRef, {percentages: arrayRemove(findObject)})
                     }
-                    await updateDoc(docRef, {percentages: arrayUnion({uid: userID.value, percentage: p})})
+                    await updateDoc(docRef, {percentages: arrayUnion({uid: userID.value, percentage: this.currentPercentage})})
                 }
-                this.currentVideo.percentages=p
-                ustore.updateCompVids(p, docSnap.data().length, this.currentCourse.col_name)
+                this.currentVideo.percentages=this.currentPercentage
+                ustore.updateCompVids(this.currentPercentage, docSnap.data().length, this.currentCourse.col_name)
             }
             
          
         },
         updateProgress(p){
-            if (p>this.initialPercentage) {
-                this.initialPercentage=p
+            if (p>this.currentPercentage) {
+                this.currentPercentage=p
             }
+            
         },
     },
     persist:true,

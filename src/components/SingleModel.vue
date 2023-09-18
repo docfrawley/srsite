@@ -10,8 +10,7 @@
           class="video-responsive-item"
           :video-id="currentVideo.iframe"
           :options="{ responsive: true }"
-          :events-to-emit="['ended', 'progress', 'pause', 'timeupdate']"
-          @progress="CheckProgress"
+          :events-to-emit="['ended', 'pause', 'timeupdate']"
           @ended="NowEnded"
           @pause="WhenPaused"
           @timeupdate="ShowUpdate"
@@ -95,10 +94,7 @@ export default {
     setup() {
     const cstore = coursesStore();
     const ustore = userStore();
-    // const theVideo =  getLesson(props.specifics.course, props.specifics.module, props.specifics.order)
-    // const { error, documents: videos } = getOrderDocs(props.specifics.course, 'module', props.specifics.module)
-    const ElementNum = ref(0);
-    const percentVid = ref(0);
+    const percentVid = ref(cstore.getInitPercentage);
     const currentModule = ref(cstore.currentModule);
     const currentVideo =  ref(cstore.currentVideo);
     const showForm = ref(false);
@@ -112,7 +108,6 @@ export default {
 
     watch(currentVideo, ()=>{
           currentVideo.value = cstore.currentVideo
-          console.log('this working?')
 
           if (currentVideo.value.order>1 && currentModule.value.modnumb==3){
             showStrategies.value='strategies'
@@ -142,6 +137,7 @@ export default {
       //     }
       // }
       // percentVid.value = 0
+      
       currentVideo.value = specs;
       cstore.unsetCurrentVideo();
       cstore.setCurrentVideo(specs);
@@ -152,15 +148,14 @@ export default {
       //   : 0;
     };
 
-    const CheckProgress = (e, d, p) => {
-      cstore.updateProgress(e.percent)
-    };
-
-    const NowEnded = () => {
-      ElementNum.value++;
-      console.log('ended: ', ElementNum.value)
-      if (ElementNum.value == currentModule.value.videos.length) {
-        ElementNum.value = 0;
+    const NowEnded = (e, d, p) => {
+     let ElementNum = currentVideo.value.order + 1
+      console.log('ended: ', ElementNum)
+      if (currentVideo.value.percentages<e.percent){
+        cstore.setPercentage(e.percent);
+      }
+      if (ElementNum == currentModule.value.videos.length) {
+        ElementNum = 0;
       }
       currentVideo.value = currentModule.value.videos[ElementNum.value];
     };
@@ -178,6 +173,7 @@ export default {
     };
 
     const ShowUpdate = (e, d, p) => {
+      cstore.updateProgress(e.percent)
         for (let i = 0; i < currentVideo.value.questions.length; i++) {
           if (
             e.seconds > currentVideo.value.questions[i].vcue  &&
@@ -189,31 +185,7 @@ export default {
             currentVideo.value.questions[i].active = true;
             player.value.pause();
             showPause.value = true;
-            console.log('pausing: ', e.seconds, showPause.value, i, currentVideo.value.questions[i].vcue)
           }
-          // if (i+1 == currentVideo.value.questions.length){
-          //   currentVideo.value.questions.forEach((element) => {
-          //     element.active = false;
-          //   });
-          //   if (currentVideo.value.questions[i].vcue <= e.seconds){
-          //     currentVideo.value.questions[i].active = true;
-          //   }
-          // } else {
-          // if (
-          //   currentVideo.value.questions[i].vcue <= e.seconds <= currentVideo.value.questions[i + 1].vcue
-          // ) {
-          //   currentVideo.value.questions.forEach((element) => {
-          //     element.active = false;
-          //   });
-          //   currentVideo.value.questions[i].active = true;
-          // }
-          // if (currentVideo.value.questions[i].vcue <= e.seconds) {
-          //   currentVideo.value.questions.forEach((element) => {
-          //     element.active = false;
-          //   });
-          //   currentVideo.value.questions[i].active = true;
-          // }
-        // } 
       }     
     };
 
@@ -231,6 +203,7 @@ export default {
     }
 
     const moveModule = (theMod) => {
+      
       let whichElement = theMod - 1;
       percentVid.value = 0
       currentModule.value = cstore.courseAll[whichElement];
@@ -243,11 +216,11 @@ export default {
     };
 
     const moveVideo = (order) => {
+      
       let whichElement = order - 1;
 
       currentVideo.value = currentModule.value.videos[whichElement];
       cstore.setCurrentVideo(currentVideo.value);
-      percentVid.value = 0
     };
 
     return {
@@ -259,7 +232,6 @@ export default {
       currentModule,
       percentVid,
       newVideo,
-      CheckProgress,
       NowEnded,
       WhenPaused,
       ShowUpdate,

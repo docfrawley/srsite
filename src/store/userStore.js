@@ -44,7 +44,6 @@ export const userStore  = defineStore("user", {
             return this.promptAnswers
         },
         getDisplayName(){
-            console.log('now: ', this.displayName)
             return this.displayName
         },
         getPositiveMotivations(){
@@ -78,7 +77,6 @@ export const userStore  = defineStore("user", {
                         await cstore.setCourseAll("procrastination");
                         if (docSnap.data().completedVids) {
                             const courseTotalSecs = cstore.getCourseSeconds
-
                          this.courseSecsTotal = docSnap.data().completedVids[0].totalSecs
                          this.courseTotalPercentage = this.courseSecsTotal/courseTotalSecs*100
                         }
@@ -105,8 +103,9 @@ export const userStore  = defineStore("user", {
                 
                 if (!res) {
                 throw new Error('Could not complete signup')
+                console.log("here I am signing up")
                 } else {
-                    response = await setDoc(doc(db, 'users', res.user.uid), {
+                    let response = await setDoc(doc(db, 'users', res.user.uid), {
                         DisplayName: dn, admin:false, uid: res.user.uid, completedVids: []
                     })
                 // const documentRef = collection(db, 'users')

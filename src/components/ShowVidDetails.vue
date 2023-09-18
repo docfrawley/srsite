@@ -62,7 +62,13 @@ export default {
       watchEffect(()=>{
         if (video.value.order == cstore.currentVideo.order){
         whatShow.value = "Now Playing"
-        percentage.value = cstore.getcurrentVidPercentage*100
+        if (cstore.getcurrentVidPercentage>cstore.getInitPercentage){
+          percentage.value = cstore.getcurrentVidPercentage*100
+          if (percentage.value >= 100){
+            isComplete.value = true
+          }
+        }
+        
          } else {
         whatShow.value = vidLength.value
       }
