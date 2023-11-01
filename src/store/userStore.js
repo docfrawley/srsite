@@ -3,7 +3,7 @@ import {defineStore} from "pinia"
 // firebase imports
 import { auth, timestamp } from '../firebase/config'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail  } from 'firebase/auth'
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, updateProfile  } from 'firebase/auth'
 import { db } from '../firebase/config'
 import { collection, onSnapshot, query, where, addDoc, updateDoc, doc, getDoc, setDoc, Timestamp, arrayUnion, arrayRemove } from 'firebase/firestore'
 import { ref } from "vue"
@@ -139,6 +139,18 @@ export const userStore  = defineStore("user", {
                     console.log('error message: ', err.message)
                 }
 
+        },
+        async updateName(name){
+            console.log("you are doing this correctly", name)
+            console.log(auth.currentUser)
+            try {
+                await updateProfile(auth.currentUser, { displayName: name });
+                // If the updateProfile operation is successful, no error is thrown, and you can assume success.
+                return true;
+            } catch (error) {
+                console.error('Error updating display name:', error);
+                return false;
+            }
         },
         async setCoursePercentages(course){
             let colRef = collection(db, 'percentages')

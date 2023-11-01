@@ -3,21 +3,35 @@
     <div class="grid-container">
         <div class="grid-col-span-3 fill-up">
             <div>
-            <p>Hello {{ displayName }}</p>
+            <p>Hello <span class="bolded">{{ displayName }}</span> !</p>
+            <p>current email: <span class="bolded">{{ userEmail }}</span></p>
             </div>
     
-            <div>You created your account on: {{ createdWhen }}</div>
+            <div>You created your account on: <span class="bolded">{{ createdWhen }}</span></div>
     
-            <div>
-                <p>Change your email address</p>
-            </div>
-            <div v-if="!wasSent">
+            <div v-if="!wasSent" class="something">
+                <button class="log-button" @click="changeID=true">Change Username</button>
+                <button class="log-button" @click="changeEmail=true">Change Email</button>
                 <button class="log-button" @click="sendEmail">Change Password</button>
-                <button class="log-button">Change Email</button>
             </div>
             <div v-else>
                 <div class="was-sent">
                     <p>An email has been sent to that email address currently associated with this account with instructions on how to reset your password.</p>
+                </div>
+                <div class="something">
+                    <button class="log-button" @click="wasSent=!wasSent">Go Back</button>
+                </div>
+            </div>
+            <div v-if="changeID">
+                <div>
+                    <form @submit.prevent="changeName">
+                        <h2>Display Name Change</h2>
+
+                        <label for="text">New Display Name:</label>
+                        <input type="text" name="Display Name" v-model="newName" required>
+
+                        <button class="log-button">submit</button>
+                    </form>
                 </div>
             </div>
     </div>
@@ -40,18 +54,26 @@ export default {
         const userEmail = ref(ustore.getUserEmail)
         const createdWhen = new Date(ustore.getWhenCreatedAt).toLocaleDateString()
         const wasSent = ref(false)
+        const changeEmail = ref(false)
+        const changeID = ref(false)
+        const newName = ref('')
 
         const sendEmail=()=>{
             wasSent.value = ustore.sendPRemail(userEmail.value)
         }
 
-        return {displayName, createdWhen, sendEmail, wasSent}
+        const changeName=()=>{
+            changeID.value = !(ustore.updateName(newName.value))
+            newName.value = ''
+        }
+
+        return {displayName, userEmail, createdWhen, sendEmail, changeName, newName, changeID, wasSent}
     }
     
 }
 </script>
 
-<style>
+<style scoped>
 .acc-container{
     position:relative;
   top:435px;
@@ -72,4 +94,15 @@ export default {
     background: white;
     margin-bottom: 50px;
   }
+
+.something {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 1em;
+}
+
+.bolded {
+    font-weight: bold;
+    color: black;
+}
 </style>
