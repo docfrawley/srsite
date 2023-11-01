@@ -13,6 +13,7 @@
             </div>
             <div v-if="!wasSent">
                 <button class="log-button" @click="sendEmail">Change Password</button>
+                <button class="log-button">Change Email</button>
             </div>
             <div v-else>
                 <div class="was-sent">
