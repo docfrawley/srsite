@@ -312,7 +312,7 @@ flex-wrap: wrap;
   max-height: 500px;
   padding-bottom: 20px;
   width:100%;
-  border-bottom: solid 4px var(--primegreen);
+  border-bottom: solid 4px var(--primeblue);
 }
 
 .questions-class-bottom {

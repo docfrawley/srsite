@@ -22,7 +22,8 @@
   color: var(--primary);
 }
 body {
-  background: #f6f6f6;
+  /* background: #f6f6f6; */
+  background: -webkit-gradient(linear, left top, left bottom, from(#d6fbfa), to(#b4e8c5)) fixed;;
 }
 a {
   text-decoration: none;

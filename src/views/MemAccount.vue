@@ -3,18 +3,18 @@
     <div class="grid-container">
         <div class="grid-col-span-3 fill-up">
             <div>
-            <p>Hello <span class="bolded">{{ displayName }}</span> !</p>
+            <p>Hello <span>{{ displayName }}</span>!</p>
             <p>current email: <span class="bolded">{{ userEmail }}</span></p>
             </div>
     
             <div>You created your account on: <span class="bolded">{{ createdWhen }}</span></div>
     
-            <div v-if="!wasSent" class="something">
-                <button class="log-button" @click="changeID=true">Change Username</button>
+            <div v-if="!wasSent&&(!changeID&&!changeEmail)" class="something">
+                <button class="log-button" @click="changeID=true">Change Display Name</button>
                 <button class="log-button" @click="changeEmail=true">Change Email</button>
                 <button class="log-button" @click="sendEmail">Change Password</button>
             </div>
-            <div v-else>
+            <div v-if="wasSent">
                 <div class="was-sent">
                     <p>An email has been sent to that email address currently associated with this account with instructions on how to reset your password.</p>
                 </div>
@@ -23,15 +23,33 @@
                 </div>
             </div>
             <div v-if="changeID">
-                <div>
+                <div class="was-sent">
                     <form @submit.prevent="changeName">
-                        <h2>Display Name Change</h2>
+                        <h2>Email Change</h2>
 
-                        <label for="text">New Display Name:</label>
+                        <label for="text">New Display Name: </label>
                         <input type="text" name="Display Name" v-model="newName" required>
 
                         <button class="log-button">submit</button>
                     </form>
+                </div>
+                <div class="something">
+                    <button class="log-button" @click="changeID=false">Cancel</button>
+                </div>
+            </div>
+            <div v-if="changeEmail">
+                <div class="was-sent">
+                    <form @submit.prevent="resetEmail">
+                        <h2>Display Name Change</h2>
+
+                        <label for="text">New Email: </label>
+                        <input type="email" name="Email" v-model="newEmail" required>
+
+                        <button class="log-button">submit</button>
+                    </form>
+                </div>
+                <div class="something">
+                    <button class="log-button" @click="changeEmail=false">Cancel</button>
                 </div>
             </div>
     </div>
@@ -57,9 +75,12 @@ export default {
         const changeEmail = ref(false)
         const changeID = ref(false)
         const newName = ref('')
+        const newEmail = ref('')
 
         const sendEmail=()=>{
-            wasSent.value = ustore.sendPRemail(userEmail.value)
+            wasSent.value = true
+            console.log('you have sent an email')
+            // wasSent.value = ustore.sendPRemail(userEmail.value)
         }
 
         const changeName=()=>{
@@ -67,13 +88,24 @@ export default {
             newName.value = ''
         }
 
-        return {displayName, userEmail, createdWhen, sendEmail, changeName, newName, changeID, wasSent}
+        const resetEmail=()=>{
+            newEmail.value = ''
+        }
+
+        return {displayName, userEmail, createdWhen, sendEmail, changeName, resetEmail, newName, newEmail, changeEmail, changeID, wasSent}
     }
     
 }
 </script>
 
 <style scoped>
+input {
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #eee;
+    margin-right: 0.75em;
+}
+
 .acc-container{
     position:relative;
   top:435px;
