@@ -9,11 +9,12 @@
     
             <div>You created your account on: <span class="bolded">{{ createdWhen }}</span></div>
     
-            <div v-if="!wasSent&&(!changeID&&!changeEmail)" class="something">
-                <button class="log-button" @click="changeID=true">Change Display Name</button>
-                <button class="log-button" @click="changeEmail=true">Change Email</button>
+            <div v-if="!wasSent&&(!boolName&&!boolEmail)" class="something">
+                <button class="log-button" @click="boolName=true">Change Display Name</button>
+                <button class="log-button" @click="boolEmail=true">Change Email</button>
                 <button class="log-button" @click="sendEmail">Change Password</button>
             </div>
+            
             <div v-if="wasSent">
                 <div class="was-sent">
                     <p>An email has been sent to that email address currently associated with this account with instructions on how to reset your password.</p>
@@ -22,35 +23,11 @@
                     <button class="log-button" @click="wasSent=!wasSent">Go Back</button>
                 </div>
             </div>
-            <div v-if="changeID">
-                <div class="was-sent">
-                    <form @submit.prevent="changeName">
-                        <h2>Email Change</h2>
-
-                        <label for="text">New Display Name: </label>
-                        <input type="text" name="Display Name" v-model="newName" required>
-
-                        <button class="log-button">submit</button>
-                    </form>
-                </div>
-                <div class="something">
-                    <button class="log-button" @click="changeID=false">Cancel</button>
-                </div>
+            <div v-if="boolName">
+                <ChangeName @cancel="boolName=false" @submit="changeName"/>
             </div>
-            <div v-if="changeEmail">
-                <div class="was-sent">
-                    <form @submit.prevent="resetEmail">
-                        <h2>Display Name Change</h2>
-
-                        <label for="text">New Email: </label>
-                        <input type="email" name="Email" v-model="newEmail" required>
-
-                        <button class="log-button">submit</button>
-                    </form>
-                </div>
-                <div class="something">
-                    <button class="log-button" @click="changeEmail=false">Cancel</button>
-                </div>
+            <div v-if="boolEmail">
+                <ChangeEmail @cancel="boolEmail=false" @submit="changeEmail"/>
             </div>
     </div>
     </div>
@@ -65,17 +42,18 @@ import { userStore } from '@/store/userStore';
 import { coursesStore } from '@/store/coursesStore';
 import { useRouter } from "vue-router";
 import { ref } from 'vue';
+import ChangeName from '@/components/ChangeName.vue';
+import ChangeEmail from '@/components/ChangeEmail.vue';
 export default {
+    components: { ChangeName, ChangeEmail },
     setup() {
         const ustore = userStore()
         const displayName = ref(ustore.getDisplayName)
         const userEmail = ref(ustore.getUserEmail)
         const createdWhen = new Date(ustore.getWhenCreatedAt).toLocaleDateString()
         const wasSent = ref(false)
-        const changeEmail = ref(false)
-        const changeID = ref(false)
-        const newName = ref('')
-        const newEmail = ref('')
+        const boolEmail = ref(false)
+        const boolName = ref(false)
 
         const sendEmail=()=>{
             wasSent.value = true
@@ -83,16 +61,18 @@ export default {
             // wasSent.value = ustore.sendPRemail(userEmail.value)
         }
 
-        const changeName=()=>{
-            changeID.value = !(ustore.updateName(newName.value))
-            newName.value = ''
+        const changeName=(newName)=>{
+            boolName.value = false
+            console.log('this is the name' + newName)
+            /* changeID.value = !(ustore.updateName(newName.value)) */
         }
 
-        const resetEmail=()=>{
-            newEmail.value = ''
+        const changeEmail=(newEmail)=>{
+            boolEmail.value = false
+            console.log('this is the email ' + newEmail)
         }
 
-        return {displayName, userEmail, createdWhen, sendEmail, changeName, resetEmail, newName, newEmail, changeEmail, changeID, wasSent}
+        return {displayName, userEmail, createdWhen, sendEmail, changeName, changeEmail, boolEmail, boolName, wasSent}
     }
     
 }
@@ -104,6 +84,14 @@ input {
     padding: 10px;
     border: 1px solid #eee;
     margin-right: 0.75em;
+    margin-left: 0.25em;
+}
+
+form {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 }
 
 .acc-container{

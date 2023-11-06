@@ -144,7 +144,7 @@ export const userStore  = defineStore("user", {
             console.log("you are doing this correctly", name)
             console.log(auth.currentUser)
             try {
-                await updateProfile(auth.currentUser, { displayName: name });
+                //await updateProfile(auth.currentUser, { displayName: name });
                 // If the updateProfile operation is successful, no error is thrown, and you can assume success.
                 return true;
             } catch (error) {
