@@ -16,11 +16,17 @@
             </div>
             
             <div v-if="wasSent">
-                <div class="was-sent">
-                    <p>An email has been sent to that email address currently associated with this account with instructions on how to reset your password.</p>
+                <div class="was-sent" v-if="passwordM">
+                    <p>An email has been sent to the email address currently associated with this account with instructions on how to reset your password.</p>
+                </div>
+                <div class="was-sent" v-if="emailM">
+                    <p>You have changed your email to {{ userEmail }}, an email has been sent with a verficiation link to this address. Please verify before the next time you log in.</p>
+                </div>
+                <div class="was-sent" v-if="nameM">
+                    <p>You have changed your dislay name to {{ displayName }}</p>
                 </div>
                 <div class="something">
-                    <button class="log-button" @click="wasSent=!wasSent">Go Back</button>
+                    <button class="log-button" @click="reset">Go Back</button>
                 </div>
             </div>
             <div v-if="boolName">
@@ -41,7 +47,7 @@
 import { userStore } from '@/store/userStore';
 import { coursesStore } from '@/store/coursesStore';
 import { useRouter } from "vue-router";
-import { ref } from 'vue';
+import { ref, watchEffect } from 'vue';
 import ChangeName from '@/components/ChangeName.vue';
 import ChangeEmail from '@/components/ChangeEmail.vue';
 export default {
@@ -54,25 +60,57 @@ export default {
         const wasSent = ref(false)
         const boolEmail = ref(false)
         const boolName = ref(false)
+        const emailM = ref(false)
+        const nameM = ref(false)
+        const passwordM = ref(false)
 
-        const sendEmail=()=>{
-            wasSent.value = true
+        watchEffect(() => {
+            displayName.value = ustore.getDisplayName
+            userEmail.value = ustore.getUserEmail
+        })
+
+        const changePass=()=>{
             console.log('you have sent an email')
-            // wasSent.value = ustore.sendPRemail(userEmail.value)
+            wasSent.value = ustore.sendPRemail(userEmail.value)
+            passwordM.value = true
         }
 
         const changeName=(newName)=>{
+            const outcome = ustore.updateName(newName)
             boolName.value = false
-            console.log('this is the name' + newName)
-            /* changeID.value = !(ustore.updateName(newName.value)) */
+            wasSent.value = true
+            nameM.value = true
         }
 
         const changeEmail=(newEmail)=>{
+            ustore.updateEmail(newEmail)
             boolEmail.value = false
-            console.log('this is the email ' + newEmail)
+            wasSent.value = true
+            emailM.value = true
         }
 
-        return {displayName, userEmail, createdWhen, sendEmail, changeName, changeEmail, boolEmail, boolName, wasSent}
+        const reset = () => {
+            wasSent.value = false
+            passwordM.value = false
+            nameM.value = false
+            emailM.value = false
+        }
+
+        return {
+            displayName, 
+            userEmail,
+            createdWhen,
+            changePass,
+            changeName,
+            changeEmail,
+            reset,
+            boolEmail,
+            boolName,
+            passwordM,
+            emailM,
+            nameM,
+            wasSent
+        }
     }
     
 }

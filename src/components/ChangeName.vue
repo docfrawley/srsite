@@ -1,7 +1,7 @@
 <template>
     <div class="was-sent">
         <form @submit.prevent="changeName">
-            <label for="text">New Display Name:</label>
+            <label for="Display Name">New Display Name:</label>
             <input type="text" name="Display Name" v-model="newName" required>
 
             <button class="log-button">submit</button>

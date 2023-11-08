@@ -1,7 +1,7 @@
 <template>
     <div>
-        <form @submit.prevent="changeName">
-            <label for="text">New Email:</label>
+        <form @submit.prevent="changeEmail">
+            <label for="Email">New Email:</label>
             <input type="email" name="Email" v-model="newEmail" required>
 
             <button class="log-button">submit</button>

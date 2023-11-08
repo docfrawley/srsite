@@ -307,7 +307,7 @@ export default {
     };
 
     const handleClick = () => {
-      store.setTechniques();
+      //store.setTechniques();
       store.$reset();
       cstore.$reset();
       logout();

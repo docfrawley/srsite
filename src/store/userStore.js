@@ -2,7 +2,7 @@ import {defineStore} from "pinia"
 
 // firebase imports
 import { auth, timestamp } from '../firebase/config'
-import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import { getAuth, onAuthStateChanged, updateEmail, sendEmailVerification } from 'firebase/auth'
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, updateProfile  } from 'firebase/auth'
 import { db } from '../firebase/config'
 import { collection, onSnapshot, query, where, addDoc, updateDoc, doc, getDoc, setDoc, Timestamp, arrayUnion, arrayRemove } from 'firebase/firestore'
@@ -129,8 +129,8 @@ export const userStore  = defineStore("user", {
                 const res = await sendPasswordResetEmail(auth, email)
                 console.log('two')
                 if (!res) {
-                throw new Error('Could not send')
-                return false
+                    throw new Error('Could not send')
+                    return false
                 } else {
                     return true
                 }
@@ -141,16 +141,36 @@ export const userStore  = defineStore("user", {
 
         },
         async updateName(name){
-            console.log("you are doing this correctly", name)
-            console.log(auth.currentUser)
-            try {
-                //await updateProfile(auth.currentUser, { displayName: name });
-                // If the updateProfile operation is successful, no error is thrown, and you can assume success.
-                return true;
-            } catch (error) {
-                console.error('Error updating display name:', error);
-                return false;
+            //console.log('you are updating the name to: ' + name)
+            const nameRef = await doc(db, 'users', this.userID) 
+            if (nameRef){
+                try {
+                    await updateDoc(nameRef, {DisplayName: name})
+                    this.displayName = name
+                    return true
+                } catch (updateError) {
+                    console.error('Error updating username:', updateError )
+                }
             }
+            return false
+        },
+        async updateEmail(email){
+            console.log('you are updating the emailt to: ' + email)
+            try{
+                await updateEmail(auth.currentUser, email)
+                this.email = email
+                console.log("updated the email")
+                try {
+                    await sendEmailVerification(auth.currentUser)
+                    console.log("verification email sent")
+                    return true
+                } catch(verificationError) {
+                    console.error("error sending verification email:", verificationError)
+                }
+            } catch (updateError) {
+                console.error("error updating the email:", updateError)
+            }
+            return false
         },
         async setCoursePercentages(course){
             let colRef = collection(db, 'percentages')
