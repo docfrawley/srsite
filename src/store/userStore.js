@@ -24,7 +24,8 @@ export const userStore  = defineStore("user", {
         promptAnswers: [],
         UserTechniques: [],
         positiveMov: {},
-        moduleNotes: []
+        moduleNotes: [],
+        userCourses: []
         }
     },
     getters: {
@@ -74,11 +75,16 @@ export const userStore  = defineStore("user", {
                         this.email = email;
                         this.userID = res.user.uid
                         cstore.setCourses();
-                        await cstore.setCourseAll("procrastination");
-                        if (docSnap.data().completedVids) {
+                        
+                        if (docSnap.data().completedVids.length>0) {
+                            const courseObject = docSnap.data().completedVids[0]
+
+                            await cstore.setCourseAll(courseObject.course);
                             const courseTotalSecs = cstore.getCourseSeconds
-                         this.courseSecsTotal = docSnap.data().completedVids[0].totalSecs
-                         this.courseTotalPercentage = this.courseSecsTotal/courseTotalSecs*100
+                            this.courseSecsTotal = courseObject.totalSecs
+                            this.courseTotalPercentage = this.courseSecsTotal/courseTotalSecs*100
+                            this.userCourses.push(courseObject.course)
+                            console.log('user courses: ', this.userCourses)
                         }
                         if (docSnap.data().answers){
                             this.promptAnswers = docSnap.data().answers
@@ -94,30 +100,34 @@ export const userStore  = defineStore("user", {
                 }
             }
             catch(err) {
+                console.log('hello there')
                     console.log('error message: ', err.message)
                 }
         },
         async signup(e, pw, dn){
             try {
+                const cstore = coursesStore();
                 const res = await createUserWithEmailAndPassword(auth, e, pw)
-                
+                await cstore.setCourses();
                 if (!res) {
                 throw new Error('Could not complete signup')
                 console.log("here I am signing up")
                 } else {
-                    let response = await setDoc(doc(db, 'users', res.user.uid), {
+                    
+                    await setDoc(doc(db, 'users', res.user.uid), {
                         DisplayName: dn, admin:false, uid: res.user.uid, completedVids: []
                     })
-                // const documentRef = collection(db, 'users')
-                // const response = await addDoc(documentRef, {DisplayName: dn, admin:false, uid: res.user.uid})
-                if (response){
-                    this.email = e
-                    this.displayName=dn
-                    this.admin = false
-                    this.userID = res.user.uid
-                    localStorage.loggedin = true
-                    }
+                        // await cstore.setCourseAll("procrastination");
+                        this.email = e
+                        this.displayName=dn
+                        this.admin = false
+                        this.userID = res.user.uid
+                        localStorage.loggedin = true
+                        return true
+                        
+                        
                 }   
+                
             }            
             catch(err) {
             console.log(err.message)
@@ -207,7 +217,6 @@ export const userStore  = defineStore("user", {
             
         },
         async setNote(modnote, modnumb){
-            console.log('user: ', modnote, modnumb)
             const noteRef = await doc(db, 'users', this.userID)
             const noteSnap = await getDoc(noteRef)
             const noteObject = ref({
@@ -245,6 +254,20 @@ export const userStore  = defineStore("user", {
             
             }
             
+        },
+        async buyCourse(course){
+            const buyRef = doc(db, 'users', this.userID)
+            const buySnap = await getDoc(buyRef)
+            const buyObject = ref({
+                course: course,
+                boughtAt: Timestamp.now(),
+                totalSecs: 0
+            })
+            if (buySnap.exists){
+                await updateDoc(buyRef, {completedVids: arrayUnion(buyObject.value)})
+                this.userCourses.push(course)
+                console.log('courses: ', this.userCourses)
+            }
         },
         updateTechs(items){
             this.UserTechniques = items

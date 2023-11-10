@@ -2,8 +2,8 @@
 <div class="t-container">
     <div v-for="item in items" :key="item.id" >
             <div v-if="item.dimension == whichDim" class="drag-row">
-                <div class="drag-el-specific">{{ item.dimension }} Strategies</div>
-<div>Order strategies by dragging the ones most important to you towards the top. Make sure to SAVE once you have all the strategies in the order you want.</div>
+                <div class="drag-el-specific just-show">{{ item.dimension }} Strategies</div>
+<div class="create-space">Order strategies by dragging the strategies most important to you towards the top. Make sure to SAVE once you have all the strategies in the order you want.</div>
         
                 <div v-for="strategy in item.techs" :key="item.dimension + strategy" draggable="true"
                     @dragstart="startDragRow($event, item, strategy)" @drop="onDropRow($event, item, strategy)"
@@ -181,4 +181,15 @@ svg {
     flex-direction: column;
     justify-content: space-around;
 }
+
+.just-show{
+    margin: auto;
+  margin-bottom: 15px;
+}
+
+.create-space{
+    margin-bottom: 15px;
+}
+
+
 </style>

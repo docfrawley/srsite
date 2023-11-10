@@ -37,12 +37,19 @@ export default {
        let didlogin = await ustore.login(email.value, password.value);
        if (didlogin){
         isPending.value=false
-        await ustore.getTechniques();
-
-      router.push({
-        name: "CourseView",
-        params: { course: "procrastination" },
-      });
+        console.log('now in login', ustore.userCourses.length)
+        if (ustore.userCourses.length>0){
+          await ustore.getTechniques();
+          router.push({
+            name: "CourseView",
+            params: { course: "procrastination" },
+          });
+        } else {
+          router.push({
+            name: "home",
+          });
+        }
+      
        } else {
         error.value = "Sorry, could not recognize your email or password"
         isPending.value=false

@@ -108,11 +108,11 @@ export default {
 
     watch(currentVideo, ()=>{
           currentVideo.value = cstore.currentVideo
-
+          percentVid.value = currentVideo.value.percentages
           if (currentVideo.value.order>1 && currentModule.value.modnumb==3){
             showStrategies.value='strategies'
           } else {
-            if ((currentVideo.value.order==4 && currentModule.value.modnumb==4 )||(currentVideo.value.order==6 && currentModule.value.modnumb==2 )){
+            if ((currentVideo.value.order==3 && currentModule.value.modnumb==4 )||(currentVideo.value.order==6 && currentModule.value.modnumb==2 )){
               showStrategies.value = 'worksheet'
             } else{
               showStrategies.value = 'prompts'
@@ -128,15 +128,7 @@ export default {
     }
 
     const newVideo = async (specs) => {
-      // if (percentVid.value > 0){
-      //     if (currentVideo.value.percentages){
-      //         if (percentVid.value > currentVideo.value.percentages)
-      //         {cstore.setPercentage(percentVid.value)}
-      //     } else {
-      //         cstore.setPercentage(percentVid.value)
-      //     }
-      // }
-      // percentVid.value = 0
+      percentVid.value = 0
       
       currentVideo.value = specs;
       cstore.unsetCurrentVideo();
@@ -308,11 +300,11 @@ flex-wrap: wrap;
   overflow: hidden;
   overflow: -moz-scrollbars-vertical;
   overflow-y: scroll;
-  min-height: 300px;
-  max-height: 500px;
+  min-height: 40%;
+  max-height: 50%;
   padding-bottom: 20px;
   width:100%;
-  border-bottom: solid 4px var(--primegreen);
+  border-bottom: solid 4px var(--primeblue);
 }
 
 .questions-class-bottom {
@@ -439,6 +431,7 @@ flex-wrap: wrap;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
   padding: 10px;
   padding-bottom: 25px;
   text-align: center;
@@ -456,6 +449,11 @@ flex-wrap: wrap;
 
 .mod-title-row{
   font-weight: 900;
+  color: var(--primegreen);
+  background-color: var(--primeblue);
+  padding: 10px;
+  border-radius: .25rem;
+  text-align: center;
 }
 
 
@@ -495,10 +493,14 @@ flex-wrap: wrap;
 }
 
 .v-prompts{
+  display: flex;
+  justify-content: center;
   text-align: center;
-  padding-bottom:10px;
-  font-weight: bold;
-  font-size: 18px;
+  font-size: 16px;
+  color: #ffffff;
+  background-color: #001e41;
+  padding: 10px;
+  border-radius: .25rem;
 }
 
 .mod-vid-head{

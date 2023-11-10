@@ -20,6 +20,9 @@
         
     </div>
     <div class="drop-zone grid-container2">
+    <h1>THE STRATEGIES</h1>
+    <p>Below is a matrix containing six dimensions and each of the strategies for that dimension. Order the dimensions by dragging what you feel are the most important or relevant dimensions towards the top. You can also order or reorder the strategies within each dimension as well by dragging the more relevant strategies for you towards the left.</p>
+    <p>The first two strategies on the left in the top most dimension and the first strategy on the left of the second highest dimension are considered your top three strategies. These three strategies are listed in "MY TOP TOOLS".</p>
       <div
         v-for="item in items"
         :key="item.id"
@@ -30,7 +33,17 @@
         @dragenter.prevent
         @dragover.prevent
       >
-        <div class="drag-el-tk">{{ item.dimension }}</div>
+        <div class="drag-el-tk"><p class="grid-dimension">{{ item.dimension }}</p>
+          <svg style="fill:white; margin-right:5px;"
+              xmlns="http://www.w3.org/2000/svg"
+              height="24"
+              width="24"
+            >
+              <path
+                d="M11.25 16.75h1.5V11h-1.5ZM12 9.3q.35 0 .575-.238.225-.237.225-.587 0-.325-.225-.563-.225-.237-.575-.237t-.575.237q-.225.238-.225.563 0 .35.225.587.225.238.575.238Zm0 12.2q-1.975 0-3.712-.75Q6.55 20 5.275 18.725T3.25 15.712Q2.5 13.975 2.5 12t.75-3.713Q4 6.55 5.275 5.275T8.288 3.25Q10.025 2.5 12 2.5t3.713.75q1.737.75 3.012 2.025t2.025 3.012q.75 1.738.75 3.713t-.75 3.712q-.75 1.738-2.025 3.013t-3.012 2.025q-1.738.75-3.713.75Zm0-1.5q3.35 0 5.675-2.325Q20 15.35 20 12q0-3.35-2.325-5.675Q15.35 4 12 4 8.65 4 6.325 6.325 4 8.65 4 12q0 3.35 2.325 5.675Q8.65 20 12 20Zm0-8Z"
+              />
+            </svg>
+        </div>
         <div
           v-for="strategy in item.techs"
           :key="item.dimension + strategy"
@@ -42,7 +55,8 @@
         >
           <div class="drag-strat-tk">
             {{ strategy
-            }}<svg
+            }}
+            <svg
               @click="openModel(item.dimension, strategy)"
               xmlns="http://www.w3.org/2000/svg"
               height="24"
@@ -63,7 +77,7 @@
   </div>
   
   <div class="grid-container2">
-  <a class="download-stuff" href="https://storage.cloud.google.com/self-relationality.appspot.com/VA_scenario.pdf?authuser=3" target="_blank" rel="noopener noreferrer">DOWNLOAD WORKSHEET</a>
+  <a class="download-stuff" href="https://storage.cloud.google.com/self-relationality.appspot.com/VAPS.pdf?authuser=3" target="_blank" rel="noopener noreferrer">DOWNLOAD WORKSHEET</a>
   </div>
 
     <TechModal
@@ -271,37 +285,46 @@ export default {
 }
 
 svg {
-  display: inline;
-  float: right;
+
   fill: var(--primeblue);
   cursor: pointer;
 }
 
 .drag-el-tk {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     background-color: var(--primeblue);
     color: white;
     margin: 5px;
-    padding: 5px;
-    min-width: 180px;
-    text-align: center;
+    padding-left: 25x;
+    min-width: 130px;
     border-radius: .25rem;
+    font-size: 12px;
   }
   
   .drag-strat-tk {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     background-color: var(--primegreen);
     color: var(--primeblue);
     margin: 5px;
     padding: 5px;
-    min-width: 170px;
-    text-align: center;
-    display: relative;
+    min-width: 135px;
     border-radius: .25rem;
+    font-size: 12px;
+  }
+
+  .grid-dimension{
+    color: white;
+    padding-left:5px;
   }
 
   .grid-container2{
   display: grid;
-  padding-block: 2rem;
-  width: min(95%, 70rem);
+  padding-block: 1rem;
+  width: min(99%, 85rem);
   margin-inline: auto;
 }
 

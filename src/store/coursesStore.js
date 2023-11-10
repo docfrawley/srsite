@@ -16,7 +16,7 @@ export const coursesStore  = defineStore("courses", {
         currentCourseTotal: 0,
         currentVideo: {},
         originalTechs: [],
-        initialPercentage: null,
+        initialPercentage: 0,
         currentPercentage: 0,
         currentDescription: ''
         }
@@ -48,8 +48,8 @@ export const coursesStore  = defineStore("courses", {
         }
     },
     actions: {
-        setCourses(){
-            let colRef = collection(db, 'courses')
+        async setCourses(){
+            let colRef = await collection(db, 'courses')
             const unsub = onSnapshot(colRef, snapshot => {
                 let results = []
                 snapshot.docs.forEach(doc => {
@@ -153,8 +153,11 @@ export const coursesStore  = defineStore("courses", {
             }
             if (video.percentages){
                 this.initialPercentage = video.percentages
+                this.currentPercentage = video.percentages
             } else {
                 this.initialPercentage = 0
+                this.currentVideo.percentages = 0
+                this.currentPercentage = 0
             }
         },
         unsetCurrentVideo(){

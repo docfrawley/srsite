@@ -24,7 +24,7 @@ import { coursesStore } from '@/store/coursesStore'
 export default {
   setup() {
     const { error, signup, isPending } = useSignup()
-    const store = userStore()
+    const ustore = userStore()
     const email = ref('')
     const password = ref('')
     const displayName = ref('')
@@ -33,10 +33,17 @@ export default {
 
     const handleSubmit = async () => {
       isPending.value = true
-      await store.signup(email.value, password.value, displayName.value)
-      cstore.setCourses()
-      isPending.value = false
-      router.push({ name: 'home' })
+      let didSignup = await ustore.signup(email.value, password.value, displayName.value)
+      if (didSignup){
+        isPending.value = false
+        router.push({
+          name: "home",
+          // params: { course: "procrastination" },
+        });
+        } else {
+          error.value = "Sorry, could not sign you up"
+          isPending.value=false
+        }
     }
     return { email, password, displayName, handleSubmit, error, isPending }
   }

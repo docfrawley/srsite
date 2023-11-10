@@ -1,7 +1,7 @@
 <template>
   <div class="navbar">
     <nav>
-      <h1 @click="goToCourse">
+      <h1 @click="goHome">
         <svg
           version="1.1"
           id="Layer_1"
@@ -220,7 +220,12 @@
           <div id="sidebarMenu">
             <ul class="sidebarMenuInner">
               <li>
-                <span @click="goToCourse">Home</span>
+                <router-link :to="{ name: 'home' }"
+                    >Home</router-link
+                  >
+              </li>
+              <li v-if="courses.length>0">
+                <span @click="goToCourse">Procrastination</span>
               </li>
               <li v-if="isAdmin">
                 <span @click="unChecked"
@@ -236,7 +241,7 @@
                   >
                 </span>
               </li>
-              <li>
+              <li v-if="courses.length>0">
                 <span @click="unChecked"
                   ><router-link :to="{ name: 'MyToolkit' }"
                     >My Toolkit</router-link
@@ -255,7 +260,7 @@
           </div>
         </div>
         <div v-else class="space-buttons">
-          <router-link class="log-button" :to="{ name: 'Signup' }">Signup</router-link>
+          <router-link class="log-button" :to="{ name: 'Signup' }">Create Account</router-link>
           <router-link class="log-button" :to="{ name: 'Login' }">Login</router-link>
         </div>
       </div>
@@ -287,7 +292,9 @@ export default {
     const ModuleShow = ref(false);
     const matty = ref(localStorage.getItem("displayName"));
     const isChecked = ref(false);
+    const courses = ref(store.userCourses)
 
+    console.log("courses: ", courses.value, courses.value.length)
     store.$subscribe((login, state) => {
       displayName.value = store.displayName;
       isAdmin.value = store.admin;
@@ -327,6 +334,13 @@ export default {
       });
     };
 
+    const goHome = () =>{
+      isChecked.value = false;
+      router.push({
+        name: "home",
+      });
+    }
+
     return {
       handleClick,
       isAdmin,
@@ -337,6 +351,8 @@ export default {
       isChecked,
       unChecked,
       goToCourse,
+      courses,
+      goHome
     };
   },
 };
@@ -377,7 +393,7 @@ nav .links button {
 }
 
 .space-buttons{
-  width:150px;
+  width:350px;
   display: flex;
   justify-content: space-around;
 }

@@ -1,6 +1,5 @@
 <template>
   <div class="page-container">
- 
     <div v-if="allCourses">
       <div v-for="course in allCourses" :key="'Z' + course.id">
         <div v-if="course.status=='published'">
@@ -13,12 +12,7 @@
             <div>
               <h4>{{course.description}}</h4>
             </div>
-            <div>
-              <div><h4>You have completed {{ totalPercentage }}% of the course</h4></div>
-              <div class="loading-bar">
-                <div class="percentage" :style="{ 'width': totalPercentage + '%'}"></div>
-              </div>
-            </div>
+            
           </div>
 
         </div>
@@ -46,23 +40,17 @@ export default {
     const cstore = coursesStore()
     const router = useRouter()
     const allCourses = ref(cstore.allCourses)
-    const totalPercentage = ref(ustore.TotalPercentage)
-    
  
     
     const sendview = async (course) => {
       if (cstore.currentCourse != course){
-        await cstore.setCourseAll(course)
+        await cstore.setCourseAll(course.col_name)
         await cstore.setCurrentCourse(course)
-        await ustore.getTechniques()
-      }
-      if (cstore.currentVideo){
-        cstore.unsetCurrentVideo()
-        cstore.unsetCurrentModule()
+        await ustore.buyCourse(course.col_name)
       }
       router.push({ name: 'CourseView', params: { course: course.col_name } })
     }
-    return { sendview, allCourses, totalPercentage }
+    return { sendview, allCourses }
     }
 }
 </script>

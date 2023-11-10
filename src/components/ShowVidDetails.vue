@@ -31,7 +31,9 @@ export default {
     setup(props){
       const cstore=coursesStore()
       const currentVideo = ref(cstore.getcurrentVideo)
+      console.log('cV: ', currentVideo.value)
       const video = ref(props.video)
+      console.log('v: ', video.value)
       let minutes = Math.floor(parseInt(video.value.length)/60).toString()
       let seconds = parseInt(video.value.length) - minutes*60
 
@@ -48,6 +50,10 @@ export default {
       const isComplete = ref(false)
       if (video.value.percentages){
         percentage.value = video.value.percentages*100
+        console.log('percentage value now: ', percentage.value)
+      } else {
+        percentage.value =  0
+        console.log('here in else')
       }
       
       if (percentage.value >= 100){

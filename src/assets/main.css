@@ -22,7 +22,7 @@
   color: var(--primary);
 }
 body {
-  background: #f6f6f6;
+  background: -webkit-gradient(linear, left top, left bottom, from(#d6fbfa), to(#b4e8c5)) fixed;;
 }
 a {
   text-decoration: none;
@@ -63,7 +63,7 @@ button, .btn {
 
 
 .log-button { 
-  background: var(--primeblue);
+  background: var(--primegreen);
   border-radius: .25rem;
   border: 0;
   padding: 8px;
@@ -72,11 +72,13 @@ button, .btn {
   display: inline-block;
   font-size: 15px;
   pointer-events: auto;
-  color:white;
+  color:var(--primeblue);
+  width:150px;
+  text-align: center;
 }
 
 .log-button:hover{
-  color: var(--primegreen)
+  font-weight: 900;
 }
 
 
