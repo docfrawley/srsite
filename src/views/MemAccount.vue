@@ -12,7 +12,7 @@
             <div v-if="!wasSent&&(!boolName&&!boolEmail)" class="something">
                 <button class="log-button" @click="boolName=true">Change Display Name</button>
                 <button class="log-button" @click="boolEmail=true">Change Email</button>
-                <button class="log-button" @click="sendEmail">Change Password</button>
+                <button class="log-button" @click="changePass">Change Password</button>
             </div>
             
             <div v-if="wasSent">

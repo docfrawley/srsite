@@ -7,6 +7,13 @@ import { getFirestore, serverTimestamp } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
 
 const firebaseConfig = {
+    apiKey: "AIzaSyA_M3UBwK2a4Y4LRyo_g0M-GqyIsp6ATWY",
+    authDomain: "self-relationality.firebaseapp.com",
+    projectId: "self-relationality",
+    storageBucket: "self-relationality.appspot.com",
+    messagingSenderId: "1011932498740",
+    appId: "1:1011932498740:web:e9e653005e981a0750f361",
+    measurementId: "G-1QH2NYKPMM"
 };
 
 // init firebase
