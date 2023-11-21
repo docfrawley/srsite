@@ -255,7 +255,7 @@
           </div>
         </div>
         <div v-else class="space-buttons">
-          <router-link class="log-button" :to="{ name: 'Signup' }">Signup</router-link>
+          <router-link class="log-button" :to="{ name: 'Signup' }">Sign Up</router-link>
           <router-link class="log-button" :to="{ name: 'Login' }">Login</router-link>
         </div>
       </div>

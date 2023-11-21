@@ -9,6 +9,11 @@
         <button class="log-button">Submit</button>
         <router-link class="forgot-password" :to="{ name: 'ForgotPassword' }">Forgot Password</router-link>
       </div>
+      <div class="button-container">
+        <button class="log-button" @click="googleSignIn">Sign In With Google</button>
+        <button class="log-button">Sign In With Facebook</button>
+        <button class="log-button">Sign In With Microsoft</button>
+      </div>
       
       <div v-if="isPending" disabled>Loading</div>
     </form>
@@ -34,7 +39,7 @@ export default {
 
     const handleSubmit = async () => {
       isPending.value=true
-       let didlogin = await ustore.login(email.value, password.value);
+       let didlogin = await ustore.loginEmailPassword(email.value, password.value);
        if (didlogin){
         isPending.value=false
         await ustore.getTechniques();
@@ -49,7 +54,25 @@ export default {
        }
       
     };
-    return { email, password, handleSubmit, error, isPending };
+
+    const googleSignIn = async () => {
+      isPending.value=true
+      let didlogin2 = await ustore.outsideLogin();
+      if (didlogin2){
+        isPending.value=false
+        await ustore.getTechniques();
+
+      router.push({
+        name: "CourseView",
+        params: { course: "procrastination" },
+      });
+       } else {
+        error.value = "Sorry, could not recognize your email or password"
+        isPending.value=false
+       }
+    };
+
+    return { email, password, handleSubmit, googleSignIn, error, isPending };
   },
 };
 </script>
@@ -72,7 +95,11 @@ export default {
   color:var(--primegreen)
 }
 
-
+.button-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
 
 form {
   position:relative;
@@ -95,6 +122,9 @@ input, textarea {
   width: 100%;
   box-sizing: border-box;
   margin: 20px auto;
+}
+button{
+  margin-bottom: 0.5em;
 }
 
 

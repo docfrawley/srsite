@@ -2,13 +2,15 @@ import {defineStore} from "pinia"
 
 // firebase imports
 import { auth, timestamp } from '../firebase/config'
-import { getAuth, onAuthStateChanged, updateEmail, sendEmailVerification } from 'firebase/auth'
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, updateProfile  } from 'firebase/auth'
+import { getAuth, onAuthStateChanged, updateEmail, sendEmailVerification, GoogleAuthProvider } from 'firebase/auth'
+import { signInWithEmailAndPassword, signInWithPopup, createUserWithEmailAndPassword, sendPasswordResetEmail, updateProfile  } from 'firebase/auth'
 import { db } from '../firebase/config'
 import { collection, onSnapshot, query, where, addDoc, updateDoc, doc, getDoc, setDoc, Timestamp, arrayUnion, arrayRemove } from 'firebase/firestore'
 import { ref } from "vue"
 import { coursesStore } from "./coursesStore"
 
+
+const provider = new GoogleAuthProvider();
 
 export const userStore  = defineStore("user", {
     state: ()=> {
@@ -57,7 +59,7 @@ export const userStore  = defineStore("user", {
         }
     },
     actions: {
-        async login(email, password){
+        async loginEmailPassword(email, password){
             try {
                 const res = await signInWithEmailAndPassword(auth, email, password)
                 if (!res) {
@@ -96,6 +98,52 @@ export const userStore  = defineStore("user", {
             catch(err) {
                     console.log('error message: ', err.message)
                 }
+        },
+        async outsideLogin(){
+            try {
+                const credentials = await signInWithPopup(auth, provider)
+                if (!credentials) {
+                    throw new Error('Could not login')
+                    return false
+                } else {
+                    await this.login(credentials)
+                }
+            }
+            catch(err) {
+                console.log('error message: ', err.message)
+            }
+            return true
+        },
+        async login(credentials) {
+            if (typeof credentials === 'object' && credentials !== null) {
+                const cstore = coursesStore();
+                const docRef = doc(db, "users", credentials.user.uid);
+                const docSnap = await getDoc(docRef);
+                this.userCreated = credentials.user.metadata.creationTime
+                if (docSnap.exists()){
+                    this.admin = docSnap.data().admin
+                    this.displayName = docSnap.data().DisplayName
+                    this.email = credentials.user.email
+                    this.userID = credentials.user.uid
+                    cstore.setCourses();
+                    await cstore.setCourseAll("procrastination");
+                    if (docSnap.data().completedVids) {
+                        const courseTotalSecs = cstore.getCourseSeconds
+                        this.courseSecsTotal = docSnap.data().completedVids[0].totalSecs
+                        this.courseTotalPercentage = this.courseSecsTotal/courseTotalSecs*100
+                    }
+                    if (docSnap.data().answers){
+                        this.promptAnswers = docSnap.data().answers
+                    }
+                    if (docSnap.data().theTechs){
+                        this.UserTechniques = docSnap.data().theTechs[0].currentAnswers
+                    }
+                    if (docSnap.data().modNotes){
+                        this.moduleNotes = docSnap.data().modNotes
+                    }
+                }
+                return true
+            }
         },
         async signup(e, pw, dn){
             try {
