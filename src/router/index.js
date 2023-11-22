@@ -8,6 +8,7 @@ import ToolkitAdmin from '../views/ToolkitAdmin.vue'
 import MyToolkit from '../views/MyToolkit.vue'
 import MemAccount from '../views/MemAccount.vue'
 import ForgotPassword from '../views/auth/ForgotPassword.vue'
+import CourseCheckout from '../views/CourseCheckout.vue'
 import { auth } from '@/firebase/config'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 
@@ -98,6 +99,12 @@ const routes = [
     path: '/forgotpassword',
     name: 'ForgotPassword',
     component: ForgotPassword,
+    props:true
+  },
+  {
+    path: '/checkout',
+    name: 'CourseCheckout',
+    component: CourseCheckout,
     props:true
   }
 ]

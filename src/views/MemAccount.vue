@@ -3,21 +3,37 @@
     <div class="grid-container">
         <div class="grid-col-span-3 fill-up">
             <div>
-            <p>Hello {{ displayName }}</p>
+            <p>Hello <span>{{ displayName }}</span>!</p>
+            <p>current email: <span class="bolded">{{ userEmail }}</span></p>
             </div>
     
-            <div>You created your account on: {{ createdWhen }}</div>
+            <div>You created your account on: <span class="bolded">{{ createdWhen }}</span></div>
     
-            <div>
-                <p>Change your email address</p>
+            <div v-if="!wasSent&&(!boolName&&!boolEmail)" class="something">
+                <button class="log-button" @click="boolName=true">Change Display Name</button>
+                <button class="log-button" @click="boolEmail=true">Change Email</button>
+                <button class="log-button" @click="changePass">Change Password</button>
             </div>
-            <div v-if="!wasSent">
-                <button class="log-button" @click="sendEmail">Change Password</button>
-            </div>
-            <div v-else>
-                <div class="was-sent">
-                    <p>An email has been sent to that email address currently associated with this account with instructions on how to reset your password.</p>
+            
+            <div v-if="wasSent">
+                <div class="was-sent" v-if="passwordM">
+                    <p>An email has been sent to the email address currently associated with this account with instructions on how to reset your password.</p>
                 </div>
+                <div class="was-sent" v-if="emailM">
+                    <p>You have changed your email to {{ userEmail }}, an email has been sent with a verficiation link to this address. Please verify before the next time you log in.</p>
+                </div>
+                <div class="was-sent" v-if="nameM">
+                    <p>You have changed your dislay name to {{ displayName }}</p>
+                </div>
+                <div class="something">
+                    <button class="log-button" @click="reset">Go Back</button>
+                </div>
+            </div>
+            <div v-if="boolName">
+                <ChangeName @cancel="boolName=false" @submit="changeName"/>
+            </div>
+            <div v-if="boolEmail">
+                <ChangeEmail @cancel="boolEmail=false" @submit="changeEmail"/>
             </div>
     </div>
     </div>
@@ -31,26 +47,91 @@
 import { userStore } from '@/store/userStore';
 import { coursesStore } from '@/store/coursesStore';
 import { useRouter } from "vue-router";
-import { ref } from 'vue';
+import { ref, watchEffect } from 'vue';
+import ChangeName from '@/components/ChangeName.vue';
+import ChangeEmail from '@/components/ChangeEmail.vue';
 export default {
+    components: { ChangeName, ChangeEmail },
     setup() {
         const ustore = userStore()
         const displayName = ref(ustore.getDisplayName)
         const userEmail = ref(ustore.getUserEmail)
         const createdWhen = new Date(ustore.getWhenCreatedAt).toLocaleDateString()
         const wasSent = ref(false)
+        const boolEmail = ref(false)
+        const boolName = ref(false)
+        const emailM = ref(false)
+        const nameM = ref(false)
+        const passwordM = ref(false)
 
-        const sendEmail=()=>{
+        watchEffect(() => {
+            displayName.value = ustore.getDisplayName
+            userEmail.value = ustore.getUserEmail
+        })
+
+        const changePass=()=>{
+            console.log('you have sent an email')
             wasSent.value = ustore.sendPRemail(userEmail.value)
+            passwordM.value = true
         }
 
-        return {displayName, createdWhen, sendEmail, wasSent}
+        const changeName=(newName)=>{
+            const outcome = ustore.updateName(newName)
+            boolName.value = false
+            wasSent.value = true
+            nameM.value = true
+        }
+
+        const changeEmail=(newEmail)=>{
+            ustore.updateEmail(newEmail)
+            boolEmail.value = false
+            wasSent.value = true
+            emailM.value = true
+        }
+
+        const reset = () => {
+            wasSent.value = false
+            passwordM.value = false
+            nameM.value = false
+            emailM.value = false
+        }
+
+        return {
+            displayName, 
+            userEmail,
+            createdWhen,
+            changePass,
+            changeName,
+            changeEmail,
+            reset,
+            boolEmail,
+            boolName,
+            passwordM,
+            emailM,
+            nameM,
+            wasSent
+        }
     }
     
 }
 </script>
 
-<style>
+<style scoped>
+input {
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #eee;
+    margin-right: 0.75em;
+    margin-left: 0.25em;
+}
+
+form {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
 .acc-container{
     position:relative;
   top:435px;
@@ -71,4 +152,15 @@ export default {
     background: white;
     margin-bottom: 50px;
   }
+
+.something {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 1em;
+}
+
+.bolded {
+    font-weight: bold;
+    color: black;
+}
 </style>

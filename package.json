@@ -7,9 +7,10 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "@vue-stripe/vue-stripe": "^4.5.0",
     "autoprefixer": "^10",
     "core-js": "^3.8.3",
-    "firebase": "^9.17.1",
+    "firebase": "^9.23.0",
     "pinia": "^2.0.16",
     "pinia-plugin-persistedstate": "^2.1.1",
     "postcss": "^8",

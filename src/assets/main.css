@@ -22,6 +22,7 @@
   color: var(--primary);
 }
 body {
+  /* background: #f6f6f6; */
   background: -webkit-gradient(linear, left top, left bottom, from(#d6fbfa), to(#b4e8c5)) fixed;;
 }
 a {
@@ -56,14 +57,14 @@ button, .btn {
 }
 
 .save-btn:hover{
-  color:var(--primegreen)
+  color:var(--primegreen);
 }
 
 
 
 
 .log-button { 
-  background: var(--primegreen);
+  background: var(--primeblue);
   border-radius: .25rem;
   border: 0;
   padding: 8px;
@@ -72,20 +73,20 @@ button, .btn {
   display: inline-block;
   font-size: 15px;
   pointer-events: auto;
-  color:var(--primeblue);
+  color:white;
   width:150px;
   text-align: center;
 }
 
 .log-button:hover{
-  font-weight: 900;
+  color:var(--primegreen);
 }
 
 
 
 .log-button:hover, button:hover, .btn:hover, .btn:active {
   background: var(--primeblue);
-  color: white;
+  color: var(--primegreen);
 }
 button:disabled {
   opacity: 0.5;

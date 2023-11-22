@@ -314,7 +314,7 @@ export default {
     };
 
     const handleClick = () => {
-      store.setTechniques();
+      // store.setTechniques();
       store.$reset();
       cstore.$reset();
       logout();
@@ -364,7 +364,8 @@ export default {
   width: 100%;
   padding: 16px 10px;
   background: #ffffff;
-  border-bottom: 1px solid var(--lines);
+  border-bottom: 2px solid var(--primeblue);
+
   z-index: 150;
 }
 
