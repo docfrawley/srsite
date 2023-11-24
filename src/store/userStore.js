@@ -220,6 +220,33 @@ export const userStore  = defineStore("user", {
             }
             return false
         },
+        async purchaseCourse(){
+            console.log('we are in the purchase zone')
+
+            const userDocRef = doc(db, 'users', this.userID);
+            const checkoutSessionsCollectionRef = collection(userDocRef, 'checkout_sessions');
+            const checkoutSessionRef = await addDoc(checkoutSessionsCollectionRef, {
+                mode: 'payment',
+                price: 'price_1OF0ZgKgvg6dyKdROjWnzo1T',
+                success_url: window.location.origin,
+                cancel_url: window.location.origin,
+              });
+              
+              // Wait for the CheckoutSession to get attached by the extension
+              const sessionDocRef = doc(db, 'users', this.userID, 'checkout_sessions', checkoutSessionRef.id);
+              onSnapshot(sessionDocRef, (snap) => {
+                const { error, url } = snap.data();
+                if (error) {
+                  // Show an error to your customer and
+                  // inspect your Cloud Function logs in the Firebase console.
+                  alert(`An error occurred: ${error.message}`);
+                }
+                if (url) {
+                  // We have a Stripe Checkout URL, let's redirect.
+                  window.location.assign(url);
+                }
+              });
+        },
         async setCoursePercentages(course){
             let colRef = collection(db, 'percentages')
             colRef =  await query(colRef, where("uid", "==", this.userID), where("col_name", "==", 'procrastination'))

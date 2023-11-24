@@ -14,6 +14,9 @@
                 <button class="log-button" @click="boolEmail=true">Change Email</button>
                 <button class="log-button" @click="changePass">Change Password</button>
             </div>
+            <div>
+                <button class="log-button" @click="purchase">Purchase Course</button>
+            </div>
             
             <div v-if="wasSent">
                 <div class="was-sent" v-if="passwordM">
@@ -96,6 +99,10 @@ export default {
             emailM.value = false
         }
 
+        const purchase = () => {
+            ustore.purchaseCourse()
+        }
+
         return {
             displayName, 
             userEmail,
@@ -104,6 +111,7 @@ export default {
             changeName,
             changeEmail,
             reset,
+            purchase,
             boolEmail,
             boolName,
             passwordM,

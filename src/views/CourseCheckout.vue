@@ -1,6 +1,7 @@
 <template>
   <div class="checkout">
     <h1>This is the checkout page</h1>
+    <p>Hello <span>{{ displayName }}</span>!</p>
   </div>
   <div>
     <StripeCheckout
@@ -19,12 +20,15 @@
 <script>
 import { ref, onMounted } from 'vue';
 import { StripeCheckout } from '@vue-stripe/vue-stripe';
+import { userStore } from '@/store/userStore';
 
 export default {
   components: {
     StripeCheckout,
   },
   setup() {
+    const ustore = userStore()
+    const displayName = ref(ustore.getDisplayName)
     const publishableKey = "pk_test_51NtaDZKgvg6dyKdReQeTRmly31uZeeR2eRGYAtsymrLsr4uqKu15FyqzLnMvZhJckTNWsbajVSCT5PW9y16CgXUO00K4vuUVTG";
     const loading = ref(false);
     const lineItems = [
@@ -39,7 +43,8 @@ export default {
 
     const submit = () => {
       // You will be redirected to Stripe's secure checkout page
-      checkoutRef.value.redirectToCheckout();
+      //checkoutRef.value.redirectToCheckout();
+      ustore.purchaseCourse()
     };
 
     return {
