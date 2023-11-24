@@ -298,11 +298,13 @@ export default {
     store.$subscribe((login, state) => {
       displayName.value = store.displayName;
       isAdmin.value = store.admin;
+      console.log('here now')
     });
 
     onMounted(() => {
       displayName.value = store.displayName;
       isAdmin.value = store.admin;
+      console.log('here now now')
     });
 
     const showModule = () => {

@@ -81,11 +81,11 @@ export const userStore  = defineStore("user", {
                         if (docSnap.data().completedVids.length>0) {
                             const courseObject = docSnap.data().completedVids[0]
 
-                            await cstore.setCourseAll(courseObject.course);
+                            await cstore.setCourseAll(courseObject.col_name);
                             const courseTotalSecs = cstore.getCourseSeconds
                             this.courseSecsTotal = courseObject.totalSecs
                             this.courseTotalPercentage = this.courseSecsTotal/courseTotalSecs*100
-                            this.userCourses.push(courseObject.course)
+                            this.userCourses.push(courseObject.col_name)
                             console.log('user courses: ', this.userCourses)
                         }
                         if (docSnap.data().answers){
