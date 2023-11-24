@@ -23,7 +23,23 @@
             class="p-4 bg-white self-start max-w-screen-md rounded-sm fixed get-margin"
           >
 
+          <button
+              class="text-white mt-8 bg-weather-primary py-2 px-6 float-right top-0"
+              @click="$emit('modalClose')"
+            >
+              Close
+            </button>
+
             <div class="modal-inside">
+              <div class="modal-line">
+                <div class="modal-which">
+                  Strategy:
+                </div>
+                <div>
+                  {{ theTech.strategy }}
+                </div>
+              </div>
+
               <div class="modal-line">
                 <div class="modal-which">
                   Dimension:
@@ -35,10 +51,10 @@
 
               <div class="modal-line">
                 <div class="modal-which">
-                  Strategy:
+                  Timestamp:
                 </div>
                 <div>
-                  {{ theTech.strategy }}
+                  {{ theTimestamp }}
                 </div>
               </div>
               
@@ -46,19 +62,14 @@
                 <div class="modal-which">
                   Description:
                 </div>
-                <div>
+                <div class="modal-description">
                   {{ description }}
                 </div>
               </div>
             </div>
             
             
-            <button
-              class="text-white mt-8 bg-weather-primary py-2 px-6"
-              @click="$emit('modalClose')"
-            >
-              Close
-            </button>
+            
           </div>
         </Transition>
       </div>
@@ -79,18 +90,20 @@ export default {
     const description = ref('');
     const strategy = ref(props.theTech.strategy)
     const dimension = ref(props.theTech.dimension)
+    const theTimestamp = ref('')
 
     watchEffect( ()=>{
       description.value = ''
       if (props.modalActive){
-        description.value = cstore.getDescription;
+        description.value = cstore.getDescription
+        theTimestamp.value = cstore.getTimestamp
       }
       
     })
 
 
 
-    return { description };
+    return { description, theTimestamp };
   },
 };
 </script>
@@ -124,10 +137,11 @@ export default {
 }
 
 .get-margin{
-  margin-top: 200px;
+  margin-top: 125px;
 }
 
 .modal-inside{
+  padding-top: 30px;
   display: flex;
   flex-direction: column;
   align-content: space-around;
@@ -141,7 +155,13 @@ export default {
 }
 
 .modal-which{
-  width:100px;
-  font-weight:900;
+  width:110px;
+  font-weight:bold;
+  padding-right: 20px;
+}
+
+.modal-description {
+  max-height: 250px;
+  overflow-y: scroll;
 }
 </style>
