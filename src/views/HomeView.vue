@@ -3,7 +3,7 @@
     <div v-if="allCourses">
       <div v-for="course in allCourses" :key="'Z' + course.id">
         <div v-if="course.status=='published'">
-          <div @click="sendview(course)" class="course-view">
+          <div class="course-view">
             <div>
               <h2>{{course.title}}</h2>
               <h3>Instructor: {{course.instructor}}</h3>
@@ -14,6 +14,13 @@
             </div>
             
           </div>
+          <div v-if="!pending">
+            <button class="log-button" @click="purchase('procrastination')">Purchase Course</button>
+          </div>
+          <div v-if="pending">
+            <button class="log-button">Loading...</button>
+          </div>
+
 
         </div>
 
@@ -40,6 +47,7 @@ export default {
     const cstore = coursesStore()
     const router = useRouter()
     const allCourses = ref(cstore.allCourses)
+    const pending = ref(false)
  
     
     const sendview = async (course) => {
@@ -50,7 +58,12 @@ export default {
       }
       router.push({ name: 'CourseView', params: { course: course.col_name } })
     }
-    return { sendview, allCourses }
+
+    const purchase = (course) => {
+            pending.value = true
+            ustore.purchaseCourse(course)
+        }
+    return { sendview, allCourses, purchase, pending }
     }
 }
 </script>
