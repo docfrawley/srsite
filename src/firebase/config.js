@@ -7,7 +7,7 @@ import { getFirestore, serverTimestamp } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
 
 const firebaseConfig = {
- 
+  
 };
 
 // init firebase

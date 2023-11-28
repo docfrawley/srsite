@@ -230,13 +230,14 @@ export const userStore  = defineStore("user", {
             return false
         },
         async purchaseCourse(course){
+            // success_url: 'https://learn.vogeacademy.com/account',
             console.log('we are in the purchase zone')
 
             const userDocRef = doc(db, 'users', this.userID);
             const checkoutSessionsCollectionRef = collection(userDocRef, 'checkout_sessions');
             const checkoutSessionRef = await addDoc(checkoutSessionsCollectionRef, {
                 mode: 'payment',
-                price: 'price_1OF0ZgKgvg6dyKdROjWnzo1T',
+                price: 'price_1OFeQrKgvg6dyKdRwnkJWIYv',
                 course: course,
                 success_url: 'http://localhost:8080/account',
                 cancel_url: window.location.origin,
@@ -258,6 +259,7 @@ export const userStore  = defineStore("user", {
               });
         },
         async establishCompletedVids(course){
+            console.log('I got here')
             const cstore = coursesStore();
             const compRef = await doc(db, 'users', this.userID)
             const compSnap = await getDoc(compRef)
@@ -268,21 +270,22 @@ export const userStore  = defineStore("user", {
             } 
         },
         async DidBuyCourse(){
+            console.log('here I am i didbuycourse')
             let results = []
             const userDocRef =  await doc(db, 'users', this.userID);
             const paymentsRef =  await collection(userDocRef, 'payments');
             if (paymentsRef){
                 const unsub = await onSnapshot(paymentsRef, snapshot => {
                     snapshot.docs.forEach(doc => {
-                        if (doc.data().items[0].description=='Amazing Course')
+                        if (doc.data().items[0].description=='Overcoming Procrastination Course')
                     results.push({ ...doc.data(), id: doc.id })
                     })
                     if (results.length>0){
-                        let tempCourse = results[0].items[0].description
+                        let tempCourse = 'procrastination'
                         const element = this.userCourses.find(obj => obj.col_name === tempCourse);
                         if (!element){
                             let tempObject = {
-                                col_name: results[0].items[0].description,
+                                col_name: tempCourse,
                                 boughtAt: Timestamp.now(),
                                 price: results[0].items[0].amount_total,
                                 totalSecs: 0
