@@ -15,6 +15,7 @@
                 <button class="log-button" @click="changePass">Change Password</button>
             </div>
             
+            
             <div v-if="wasSent">
                 <div class="was-sent" v-if="passwordM">
                     <p>An email has been sent to the email address currently associated with this account with instructions on how to reset your password.</p>
@@ -35,7 +36,16 @@
             <div v-if="boolEmail">
                 <ChangeEmail @cancel="boolEmail=false" @submit="changeEmail"/>
             </div>
-    </div>
+        </div>
+        
+        <div v-if="testPur" class="grid-col-span-2 fill-up memAccountStuff">
+
+        
+            <div>Thank you for purchasing the Overcoming Procrastination Course</div>
+            <div>Amount Paid: ${{(testPur.price/100).toFixed(2)}}</div>
+            <div>Date of Purchase: {{whenBought}}</div>
+            <div class="log-button" @click="goToCourse">Go To Course</div>
+        </div>
     </div>
     </div>
         
@@ -47,9 +57,10 @@
 import { userStore } from '@/store/userStore';
 import { coursesStore } from '@/store/coursesStore';
 import { useRouter } from "vue-router";
-import { ref, watchEffect } from 'vue';
+import { ref, watchEffect, onMounted } from 'vue';
 import ChangeName from '@/components/ChangeName.vue';
 import ChangeEmail from '@/components/ChangeEmail.vue';
+
 export default {
     components: { ChangeName, ChangeEmail },
     setup() {
@@ -57,17 +68,42 @@ export default {
         const displayName = ref(ustore.getDisplayName)
         const userEmail = ref(ustore.getUserEmail)
         const createdWhen = new Date(ustore.getWhenCreatedAt).toLocaleDateString()
+        const router = useRouter();
         const wasSent = ref(false)
         const boolEmail = ref(false)
         const boolName = ref(false)
         const emailM = ref(false)
         const nameM = ref(false)
         const passwordM = ref(false)
+        const Purchased = ref(false)
+        const testPur = ref(ustore.userCourses[0])
+        const blay = ref(ustore.DidBuyCourse())
+        const whenBought = ref('')
 
-        watchEffect(() => {
+        if (blay.value){
+            testPur.value = ustore.userCourses[0]
+            console.log('value: ', testPur.value)
+            whenBought.value = new Date(testPur.boughtAt).toLocaleDateString()
+            console.log('bought when: ', whenBought.value)
+        }
+
+
+        watchEffect()(() => {
             displayName.value = ustore.getDisplayName
-            userEmail.value = ustore.getUserEmail
+            userEmail.value = ustore.getUserEmail  
+            testPur.value = ustore.userCourses[0]
+            console.log('value: ', testPur.value)
+            whenBought.value = new Date(testPur.boughtAt).toLocaleDateString()
+            console.log('bought when: ', whenBought.value)
         })
+
+        ustore.$subscribe((login, state) => {
+            testPur.value = ustore.userCourses[0]
+        });
+
+        onMounted(() => {
+            testPur.value = ustore.userCourses[0]
+        });
 
         const changePass=()=>{
             console.log('you have sent an email')
@@ -96,6 +132,15 @@ export default {
             emailM.value = false
         }
 
+        const goToCourse = () => {
+            router.push({
+                name: "CourseView",
+                params: { course: "procrastination" },
+            });
+        };
+
+        
+
         return {
             displayName, 
             userEmail,
@@ -109,7 +154,11 @@ export default {
             passwordM,
             emailM,
             nameM,
-            wasSent
+            wasSent,
+            Purchased,
+            testPur,
+            goToCourse,
+            whenBought
         }
     }
     
@@ -162,5 +211,13 @@ form {
 .bolded {
     font-weight: bold;
     color: black;
+}
+
+.memAccountStuff{
+    min-height: 250px;
+    display: flex;
+    flex-direction: column;
+    align-content: space-around;
+    flex-wrap: wrap;
 }
 </style>

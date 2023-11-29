@@ -18,7 +18,8 @@ export const coursesStore  = defineStore("courses", {
         originalTechs: [],
         initialPercentage: 0,
         currentPercentage: 0,
-        currentDescription: ''
+        currentDescription: '',
+        currentTimestamp:''
         }
     },
     getters: {
@@ -33,6 +34,9 @@ export const coursesStore  = defineStore("courses", {
         },
         getDescription(){
             return this.currentDescription
+        },
+        getTimestamp(){
+            return this.currentTimestamp
         },
         getCurrentVideo(){
             return this.currentVideo
@@ -134,6 +138,7 @@ export const coursesStore  = defineStore("courses", {
                         tresults.push({ ...doc.data(), id: doc.id })
                     })
                     this.currentDescription = tresults[0].description
+                    this.currentTimestamp = tresults[0].timestamp
                 })
                 
 

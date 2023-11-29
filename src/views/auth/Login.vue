@@ -10,9 +10,7 @@
         <router-link class="forgot-password" :to="{ name: 'ForgotPassword' }">Forgot Password</router-link>
       </div>
       <div class="button-container">
-        <button class="log-button" @click="googleSignIn">Sign In With Google</button>
-        <button class="log-button">Sign In With Facebook</button>
-        <button class="log-button">Sign In With Microsoft</button>
+        <button class="google-button" @click="googleSignIn">Sign In With Google</button>
       </div>
       
       <div v-if="isPending" disabled>Loading</div>
@@ -25,7 +23,6 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { userStore } from "@/store/userStore";
-import { coursesStore } from "@/store/coursesStore";
 
 export default {
   setup() {
@@ -33,7 +30,6 @@ export default {
     const password = ref("");
     const router = useRouter();
     const ustore = userStore();
-    const cstore = coursesStore();
     const error = ref('')
     const isPending = ref(false)
 
@@ -43,12 +39,18 @@ export default {
        if (didlogin){
         isPending.value=false
         await ustore.getTechniques();
-
-      router.push({
-        name: "CourseView",
-        params: { course: "procrastination" },
-      });
-       } else {
+        if (ustore.userCourses.length>0){
+          router.push({
+          name: "CourseView",
+          params: { course: "procrastination" },
+       });
+        } else{
+          router.push({
+            name: "home"
+          })
+        }
+      
+       } else { 
         error.value = "Sorry, could not recognize your email or password"
         isPending.value=false
        }
@@ -125,6 +127,25 @@ input, textarea {
 }
 button{
   margin-bottom: 0.5em;
+}
+
+.google-button {
+  background: var(--primeblue);
+  border-radius: .25rem;
+  border: 0;
+  padding: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 15px;
+  pointer-events: auto;
+  color:white;
+  width:100%;
+  text-align: center;
+}
+
+.google-button:hover{
+  color: var(--primegreen);
 }
 
 

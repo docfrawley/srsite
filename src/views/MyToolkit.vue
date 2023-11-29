@@ -21,8 +21,8 @@
     </div>
     <div class="drop-zone grid-container2">
     <h1>THE STRATEGIES</h1>
-    <p>Below is a matrix containing six dimensions and each of the strategies for that dimension. Order the dimensions by dragging what you feel are the most important or relevant dimensions towards the top. You can also order or reorder the strategies within each dimension as well by dragging the more relevant strategies for you towards the left.</p>
-    <p>The first two strategies on the left in the top most dimension and the first strategy on the left of the second highest dimension are considered your top three strategies. These three strategies are listed in "MY TOP TOOLS".</p>
+    <p class="matrix-description">Below is a matrix containing six dimensions and each of the strategies for that dimension. Order the dimensions by dragging what you feel are the most important or relevant dimensions towards the top. You can also order or reorder the strategies within each dimension as well by dragging the more relevant strategies for you towards the left.</p>
+    <p class="matrix-description">The first two strategies on the left in the top most dimension and the first strategy on the left of the second highest dimension are considered your top three strategies. These three strategies are listed in "MY TOP TOOLS".</p>
       <div
         v-for="item in items"
         :key="item.id"
@@ -35,6 +35,7 @@
       >
         <div class="drag-el-tk"><p class="grid-dimension">{{ item.dimension }}</p>
           <svg style="fill:white; margin-right:5px;"
+          @click="openDimModel(item.dimension)"
               xmlns="http://www.w3.org/2000/svg"
               height="24"
               width="24"
@@ -85,6 +86,12 @@
       :theTech="strategyItems"
       :modalActive="modalActive"
     />
+
+    <TechDimModal
+      @modalDimClose="toggleDimModal"
+      :theDimension="theDimension"
+      :modalDimActive="modalDimActive"
+    />
   </div>
   
 </template>
@@ -94,12 +101,13 @@ import { ref } from "@vue/reactivity";
 import { userStore } from "@/store/userStore";
 import { coursesStore } from "@/store/coursesStore";
 import TechModal from "@/components/TechModal.vue";
+import TechDimModal from "@/components/TechDimModal.vue";
 import Motivations from "@/components/Motivations.vue";
 import TopTools from "@/components/TopTools.vue";
 import ShowPromptTK from "@/components/ShowPromptTK.vue";
 
 export default {
-  components: { TechModal, Motivations, TopTools, ShowPromptTK },
+  components: { TechModal, TechDimModal, Motivations, TopTools, ShowPromptTK },
   setup() {
     const ustore = userStore();
     const cstore = coursesStore();
@@ -110,7 +118,9 @@ export default {
     const original_items = ref(JSON.parse(JSON.stringify(items.value)));
     const UserTechs = ref(ustore.getUserTechniques);
     const modalActive = ref(false);
+    const modalDimActive = ref(false)
     const strategyItems = ref({});
+    const theDimension = ref('')
     const topArray = ref([])
     const goalstuff =  {
       prompt:"",
@@ -203,6 +213,13 @@ export default {
       modalActive.value = true;
     };
 
+    const openDimModel = (dimension) => {
+      theDimension.value = dimension
+      console.log('here now: ', theDimension.value)
+
+      modalDimActive.value = true
+    }
+
     const handleReset = () => {
       items.value = original_items.value;
       original_items.value = JSON.parse(JSON.stringify(items.value));
@@ -214,6 +231,10 @@ export default {
 
     const toggleModal = () => {
       modalActive.value = !modalActive.value;
+    };
+
+    const toggleDimModal = () => {
+      modalDimActive.value = !modalDimActive.value;
     };
     const wasItAdded = (addedYes) => {
       console.log('added')    
@@ -229,7 +250,9 @@ export default {
       handleReset,
       handleTechs,
       modalActive,
+      modalDimActive,
       toggleModal,
+      toggleDimModal,
       strategyItems,
       openModel,
       topArray,
@@ -239,7 +262,9 @@ export default {
       totalPercentage,
       goalstuff,
       motstuff,
-      wasItAdded
+      wasItAdded,
+      openDimModel,
+      theDimension
     };
   },
 };
@@ -344,6 +369,17 @@ svg {
 
 .download-stuff:hover{
   color: var(--primegreen);
+}
+
+.matrix-description{
+  font-size: 14px;
+  width: 90%;
+  margin: 10px 0 10px 0;
+}
+
+h1 {
+  font-size: 20px;
+  font-weight: bold;
 }
 
 /* .drag-el:nth-last-of-type(1){

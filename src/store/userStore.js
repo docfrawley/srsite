@@ -9,7 +9,7 @@ import { collection, onSnapshot, query, where, addDoc, updateDoc, doc, getDoc, s
 import { ref } from "vue"
 import { coursesStore } from "./coursesStore"
 
-
+const provider = new GoogleAuthProvider();
 
 
 export const userStore  = defineStore("user", {
@@ -81,11 +81,11 @@ export const userStore  = defineStore("user", {
                         if (docSnap.data().completedVids.length>0) {
                             const courseObject = docSnap.data().completedVids[0]
 
-                            await cstore.setCourseAll(courseObject.course);
+                            await cstore.setCourseAll(courseObject.col_name);
                             const courseTotalSecs = cstore.getCourseSeconds
                             this.courseSecsTotal = courseObject.totalSecs
                             this.courseTotalPercentage = this.courseSecsTotal/courseTotalSecs*100
-                            this.userCourses.push(courseObject.course)
+                            this.userCourses.push(courseObject)
                             console.log('user courses: ', this.userCourses)
                         }
                         if (docSnap.data().answers){
@@ -228,6 +228,78 @@ export const userStore  = defineStore("user", {
                 console.error("error updating the email:", updateError)
             }
             return false
+        },
+        async purchaseCourse(course){
+            // success_url: 'https://learn.vogeacademy.com/account',
+            console.log('we are in the purchase zone')
+
+            const userDocRef = doc(db, 'users', this.userID);
+            const checkoutSessionsCollectionRef = collection(userDocRef, 'checkout_sessions');
+            const checkoutSessionRef = await addDoc(checkoutSessionsCollectionRef, {
+                mode: 'payment',
+                price: 'price_1OFeQrKgvg6dyKdRwnkJWIYv',
+                course: course,
+                success_url: 'http://localhost:8080/account',
+                cancel_url: window.location.origin,
+              });
+              
+              // Wait for the CheckoutSession to get attached by the extension
+              const sessionDocRef = doc(db, 'users', this.userID, 'checkout_sessions', checkoutSessionRef.id);
+              onSnapshot(sessionDocRef, (snap) => {
+                const { error, url } = snap.data();
+                if (error) {
+                  // Show an error to your customer and
+                  // inspect your Cloud Function logs in the Firebase console.
+                  alert(`An error occurred: ${error.message}`);
+                }
+                if (url) {
+                  // We have a Stripe Checkout URL, let's redirect.
+                  window.location.assign(url);
+                }
+              });
+        },
+        async establishCompletedVids(course){
+            console.log('I got here')
+            const cstore = coursesStore();
+            const compRef = await doc(db, 'users', this.userID)
+            const compSnap = await getDoc(compRef)
+            if (compSnap.data().completedVids.length==0){
+                updateDoc(compRef, {completedVids: arrayUnion(this.userCourses[0])})
+                cstore.setCourses();
+                cstore.setCourseAll(course);
+            } 
+        },
+        async DidBuyCourse(){
+            console.log('here I am i didbuycourse')
+            let results = []
+            const userDocRef =  await doc(db, 'users', this.userID);
+            const paymentsRef =  await collection(userDocRef, 'payments');
+            if (paymentsRef){
+                const unsub = await onSnapshot(paymentsRef, snapshot => {
+                    snapshot.docs.forEach(doc => {
+                        if (doc.data().items[0].description=='Overcoming Procrastination Course')
+                    results.push({ ...doc.data(), id: doc.id })
+                    })
+                    if (results.length>0){
+                        let tempCourse = 'procrastination'
+                        const element = this.userCourses.find(obj => obj.col_name === tempCourse);
+                        if (!element){
+                            let tempObject = {
+                                col_name: tempCourse,
+                                boughtAt: Timestamp.now(),
+                                price: results[0].items[0].amount_total,
+                                totalSecs: 0
+                            }
+                            this.userCourses.push(tempObject)
+                            console.log('user courses: ', this.userCourses)
+                            this.establishCompletedVids(tempCourse)
+                        }
+                       
+                    }
+                })
+            } 
+            
+            
         },
         async setCoursePercentages(course){
             let colRef = collection(db, 'percentages')

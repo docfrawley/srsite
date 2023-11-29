@@ -219,13 +219,13 @@
 
           <div id="sidebarMenu">
             <ul class="sidebarMenuInner">
-              <li>
+              <li v-if="courses.length==0">
                 <router-link :to="{ name: 'home' }"
                     >Home</router-link
                   >
               </li>
               <li v-if="courses.length>0">
-                <span @click="goToCourse">Procrastination</span>
+                <span @click="goToCourse">Home</span>
               </li>
               <li v-if="isAdmin">
                 <span @click="unChecked"
@@ -275,7 +275,7 @@
 import useLogout from "../composables/useLogout";
 import { useRouter } from "vue-router";
 import getUser from "@/composables/getUser";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watchEffect } from "vue";
 import { userStore } from "@/store/userStore";
 import { coursesStore } from "@/store/coursesStore";
 import ModalMenu from "./ModalMenu.vue";
@@ -292,17 +292,24 @@ export default {
     const ModuleShow = ref(false);
     const matty = ref(localStorage.getItem("displayName"));
     const isChecked = ref(false);
-    const courses = ref(store.userCourses)
+    const courses = ref([])
+    console.log('courses.....: ', courses)
+    watchEffect(() =>{
+      courses.value = store.userCourses
+      console.log('courses: ', courses)
+    })
 
-    console.log("courses: ", courses.value, courses.value.length)
+
     store.$subscribe((login, state) => {
       displayName.value = store.displayName;
       isAdmin.value = store.admin;
+      courses.value = store.userCourses
     });
 
     onMounted(() => {
       displayName.value = store.displayName;
       isAdmin.value = store.admin;
+      courses.value = store.userCourses
     });
 
     const showModule = () => {
@@ -336,9 +343,16 @@ export default {
 
     const goHome = () =>{
       isChecked.value = false;
+      if (courses.value.length>0){
+        router.push({
+        name: "CourseView",
+        params: { course: "procrastination" },
+      });
+      } else {
       router.push({
         name: "home",
       });
+    }
     }
 
     return {
@@ -351,8 +365,8 @@ export default {
       isChecked,
       unChecked,
       goToCourse,
-      courses,
-      goHome
+      goHome,
+      courses
     };
   },
 };
