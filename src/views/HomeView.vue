@@ -1,33 +1,18 @@
 <template>
-  <div class="page-container">
-    <div v-if="allCourses">
-      <div v-for="course in allCourses" :key="'Z' + course.id">
-        <div v-if="course.status=='published'">
-          <div class="course-view">
-            <div>
-              <h2>{{course.title}}</h2>
-              <h3>Instructor: {{course.instructor}}</h3>
-            </div>
-      
-            <div>
-              <h4>{{course.description}}</h4>
-            </div>
-            
-          </div>
-          <div v-if="!pending">
-            <button class="log-button" @click="purchase('procrastination')">Purchase Course</button>
-          </div>
-          <div v-if="pending">
-            <button class="log-button">Loading...</button>
-          </div>
 
 
-        </div>
-
-      </div>
-    </div>
-
-
+<div class="step2-container">
+  <div class="su-stuff">
+  <p class="step-one">STEP TWO:</p>
+  <p class="sub-one">Thanks for creating your account, {{ displayName }}.</p>
+  <p class="sub-one">Now, if you're ready to start Overcoming Procrastination with Nic Voge as your guide, please click on the Purchase Course below</p>
+  <div v-if="!pending">
+    <button class="log-button" @click="purchase('procrastination')">Purchase Course</button>
+  </div>
+  <div v-if="pending">
+    <button class="log-button">Loading...</button>
+  </div>
+</div>
 </div>
 
 </template>
@@ -44,63 +29,71 @@ export default {
   
   setup() {
     const ustore = userStore()
-    const cstore = coursesStore()
     const router = useRouter()
-    const allCourses = ref(cstore.allCourses)
     const pending = ref(false)
+    const displayName = ref(ustore.displayName)
  
-    
-    const sendview = async (course) => {
-      if (cstore.currentCourse != course){
-        await cstore.setCourseAll(course.col_name)
-        await cstore.setCurrentCourse(course)
-        await ustore.buyCourse(course.col_name)
-      }
-      router.push({ name: 'CourseView', params: { course: course.col_name } })
-    }
+  
 
     const purchase = (course) => {
             pending.value = true
             ustore.purchaseCourse(course)
         }
-    return { sendview, allCourses, purchase, pending }
+    return { purchase, pending, displayName }
     }
 }
 </script>
 
 <style scoped>
-    .course-view {
-      display: flex;
-      flex-wrap: wrap;
-      align-content: space-between;
-      background-blend-mode: darken;
-      background-color: rgba(0, 0, 0, 0.3);
-      border-radius: 5px;
-      border: 1px solid var(--lines);
-      padding: 25px 20px;
-      font-weight: 600;
-      cursor: pointer;
-      font-size: 18px;
-      background-image:url("../assets/procrastinateLarge.jpg");
-      height: 375px;
-      width: 500px;
-      color: #fff;
+.step2-container {
+  padding-top: 150px;
+}
+
+    
+
+    .su-stuff{
+      position:relative;
+      top:20px;
+      width: 400px;
+      margin: 0 auto;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 1px 2px 3px rgba(50,50,50,0.05);
+      border: 1px solid  var(--secondary);
+      background: white;
     }
 
-    .course h1, h2, h3, h4, h5, h6{
-      color:#fff;
-    }
-  
-    @media screen and (max-width: 600px){
-    
-      .course-view {
-        display: flex;
-      flex-wrap: wrap;
-      height: 230px;
-      max-width: 300px;
-      font-size:12px;
-      background-image:url("../assets/procrastinateSmall.jpg");
-    }
-    
+.step-one {
+  font-size: 22px;
+
+}
+
+.sub-one {
+  margin-top: 20px;
+  font-size: 18px;
+  margin-bottom: 15px;
+}
+
+form {
+  position:relative;
+  top:20px;
+  width: 400px;
+  margin: 0 auto;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 1px 2px 3px rgba(50,50,50,0.05);
+  border: 1px solid  var(--secondary);
+  background: white;
+  margin-bottom: 50px;
+}
+input, textarea {
+  border: 0;
+  border-bottom: 1px solid var(--secondary);
+  padding: 10px;
+  outline: none;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin:
   }
 </style>
