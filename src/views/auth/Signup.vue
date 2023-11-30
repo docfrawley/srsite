@@ -1,13 +1,14 @@
 <template>
   <div class="su-stuff">
     <form @submit.prevent="handleSubmit">
-      <h3>Sign up</h3>
+      <p class="step-one">STEP ONE:</p>
+      <p class="sub-one">Thanks so much for your interest. Let's get you signed up with an account after which you can purchase the course.</p>
       <input type="text" required placeholder="Display name" v-model="displayName">
       <input type="email" required placeholder="Email" v-model="email">
       <input type="password" required placeholder="Password" v-model="password">
       <div v-if="error" class="error">{{ error }}</div>
-      <button v-if="!isPending">Sign up</button>
-      <button v-if="isPending" disabled>Loading</button>
+      <button class="log-button" v-if="!isPending">Sign up</button>
+      <button class="log-button" v-if="isPending" disabled>Loading...</button>
     </form>
   </div>
   
@@ -53,6 +54,15 @@ export default {
 <style scoped>
 .su-stuff{
   padding-top: 150px;
+}
+
+.step-one {
+  font-size: 22px;
+}
+
+.sub-one {
+  margin-top: 15px;
+  font-size: 18px;
 }
 
 form {
