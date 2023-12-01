@@ -88,13 +88,13 @@ export default {
         }
 
 
-        watchEffect()(() => {
+        watchEffect(() => {
             displayName.value = ustore.getDisplayName
-            userEmail.value = ustore.getUserEmail  
-            testPur.value = ustore.userCourses[0]
+            userEmail.value = ustore.getUserEmail
+            /*testPur.value = ustore.userCourses[0]
             console.log('value: ', testPur.value)
             whenBought.value = new Date(testPur.boughtAt).toLocaleDateString()
-            console.log('bought when: ', whenBought.value)
+            console.log('bought when: ', whenBought.value)*/
         })
 
         ustore.$subscribe((login, state) => {
@@ -112,7 +112,7 @@ export default {
         }
 
         const changeName=(newName)=>{
-            const outcome = ustore.updateName(newName)
+            ustore.updateName(newName)
             boolName.value = false
             wasSent.value = true
             nameM.value = true
@@ -130,6 +130,8 @@ export default {
             passwordM.value = false
             nameM.value = false
             emailM.value = false
+            displayName.value = ustore.getDisplayName
+            console.log(ustore.getDisplayName)
         }
 
         const goToCourse = () => {

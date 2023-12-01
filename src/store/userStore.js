@@ -3,7 +3,7 @@ import {defineStore} from "pinia"
 // firebase imports
 import { auth, timestamp } from '../firebase/config'
 import { getAuth, onAuthStateChanged,updateEmail, sendEmailVerification, GoogleAuthProvider  } from 'firebase/auth'
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail  } from 'firebase/auth'
+import { signInWithEmailAndPassword, signInWithPopup, createUserWithEmailAndPassword, sendPasswordResetEmail  } from 'firebase/auth'
 import { db } from '../firebase/config'
 import { collection, onSnapshot, query, where, addDoc, updateDoc, doc, getDoc, setDoc, Timestamp, arrayUnion, arrayRemove } from 'firebase/firestore'
 import { ref } from "vue"
@@ -171,10 +171,41 @@ export const userStore  = defineStore("user", {
                         this.userID = res.user.uid
                         localStorage.loggedin = true
                         return true
-                        
-                        
-                }   
-                
+  
+                }                   
+            }            
+            catch(err) {
+            console.log(err.message)
+            }
+        },
+        async outsideSignUp(){
+            try {
+                const cstore = coursesStore();
+                const res = await signInWithPopup(auth, provider)
+                const docRef = doc(db, "users", res.user.uid);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    throw new Error('There is already an account associated with that google address')
+                    return false
+                }
+                await cstore.setCourses();
+                if (!res) {
+                throw new Error('Could not complete signup')
+                console.log("here I am signing up")
+                } else {
+                    
+                    await setDoc(doc(db, 'users', res.user.uid), {
+                        DisplayName: res.user.displayName, admin:false, uid: res.user.uid, completedVids: []
+                    })
+                        // await cstore.setCourseAll("procrastination");
+                        this.email = res.user.email
+                        this.displayName=res.user.displayName
+                        this.admin = false
+                        this.userID = res.user.uid
+                        localStorage.loggedin = true
+                        return true
+  
+                }                   
             }            
             catch(err) {
             console.log(err.message)
@@ -217,13 +248,13 @@ export const userStore  = defineStore("user", {
                 await updateEmail(auth.currentUser, email)
                 this.email = email
                 console.log("updated the email")
-                try {
+                /*try {
                     await sendEmailVerification(auth.currentUser)
                     console.log("verification email sent")
                     return true
                 } catch(verificationError) {
                     console.error("error sending verification email:", verificationError)
-                }
+                }*/
             } catch (updateError) {
                 console.error("error updating the email:", updateError)
             }
