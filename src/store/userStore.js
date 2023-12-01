@@ -108,19 +108,31 @@ export const userStore  = defineStore("user", {
         async outsideLogin(){
             let result = false
             try {
-                const credentials = await signInWithPopup(auth, provider)
-                if (!credentials) {
+                const res = await signInWithPopup(auth, provider)
+                if (!res) {
                     throw new Error('Could not login')
                     return false
                 } else {
-                    result = await this.login(credentials)
+                    result = await this.login(res)
+                }
+
+                if (!result) {
+                    const cstore = coursesStore();
+                    await cstore.setCourses();
+                    await setDoc(doc(db, 'users', res.user.uid), {
+                        DisplayName: res.user.displayName, admin:false, uid: res.user.uid, completedVids: []
+                    })
+                    // await cstore.setCourseAll("procrastination");
+                    this.email = res.user.email
+                    this.displayName=res.user.displayName
+                    this.admin = false
+                    this.userID = res.user.uid
+                    localStorage.loggedin = true
+                    return true
                 }
             }
             catch(err) {
                 console.log('error message: ', err.message)
-            }
-            if (!result) {
-                auth.currentUser.delete()
             }
             return result
         },
@@ -137,7 +149,7 @@ export const userStore  = defineStore("user", {
                     this.userID = credentials.user.uid
                     cstore.setCourses();
                     await cstore.setCourseAll("procrastination");
-                    if (docSnap.data().completedVids) {
+                    if (docSnap.data().completedVids.length>0) {
                         const courseTotalSecs = cstore.getCourseSeconds
                         this.courseSecsTotal = docSnap.data().completedVids[0].totalSecs
                         this.courseTotalPercentage = this.courseSecsTotal/courseTotalSecs*100
@@ -170,13 +182,13 @@ export const userStore  = defineStore("user", {
                     await setDoc(doc(db, 'users', res.user.uid), {
                         DisplayName: dn, admin:false, uid: res.user.uid, completedVids: []
                     })
-                        // await cstore.setCourseAll("procrastination");
-                        this.email = e
-                        this.displayName=dn
-                        this.admin = false
-                        this.userID = res.user.uid
-                        localStorage.loggedin = true
-                        return true
+                    // await cstore.setCourseAll("procrastination");
+                    this.email = e
+                    this.displayName=dn
+                    this.admin = false
+                    this.userID = res.user.uid
+                    localStorage.loggedin = true
+                    return true
   
                 }                   
             }            

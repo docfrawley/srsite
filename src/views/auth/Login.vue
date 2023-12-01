@@ -13,7 +13,7 @@
         <div v-if="isPending" disabled>Loading</div>
       </form>
       <div class="button-container">
-        <button class="google-button" @click="googleSignIn">Sign In With Google</button>
+        <button class="google-button" @click="googleLogin">Login With Google</button>
       </div>
     </div>
   </div>
@@ -58,24 +58,29 @@ export default {
       
     };
 
-    const googleSignIn = async () => {
+    const googleLogin = async () => {
       isPending.value=true
       let didlogin2 = await ustore.outsideLogin();
       if (didlogin2){
         isPending.value=false
         await ustore.getTechniques();
-
-      router.push({
-        name: "CourseView",
-        params: { course: "procrastination" },
-      });
-       } else {
+        if (ustore.userCourses.length>0){
+          router.push({
+          name: "CourseView",
+          params: { course: "procrastination" },
+       });
+        } else{
+          router.push({
+            name: "home"
+          })
+        }
+      } else {
         error.value = "Sorry, could not recognize your email or password"
         isPending.value=false
        }
     };
 
-    return { email, password, handleSubmit, googleSignIn, error, isPending };
+    return { email, password, handleSubmit, googleLogin, error, isPending };
   },
 };
 </script>
