@@ -106,19 +106,23 @@ export const userStore  = defineStore("user", {
                 }
         },
         async outsideLogin(){
+            let result = false
             try {
                 const credentials = await signInWithPopup(auth, provider)
                 if (!credentials) {
                     throw new Error('Could not login')
                     return false
                 } else {
-                    await this.login(credentials)
+                    result = await this.login(credentials)
                 }
             }
             catch(err) {
                 console.log('error message: ', err.message)
             }
-            return true
+            if (!result) {
+                auth.currentUser.delete()
+            }
+            return result
         },
         async login(credentials) {
             if (typeof credentials === 'object' && credentials !== null) {
@@ -147,8 +151,10 @@ export const userStore  = defineStore("user", {
                     if (docSnap.data().modNotes){
                         this.moduleNotes = docSnap.data().modNotes
                     }
+                    return true
+                } else {
+                    return false
                 }
-                return true
             }
         },
         async signup(e, pw, dn){
