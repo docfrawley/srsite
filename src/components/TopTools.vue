@@ -50,7 +50,6 @@ export default {
       topArray.value.push({dimension:UserTechs.value[0].dimension, tool: UserTechs.value[0].techs[1]})
       topArray.value.push({dimension:UserTechs.value[1].dimension, tool: UserTechs.value[1].techs[0]})
     }
-    console.log('top tool: ', topArray.value)
     })
     
 

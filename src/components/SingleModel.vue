@@ -165,7 +165,6 @@ export default {
     };
 
     const ShowUpdate = (e, d, p) => {
-      console.lot('second: ', e)
       cstore.updateProgress(e.percent)
         for (let i = 0; i < currentVideo.value.questions.length; i++) {
           if (
@@ -182,15 +181,15 @@ export default {
         }    
         
         if (e.percent>.99){
-          let ElementNum = currentVideo.value.order + 1
-      console.log('ended: ', ElementNum)
-      if (currentVideo.value.percentages<e.percent){
-        cstore.setPercentage(e.percent);
-      }
-      if (ElementNum == currentModule.value.videos.length) {
-        ElementNum = 0;
-      }
-      currentVideo.value = currentModule.value.videos[ElementNum.value];
+          let ElementNum = currentVideo.value.order
+          if (currentVideo.value.percentages<e.percent){
+            cstore.setPercentage(e.percent);
+          }
+          if (ElementNum == currentModule.value.videos.length) {
+            ElementNum = 0;
+          }
+          currentVideo.value = currentModule.value.videos[ElementNum];
+        cstore.setCurrentVideo(currentVideo.value);
         }
     };
 
