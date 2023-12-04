@@ -17,6 +17,7 @@
 import { ref } from "vue";
 
 export default {
+    emits: ['cancel', 'submit'],
     setup(props, context) {
         const newName = ref('')
         const nameError = ref(false)

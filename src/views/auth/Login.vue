@@ -1,20 +1,21 @@
 <template>
   <div class="login-stuff">
-    <form @submit.prevent="handleSubmit">
-      <h3>Login</h3>
-      <input type="email" placeholder="Email" v-model="email" />
-      <input type="password" placeholder="Password" v-model="password" />
-      <div v-if="error" class="error">{{ error }}</div>
-      <div v-if="!isPending" class="log-flex">
-        <button class="log-button">Submit</button>
-        <router-link class="forgot-password" :to="{ name: 'ForgotPassword' }">Forgot Password</router-link>
-      </div>
+    <div class="login-form">
+      <form @submit.prevent="handleSubmit">
+        <h3>Login</h3>
+        <input type="email" placeholder="Email" v-model="email" />
+        <input type="password" placeholder="Password" v-model="password" />
+        <div v-if="error" class="error">{{ error }}</div>
+        <div v-if="!isPending" class="log-flex">
+          <button class="log-button" >Submit</button>
+          <router-link class="forgot-password" :to="{ name: 'ForgotPassword' }">Forgot Password</router-link>
+        </div>
+        <div v-if="isPending" disabled>Loading</div>
+      </form>
       <div class="button-container">
-        <button class="google-button" @click="googleSignIn">Sign In With Google</button>
+        <button class="google-button" @click="googleLogin">Login With Google</button>
       </div>
-      
-      <div v-if="isPending" disabled>Loading</div>
-    </form>
+    </div>
   </div>
 </template>
 
@@ -57,24 +58,29 @@ export default {
       
     };
 
-    const googleSignIn = async () => {
+    const googleLogin = async () => {
       isPending.value=true
       let didlogin2 = await ustore.outsideLogin();
       if (didlogin2){
         isPending.value=false
         await ustore.getTechniques();
-
-      router.push({
-        name: "CourseView",
-        params: { course: "procrastination" },
-      });
-       } else {
+        if (ustore.userCourses.length>0){
+          router.push({
+          name: "CourseView",
+          params: { course: "procrastination" },
+       });
+        } else{
+          router.push({
+            name: "home"
+          })
+        }
+      } else {
         error.value = "Sorry, could not recognize your email or password"
         isPending.value=false
        }
     };
 
-    return { email, password, handleSubmit, googleSignIn, error, isPending };
+    return { email, password, handleSubmit, googleLogin, error, isPending };
   },
 };
 </script>
@@ -103,7 +109,7 @@ export default {
   justify-content: space-around;
 }
 
-form {
+.login-form {
   position:relative;
   top:20px;
   width: 400px;

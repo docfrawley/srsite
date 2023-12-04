@@ -1,15 +1,20 @@
 <template>
   <div class="su-stuff">
-    <form @submit.prevent="handleSubmit">
-      <p class="step-one">STEP ONE:</p>
-      <p class="sub-one">Thanks so much for your interest. Let's get you signed up with an account after which you can purchase the course.</p>
-      <input type="text" required placeholder="Display name" v-model="displayName">
-      <input type="email" required placeholder="Email" v-model="email">
-      <input type="password" required placeholder="Password" v-model="password">
-      <div v-if="error" class="error">{{ error }}</div>
-      <button class="log-button" v-if="!isPending">Sign up</button>
-      <button class="log-button" v-if="isPending" disabled>Loading...</button>
-    </form>
+    <div class="signup-form">
+      <form @submit.prevent="handleSubmit">
+        <p class="step-one">STEP ONE:</p>
+        <p class="sub-one">Thanks so much for your interest. Let's get you signed up with an account after which you can purchase the course.</p>
+        <input type="text" required placeholder="Display name" v-model="displayName">
+        <input type="email" required placeholder="Email" v-model="email">
+        <input type="password" required placeholder="Password" v-model="password">
+        <div v-if="error" class="error">{{ error }}</div>
+        <button class="log-button" v-if="!isPending">Sign up</button>
+        <button class="log-button" v-if="isPending" disabled>Loading...</button>
+      </form>
+      <div class="button-container">
+        <button class="google-button" @click="googleSignUp">Sign Up With Google</button>
+      </div>
+    </div>
   </div>
   
 </template>
@@ -38,7 +43,7 @@ export default {
       if (didSignup){
         isPending.value = false
         router.push({
-          name: "home",
+          name: "MemAccount",
           // params: { course: "procrastination" },
         });
         } else {
@@ -46,7 +51,22 @@ export default {
           isPending.value=false
         }
     }
-    return { email, password, displayName, handleSubmit, error, isPending }
+
+    const googleSignUp = async () => {
+      isPending.value=true
+      let didSignup = await ustore.outsideSignUp();
+      if (didSignup){
+        isPending.value = false
+        router.push({
+          name: "MemAccount",
+          // params: { course: "procrastination" },
+        });
+        } else {
+          error.value = "Sorry, there may already be an account associated with that google address, please try logging in using google"
+          isPending.value=false
+        }
+    };
+    return { email, password, displayName, googleSignUp, handleSubmit, error, isPending }
   }
 }
 </script>
@@ -65,7 +85,7 @@ export default {
   font-size: 18px;
 }
 
-form {
+.signup-form {
   position:relative;
   top:20px;
   width: 400px;
@@ -86,6 +106,28 @@ input, textarea {
   width: 100%;
   box-sizing: border-box;
   margin: 20px auto;
+}
+button{
+  margin-bottom: 0.5em;
+}
+
+.google-button {
+  background: var(--primeblue);
+  border-radius: .25rem;
+  border: 0;
+  padding: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 15px;
+  pointer-events: auto;
+  color:white;
+  width:100%;
+  text-align: center;
+}
+
+.google-button:hover{
+  color: var(--primegreen);
 }
 
 </style>

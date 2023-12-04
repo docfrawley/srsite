@@ -45,6 +45,7 @@
               />
             </svg>
         </div>
+        <div class="horizontal-respon"></div>
         <div
           v-for="strategy in item.techs"
           :key="item.dimension + strategy"
@@ -75,10 +76,18 @@
         <button @click="handleReset" class="reset-button">RESET</button>
         <button @click="handleTechs" class="reset-button">SAVE</button>
       </div>
+
+      
   </div>
   
-  <div class="grid-container2">
-  <a class="download-stuff" href="https://storage.cloud.google.com/self-relationality.appspot.com/VAPS.pdf?authuser=3" target="_blank" rel="noopener noreferrer">DOWNLOAD WORKSHEET</a>
+  <div class="grid-container fill-up download-section">
+  <div class="down-info">
+  <p>This is the worksheet mentioned in the first module and discussed more fully in the Knowing to Doing video of module 4. 
+    Use this worksheet to create your gameplan for particular situations where you are prone to procrastinate.</p>
+  </div>
+  <div class="down-button">   
+    <a class="download-stuff" href="https://storage.cloud.google.com/self-relationality.appspot.com/VAPS.pdf?authuser=3" target="_blank" rel="noopener noreferrer">DOWNLOAD WORKSHEET</a>
+  </div>
   </div>
 
     <TechModal
@@ -97,7 +106,7 @@
 </template>
 
 <script>
-import { ref } from "@vue/reactivity";
+import { ref, watchEffect } from "@vue/reactivity";
 import { userStore } from "@/store/userStore";
 import { coursesStore } from "@/store/coursesStore";
 import TechModal from "@/components/TechModal.vue";
@@ -140,6 +149,8 @@ export default {
       topArray.value.push({dimension:UserTechs.value[1].dimension, tool: UserTechs.value[1].techs[0]})
     
     }
+
+    
 
 
     if (UserTechs.value.length > 0) {
@@ -280,12 +291,18 @@ export default {
   border: solid 1px var(--primeblue);
   box-shadow: 2.5rem 3.75rem 3rem -3rem hsl(var(--clr-secondary-400) / 0.25);
   margin:auto;
+  margin-bottom:30px;
 }
 
 .drag-row {
   display: flex;
   flex-direction: row;
+  flex-wrap: nowrap;
+  overflow-y: hidden;
+  overflow-x: auto;
 }
+
+
 
 
 
@@ -353,6 +370,22 @@ svg {
   margin-inline: auto;
 }
 
+.download-section{
+  padding:25px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    margin-bottom:50px;
+}
+
+@media screen and (max-width: 650px){
+    
+  .download-section{
+      flex-direction: column;
+    }
+  }
+
 .download-stuff{
   background-color: var(--primeblue);
   color: white;
@@ -365,6 +398,12 @@ svg {
   font-size: 15px;
   pointer-events: auto;
   color:white;
+  width: 200px;
+}
+
+
+.down-info{
+  max-width:60%;
 }
 
 .download-stuff:hover{

@@ -67,14 +67,15 @@ button, .btn {
   background: var(--primeblue);
   border-radius: .25rem;
   border: 0;
-  padding: 8px;
+  padding: 10px;
   font-weight: 600;
   cursor: pointer;
   display: inline-block;
   font-size: 15px;
   pointer-events: auto;
   color:white;
-  width:150px;
+  max-width: 220px;
+  max-height: 45px;
   text-align: center;
 }
 

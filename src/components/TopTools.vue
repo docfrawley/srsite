@@ -1,5 +1,5 @@
 <template>
-  <div class="fill-up"><h1 class="top-title">MY TOP TOOLS</h1>
+  <div class="fill-up"><h1 class="top-title title-header">MY TOP TOOLS</h1>
   <div v-if="topArray.length==0">
     <p>You have yet to set your toolbox</p>
   </div>
@@ -45,11 +45,12 @@ export default {
 
     watchEffect(()=>{
       topArray.value = []
-      if (UserTechs.value.length>0){
+      if (UserTechs.value){
       topArray.value.push({dimension:UserTechs.value[0].dimension, tool: UserTechs.value[0].techs[0]})
       topArray.value.push({dimension:UserTechs.value[0].dimension, tool: UserTechs.value[0].techs[1]})
       topArray.value.push({dimension:UserTechs.value[1].dimension, tool: UserTechs.value[1].techs[0]})
     }
+    console.log('top tool: ', topArray.value)
     })
     
 

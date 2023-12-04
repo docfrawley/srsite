@@ -48,7 +48,8 @@ const routes = [
     path: '/',
     name: 'home',
     component: HomeView,
-    beforeEnter: requiresAuth
+    beforeEnter: requiresAuth,
+    redirect: 'account'
   },
   {
     path: '/login',

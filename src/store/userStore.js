@@ -1,9 +1,9 @@
 import {defineStore} from "pinia"
 
 // firebase imports
-import { auth, timestamp } from '../firebase/config'
+import { auth } from '../firebase/config'
 import { getAuth, onAuthStateChanged,updateEmail, sendEmailVerification, GoogleAuthProvider  } from 'firebase/auth'
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail  } from 'firebase/auth'
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithPopup  } from 'firebase/auth'
 import { db } from '../firebase/config'
 import { collection, onSnapshot, query, where, addDoc, updateDoc, doc, getDoc, setDoc, Timestamp, arrayUnion, arrayRemove } from 'firebase/firestore'
 import { ref } from "vue"
@@ -70,7 +70,8 @@ export const userStore  = defineStore("user", {
                     const cstore = coursesStore();
                     const docRef = doc(db, "users", res.user.uid);
                     const docSnap = await getDoc(docRef);
-                    this.userCreated = res.user.metadata.creationTime
+                    let whenCreated = res.user.metadata.creationTime
+                    this.userCreated = new Date(whenCreated).toLocaleDateString()
                     if (docSnap.exists()){
                         this.admin = docSnap.data().admin
                         this.displayName = docSnap.data().DisplayName
@@ -92,7 +93,7 @@ export const userStore  = defineStore("user", {
                             this.promptAnswers = docSnap.data().answers
                         }
                         if (docSnap.data().theTechs){
-                            this.UserTechniques = docSnap.data().theTechs[0].currentAnswers
+                            this.UserTechniques = docSnap.data().theTechs
                         }
                         if (docSnap.data().modNotes){
                             this.moduleNotes = docSnap.data().modNotes
@@ -106,19 +107,35 @@ export const userStore  = defineStore("user", {
                 }
         },
         async outsideLogin(){
+            let result = false
             try {
-                const credentials = await signInWithPopup(auth, provider)
-                if (!credentials) {
+                const res = await signInWithPopup(auth, provider)
+                if (!res) {
                     throw new Error('Could not login')
                     return false
                 } else {
-                    await this.login(credentials)
+                    result = await this.login(res)
+                }
+
+                if (!result) {
+                    const cstore = coursesStore();
+                    await cstore.setCourses();
+                    await setDoc(doc(db, 'users', res.user.uid), {
+                        DisplayName: res.user.displayName, admin:false, uid: res.user.uid, completedVids: []
+                    })
+                    // await cstore.setCourseAll("procrastination");
+                    this.email = res.user.email
+                    this.displayName=res.user.displayName
+                    this.admin = false
+                    this.userID = res.user.uid
+                    localStorage.loggedin = true
+                    return true
                 }
             }
             catch(err) {
                 console.log('error message: ', err.message)
             }
-            return true
+            return result
         },
         async login(credentials) {
             if (typeof credentials === 'object' && credentials !== null) {
@@ -133,7 +150,7 @@ export const userStore  = defineStore("user", {
                     this.userID = credentials.user.uid
                     cstore.setCourses();
                     await cstore.setCourseAll("procrastination");
-                    if (docSnap.data().completedVids) {
+                    if (docSnap.data().completedVids.length>0) {
                         const courseTotalSecs = cstore.getCourseSeconds
                         this.courseSecsTotal = docSnap.data().completedVids[0].totalSecs
                         this.courseTotalPercentage = this.courseSecsTotal/courseTotalSecs*100
@@ -142,13 +159,15 @@ export const userStore  = defineStore("user", {
                         this.promptAnswers = docSnap.data().answers
                     }
                     if (docSnap.data().theTechs){
-                        this.UserTechniques = docSnap.data().theTechs[0].currentAnswers
+                        this.UserTechniques = docSnap.data().theTechs
                     }
                     if (docSnap.data().modNotes){
                         this.moduleNotes = docSnap.data().modNotes
                     }
+                    return true
+                } else {
+                    return false
                 }
-                return true
             }
         },
         async signup(e, pw, dn){
@@ -175,6 +194,39 @@ export const userStore  = defineStore("user", {
                         
                 }   
                 
+            }            
+            catch(err) {
+            console.log(err.message)
+            }
+        },
+        async outsideSignUp(){
+            try {
+                const cstore = coursesStore();
+                const res = await signInWithPopup(auth, provider)
+                const docRef = doc(db, "users", res.user.uid);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    throw new Error('There is already an account associated with that google address')
+                    return false
+                }
+                await cstore.setCourses();
+                if (!res) {
+                throw new Error('Could not complete signup')
+                console.log("here I am signing up")
+                } else {
+                    
+                    await setDoc(doc(db, 'users', res.user.uid), {
+                        DisplayName: res.user.displayName, admin:false, uid: res.user.uid, completedVids: []
+                    })
+                        // await cstore.setCourseAll("procrastination");
+                        this.email = res.user.email
+                        this.displayName=res.user.displayName
+                        this.admin = false
+                        this.userID = res.user.uid
+                        localStorage.loggedin = true
+                        return true
+  
+                }                   
             }            
             catch(err) {
             console.log(err.message)
@@ -263,10 +315,12 @@ export const userStore  = defineStore("user", {
             const cstore = coursesStore();
             const compRef = await doc(db, 'users', this.userID)
             const compSnap = await getDoc(compRef)
-            if (compSnap.data().completedVids.length==0){
-                updateDoc(compRef, {completedVids: arrayUnion(this.userCourses[0])})
                 cstore.setCourses();
                 cstore.setCourseAll(course);
+            if (compSnap.data().completedVids.length==0){
+                await updateDoc(compRef, {completedVids: arrayUnion(this.userCourses[0])})
+                await updateDoc(compRef, {theTechs: cstore.originalTechs})
+                this.UserTechniques = cstore.originalTechs
             } 
         },
         async DidBuyCourse(){
@@ -282,11 +336,13 @@ export const userStore  = defineStore("user", {
                     })
                     if (results.length>0){
                         let tempCourse = 'procrastination'
+                        let tempstamp = new Date();
+                        let tempDate = tempstamp.toLocaleDateString()
                         const element = this.userCourses.find(obj => obj.col_name === tempCourse);
                         if (!element){
                             let tempObject = {
                                 col_name: tempCourse,
-                                boughtAt: Timestamp.now(),
+                                boughtAt: tempDate,
                                 price: results[0].items[0].amount_total,
                                 totalSecs: 0
                             }
@@ -389,6 +445,7 @@ export const userStore  = defineStore("user", {
             this.moduleNotes.push(noteObject.value)
         },
         async setTechniques(){
+            console.log('hot here now: ', this.UserTechniques)
             const techsRef = doc(db, 'users', this.userID)
             const techsSnap = await getDoc(techsRef)
             const tempObject = ref({
@@ -397,28 +454,11 @@ export const userStore  = defineStore("user", {
                 currentAnswers: this.UserTechniques
             })
             if (techsSnap.exists()){
-                let techObject = techsSnap.data().theTechs.find((obj) => obj.course == 'procrastination')
-                if (techObject){
-                    await updateDoc(techsRef, {theTechs: arrayRemove(techObject)})
-                }
-                await updateDoc(techsRef, {theTechs: arrayUnion(tempObject.value)})
+                console.log('here')
+                await updateDoc(techsRef, {theTechs: tempObject.value})
             
             }
             
-        },
-        async buyCourse(course){
-            const buyRef = doc(db, 'users', this.userID)
-            const buySnap = await getDoc(buyRef)
-            const buyObject = ref({
-                course: course,
-                boughtAt: Timestamp.now(),
-                totalSecs: 0
-            })
-            if (buySnap.exists){
-                await updateDoc(buyRef, {completedVids: arrayUnion(buyObject.value)})
-                this.userCourses.push(course)
-                console.log('courses: ', this.userCourses)
-            }
         },
         updateTechs(items){
             this.UserTechniques = items

@@ -1,18 +1,18 @@
 <template>
     <div class="page-container">
     <div class="grid-container">
-        <div class="grid-col-span-3 fill-up">
-            <div>
-            <p>Hello <span>{{ displayName }}</span>!</p>
-            <p>current email: <span class="bolded">{{ userEmail }}</span></p>
-            </div>
+        <div class="grid-col-span-3 fill-up mem-top">
+            
+            <div class="welcome">Hello <span>{{ displayName }}</span>!</div>
+            <div class="bolded">Current Email: <span >{{ userEmail }}</span></div>
+            
     
-            <div>You created your account on: <span class="bolded">{{ createdWhen }}</span></div>
+            <div class="bolded">Account Created: <span>{{ createdWhen }}</span></div>
     
             <div v-if="!wasSent&&(!boolName&&!boolEmail)" class="something">
-                <button class="log-button" @click="boolName=true">Change Display Name</button>
-                <button class="log-button" @click="boolEmail=true">Change Email</button>
-                <button class="log-button" @click="changePass">Change Password</button>
+                <button class="log-button response-gap" @click="boolName=true">Change Display Name</button>
+                <button class="log-button response-gap" @click="boolEmail=true">Change Email</button>
+                <button class="log-button response-gap" @click="changePass">Change Password</button>
             </div>
             
             
@@ -38,13 +38,27 @@
             </div>
         </div>
         
-        <div v-if="testPur" class="grid-col-span-2 fill-up memAccountStuff">
-
-        
-            <div>Thank you for purchasing the Overcoming Procrastination Course</div>
-            <div>Amount Paid: ${{(testPur.price/100).toFixed(2)}}</div>
-            <div>Date of Purchase: {{whenBought}}</div>
+        <div v-if="testPur" class="grid-col-span-3 fill-up memAccountStuff">
+            <div>
+                <p>Thank you for purchasing the Overcoming Procrastination course</p>
+                <p>Amount Paid: ${{(testPur.price/100).toFixed(2)}}</p>
+                <p>Date of Purchase: {{testPur.boughtAt}}</p>
+            </div>
             <div class="log-button" @click="goToCourse">Go To Course</div>
+        </div>
+        <div v-else class="grid-col-span-3 fill-up memAccountStuff">
+            <div>
+                <p class="step-one">STEP TWO:</p>
+                <p class="sub-one">Thanks for creating your account, {{ displayName }}.</p>
+                <p class="sub-one">Purchase Overcoming Procrastination with Nic Voge:</p>
+            </div>
+            
+            <div v-if="!pending">
+                <button class="log-button" @click="purchase('procrastination')">Purchase Course</button>
+            </div>
+            <div v-if="pending">
+                <button class="log-button">Loading...</button>
+            </div>
         </div>
     </div>
     </div>
@@ -78,23 +92,24 @@ export default {
         const Purchased = ref(false)
         const testPur = ref(ustore.userCourses[0])
         const blay = ref(ustore.DidBuyCourse())
-        const whenBought = ref('')
+        const pending = ref(false)
+ 
+  
+
+        const purchase = (course) => {
+            pending.value = true
+            ustore.purchaseCourse(course)
+        }
 
         if (blay.value){
             testPur.value = ustore.userCourses[0]
-            console.log('value: ', testPur.value)
-            whenBought.value = new Date(testPur.boughtAt).toLocaleDateString()
-            console.log('bought when: ', whenBought.value)
         }
 
 
-        watchEffect()(() => {
+        watchEffect(() => {
             displayName.value = ustore.getDisplayName
             userEmail.value = ustore.getUserEmail  
             testPur.value = ustore.userCourses[0]
-            console.log('value: ', testPur.value)
-            whenBought.value = new Date(testPur.boughtAt).toLocaleDateString()
-            console.log('bought when: ', whenBought.value)
         })
 
         ustore.$subscribe((login, state) => {
@@ -158,7 +173,8 @@ export default {
             Purchased,
             testPur,
             goToCourse,
-            whenBought
+            purchase, 
+            pending
         }
     }
     
@@ -166,6 +182,21 @@ export default {
 </script>
 
 <style scoped>
+
+.welcome {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.mem-top{
+    padding: 25px;
+}
+
+.step-one {
+  font-size: 22px;
+
+}
 input {
     margin: 10px 0;
     padding: 10px;
@@ -208,16 +239,34 @@ form {
     margin-top: 1em;
 }
 
+.response-gap {
+    margin:0;
+}
+
+@media (max-width: 570px) {
+    .something{
+        flex-direction: column;
+        justify-content: center;
+        align-content: space-between;
+    }
+
+    .response-gap {
+        margin: 10px;
+    }
+    
+
+}
+
 .bolded {
     font-weight: bold;
     color: black;
 }
 
 .memAccountStuff{
-    min-height: 250px;
+    padding:25px;
     display: flex;
-    flex-direction: column;
-    align-content: space-around;
     flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
 }
 </style>
