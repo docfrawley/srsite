@@ -1,9 +1,9 @@
 import {defineStore} from "pinia"
 import {  ref } from 'vue'
-import { db } from '../firebase/config'
+import { db, storage } from '../firebase/config'
 import { userStore } from "./userStore"
 import { collection, onSnapshot, query, where, doc, updateDoc, arrayUnion, getDoc, arrayRemove, getDocs } from 'firebase/firestore'
-
+import {getDownloadURL, ref as reff} from 'firebase/storage'
 
 
 export const coursesStore  = defineStore("courses", {
@@ -19,7 +19,8 @@ export const coursesStore  = defineStore("courses", {
         initialPercentage: 0,
         currentPercentage: 0,
         currentDescription: '',
-        currentTimestamp:''
+        currentTimestamp:'',
+        downloadLink:''
         }
     },
     getters: {
@@ -49,6 +50,9 @@ export const coursesStore  = defineStore("courses", {
         },
         getInitPercentage(){
             return this.initialPercentage
+        },
+        getDownloadLink(){
+            return this.downloadLink
         }
     },
     actions: {
@@ -61,7 +65,7 @@ export const coursesStore  = defineStore("courses", {
                 })
                 this.allCourses = results
             })
-
+            this.setDownloadLink()
 
         },
          unsetCourseAll(){
@@ -207,6 +211,11 @@ export const coursesStore  = defineStore("courses", {
             }
             
         },
+        async setDownloadLink(){
+            const fileRef = reff(storage, 'gs://self-relationality/VAPS.pdf');
+            this.downloadLink = await getDownloadURL(fileRef)
+            
+        }
     },
     persist:true,
 });

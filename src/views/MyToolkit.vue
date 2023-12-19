@@ -86,7 +86,7 @@
     Use this worksheet to create your gameplan for particular situations where you are prone to procrastinate.</p>
   </div>
   <div class="down-button">   
-    <a class="download-stuff" href="https://storage.cloud.google.com/self-relationality.appspot.com/VAPS.pdf?authuser=3" target="_blank" rel="noopener noreferrer">DOWNLOAD WORKSHEET</a>
+    <a class="download-stuff" :href="theURL" target="_blank" rel="noopener noreferrer">DOWNLOAD WORKSHEET</a>
   </div>
   </div>
 
@@ -126,6 +126,7 @@ export default {
     const items = ref(cstore.currentCourse.techniques);
     const original_items = ref(JSON.parse(JSON.stringify(items.value)));
     const UserTechs = ref(ustore.getUserTechniques);
+    const theURL = ref(cstore.getDownloadLink);
     const modalActive = ref(false);
     const modalDimActive = ref(false)
     const strategyItems = ref({});
@@ -275,7 +276,8 @@ export default {
       motstuff,
       wasItAdded,
       openDimModel,
-      theDimension
+      theDimension,
+      theURL
     };
   },
 };

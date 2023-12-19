@@ -1,9 +1,6 @@
 <template>
   <div class="fill-up"><h1 class="top-title title-header">MY TOP TOOLS</h1>
-  <div v-if="topArray.length==0">
-    <p>You have yet to set your toolbox</p>
-  </div>
-  <div v-else>
+    <div class="sub-line">To rearrange your Top Tools, go to your Toolkit Page</div>
     <div v-for="item in topArray" :key="item.tool + item.dimension" class="top-tools">
       <div class="tool-element">{{ item.tool }}<svg
               @click="openModel(item.dimension, item.tool)"
@@ -16,7 +13,7 @@
               />
             </svg></div>
     </div>
-  </div>
+  
   <TechModal
       @modalClose="toggleModal"
       :theTech="strategyItems"
@@ -74,6 +71,12 @@ export default {
 </script>
 
 <style scoped>
+
+.sub-line{
+  padding-top:10px;
+  font-size: 12px;
+  text-align: center;
+}
 .top-title{
   font-weight: bold;
   font-size: 18px;
