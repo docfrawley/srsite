@@ -24,9 +24,10 @@
             </div>
         </div>
 
-    <div>
+    <div class="matrix-bottom">
         <button @click="handleTechs" class="reset-button">SAVE</button>
-    </div>
+        <div class="changes-saved" v-if="matrixChanged">Changes Saved</div>
+      </div>
     <TechModal
       @modalClose="toggleModal"
       :theTech="strategyItems"
@@ -54,9 +55,11 @@ export default {
         const whichDim = ref('')
         const modalActive = ref(false);
         const strategyItems = ref({});
+        const matrixChanged = ref(false)
 
         watchEffect(() => {
             cvid.value = cstore.currentVideo
+            matrixChanged.value = false
             switch (cvid.value.order){
             case 2:
                 whichDim.value = 'Context'
@@ -116,7 +119,7 @@ export default {
 
         const handleTechs = () => {
 
-            ustore.setTechniques()
+            matrixChanged.value = ustore.setTechniques()
 
         }
 
@@ -134,7 +137,7 @@ export default {
     };
 
 
-        return { items, startDragRow, onDropRow, handleTechs, whichDim, cvid, modalActive, strategyItems, openModel, toggleModal}
+        return { items, startDragRow, onDropRow, handleTechs, whichDim, cvid, modalActive, strategyItems, openModel, toggleModal, matrixChanged}
 
     }
 

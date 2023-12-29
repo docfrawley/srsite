@@ -52,7 +52,7 @@ export default {
         percentage.value =  0
       }
       
-      if (percentage.value >= 100){
+      if (percentage.value >= 99){
         isComplete.value = true
       }
 
@@ -66,7 +66,7 @@ export default {
         whatShow.value = "Now Playing"
         if (cstore.getcurrentVidPercentage>cstore.getInitPercentage){
           percentage.value = cstore.getcurrentVidPercentage*100
-          if (percentage.value >= 100){
+          if (percentage.value >= 99){
             isComplete.value = true
           }
         }

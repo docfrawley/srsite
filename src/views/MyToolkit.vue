@@ -72,9 +72,10 @@
         </div>
       </div>
 
-      <div>
+      <div class="matrix-bottom">
         <button @click="handleReset" class="reset-button">RESET</button>
         <button @click="handleTechs" class="reset-button">SAVE</button>
+        <div class="changes-saved" v-if="matrixChange">Changes Saved</div>
       </div>
 
       
@@ -123,15 +124,15 @@ export default {
     const currentCourse = ref(cstore.currentCourse);
     const currentModule = ref(cstore.currentModule);
     const currentVideo = ref(cstore.currentVideo);
-    const items = ref(cstore.currentCourse.techniques);
-    const original_items = ref(JSON.parse(JSON.stringify(items.value)));
-    const UserTechs = ref(ustore.getUserTechniques);
+    const original_items = ref(cstore.currentCourse.techniques);
+    const items = ref(ustore.getUserTechniques);
     const theURL = ref(cstore.getDownloadLink);
     const modalActive = ref(false);
     const modalDimActive = ref(false)
     const strategyItems = ref({});
     const theDimension = ref('')
-    const topArray = ref([])
+    const matrixChange = ref(false)
+  
     const goalstuff =  {
       prompt:"",
       id:"uwi6QJH5wozGZOF8oVbd"
@@ -142,21 +143,6 @@ export default {
     }
     const totalPercentage = ref(ustore.getTotalPercentage)
     totalPercentage.value = parseInt(totalPercentage.value).toFixed(2)
-
-    if (UserTechs.value.length > 0) {
-      items.value = UserTechs.value.currentAnswers;
-      topArray.value.push({dimension:UserTechs.value[0].dimension, tool: UserTechs.value[0].techs[0]})
-      topArray.value.push({dimension:UserTechs.value[0].dimension, tool: UserTechs.value[0].techs[1]})
-      topArray.value.push({dimension:UserTechs.value[1].dimension, tool: UserTechs.value[1].techs[0]})
-    
-    }
-
-    
-
-
-    if (UserTechs.value.length > 0) {
-      items.value = UserTechs.value;
-    }
 
     const getList = (list) => {
       return items.value.filter((item) => item.list == list);
@@ -180,6 +166,7 @@ export default {
       const tempObject = items.value[whereStarted];
       items.value.splice(whereStarted, 1);
       items.value.splice(whereEnding, 0, tempObject);
+      ustore.updateTechs(items.value);
     };
 
     const startDragRow = (evt, item, tech) => {
@@ -209,10 +196,7 @@ export default {
         whichitem.techs.splice(whereEnding, 0, tempObject);
         items.value[whereItem].techs = whichitem.techs;
         ustore.updateTechs(items.value);
-        topArray.value=[]
-        topArray.value.push({dimension:UserTechs.value[0].dimension, tool: UserTechs.value[0].techs[0]})
-      topArray.value.push({dimension:UserTechs.value[0].dimension, tool: UserTechs.value[0].techs[1]})
-      topArray.value.push({dimension:UserTechs.value[1].dimension, tool: UserTechs.value[1].techs[0]})
+      
       }
     };
 
@@ -227,18 +211,16 @@ export default {
 
     const openDimModel = (dimension) => {
       theDimension.value = dimension
-      console.log('here now: ', theDimension.value)
 
       modalDimActive.value = true
     }
 
     const handleReset = () => {
       items.value = original_items.value;
-      original_items.value = JSON.parse(JSON.stringify(items.value));
     };
 
     const handleTechs = () => {
-      ustore.setTechniques();
+      matrixChange.value = ustore.setTechniques();
     };
 
     const toggleModal = () => {
@@ -267,7 +249,6 @@ export default {
       toggleDimModal,
       strategyItems,
       openModel,
-      topArray,
       currentModule,
       currentVideo,
       currentCourse,
@@ -277,7 +258,8 @@ export default {
       wasItAdded,
       openDimModel,
       theDimension,
-      theURL
+      theURL,
+      matrixChange
     };
   },
 };
@@ -422,6 +404,8 @@ h1 {
   font-size: 20px;
   font-weight: bold;
 }
+
+
 
 /* .drag-el:nth-last-of-type(1){
     margin-bottom: 0;

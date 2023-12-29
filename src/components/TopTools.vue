@@ -27,7 +27,7 @@
 <script>
 import { userStore } from '@/store/userStore';
 import { coursesStore } from '@/store/coursesStore';
-import { ref, watchEffect } from 'vue';
+import { ref, watch } from 'vue';
 import TechModal from "@/components/TechModal.vue";
 
 export default {
@@ -35,18 +35,28 @@ export default {
   setup() {
     const cstore = coursesStore()
     const ustore = userStore()
-    const UserTechs = ref(ustore.getUserTechniques)
+    const UserTs = ref(ustore.getUserTechniques)
     const topArray = ref([])
     const strategyItems = ref({})
     const modalActive = ref(false);
-
-    watchEffect(()=>{
-      topArray.value = []
-      if (UserTechs.value){
-      topArray.value.push({dimension:UserTechs.value[0].dimension, tool: UserTechs.value[0].techs[0]})
-      topArray.value.push({dimension:UserTechs.value[0].dimension, tool: UserTechs.value[0].techs[1]})
-      topArray.value.push({dimension:UserTechs.value[1].dimension, tool: UserTechs.value[1].techs[0]})
+     
+      
+    if (UserTs.value.length>0){
+      topArray.value.push({dimension:UserTs.value[0].dimension, tool: UserTs.value[0].techs[0]})
+      topArray.value.push({dimension:UserTs.value[0].dimension, tool: UserTs.value[0].techs[1]})
+      topArray.value.push({dimension:UserTs.value[1].dimension, tool: UserTs.value[1].techs[0]})
     }
+      
+    
+    watch(ustore, ()=>{
+      UserTs.value = {}
+      UserTs.value = ustore.getUserTechniques
+      topArray.value = []
+      if (UserTs.value.length>0) {
+        topArray.value.push({dimension:UserTs.value[0].dimension, tool: UserTs.value[0].techs[0]})
+        topArray.value.push({dimension:UserTs.value[0].dimension, tool: UserTs.value[0].techs[1]})
+        topArray.value.push({dimension:UserTs.value[1].dimension, tool: UserTs.value[1].techs[0]})
+      }
     })
     
 

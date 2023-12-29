@@ -3,7 +3,7 @@
     <div class="fill-up-vid grid-col-span-2">
       <div class="video-responsive">
         <div v-if="showPause" @click="startPlaying" class="overlay-Pause">
-          <div class="inside-pause">press here when ready to resume video</div>
+          <div class="inside-pause">Please answer the video prompt highlighted in green and press here when ready to resume video</div>
         </div>
         <vue-vimeo-player
           ref="player"
@@ -45,7 +45,7 @@
           </div>
     </div>
   </div>
-    <div class="fill-up grid-col-span-1 all-questions">
+    <div class="fill-up grid-col-span-1">
       <div class="flex flex-col questions-class">
         <div v-if="showStrategies == 'strategies'">
           <IndTechRow />
@@ -142,7 +142,6 @@ export default {
 
     const NowEnded = (e, d, p) => {
      let ElementNum = currentVideo.value.order + 1
-      console.log('ended: ', ElementNum)
       if (currentVideo.value.percentages<e.percent){
         cstore.setPercentage(e.percent);
       }
@@ -180,7 +179,7 @@ export default {
           }
         }    
         
-        if (e.percent>.99){
+        if (e.percent>.999){
           let ElementNum = currentVideo.value.order
           if (currentVideo.value.percentages<e.percent){
             cstore.setPercentage(e.percent);
@@ -280,12 +279,7 @@ export default {
 .download-stuff2:hover{
   color: var(--primegreen);
 }
-.all-questions{
- display: flex;
- flex-direction: column;
- align-content: space-between;
-flex-wrap: wrap;
-}
+
 .fill-up-vid{
   background-color: white;
   padding: .75rem;

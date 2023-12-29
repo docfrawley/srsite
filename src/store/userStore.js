@@ -87,13 +87,12 @@ export const userStore  = defineStore("user", {
                             this.courseSecsTotal = courseObject.totalSecs
                             this.courseTotalPercentage = this.courseSecsTotal/courseTotalSecs*100
                             this.userCourses.push(courseObject)
-                            console.log('user courses: ', this.userCourses)
                         }
                         if (docSnap.data().answers){
                             this.promptAnswers = docSnap.data().answers
                         }
                         if (docSnap.data().theTechs){
-                            this.UserTechniques = docSnap.data().theTechs
+                            this.UserTechniques = docSnap.data().theTechs.currentAnswers
                         }
                         if (docSnap.data().modNotes){
                             this.moduleNotes = docSnap.data().modNotes
@@ -159,7 +158,7 @@ export const userStore  = defineStore("user", {
                         this.promptAnswers = docSnap.data().answers
                     }
                     if (docSnap.data().theTechs){
-                        this.UserTechniques = docSnap.data().theTechs
+                        this.UserTechniques = docSnap.data().theTechs.currentAnswers
                     }
                     if (docSnap.data().modNotes){
                         this.moduleNotes = docSnap.data().modNotes
@@ -177,7 +176,6 @@ export const userStore  = defineStore("user", {
                 await cstore.setCourses();
                 if (!res) {
                 throw new Error('Could not complete signup')
-                console.log("here I am signing up")
                 } else {
                     
                     await setDoc(doc(db, 'users', res.user.uid), {
@@ -212,7 +210,6 @@ export const userStore  = defineStore("user", {
                 await cstore.setCourses();
                 if (!res) {
                 throw new Error('Could not complete signup')
-                console.log("here I am signing up")
                 } else {
                     
                     await setDoc(doc(db, 'users', res.user.uid), {
@@ -233,10 +230,8 @@ export const userStore  = defineStore("user", {
             }
         },
         async sendPRemail(email){
-            console.log('one: ', email)
             try {
                 const res = await sendPasswordResetEmail(auth, email)
-                console.log('two')
                 if (!res) {
                 throw new Error('Could not send')
                 return false
@@ -264,7 +259,6 @@ export const userStore  = defineStore("user", {
             return false
         },
         async updateEmail(email){
-            console.log('you are updating the emailt to: ' + email)
             try{
                 await updateEmail(auth.currentUser, email)
                 this.email = email
@@ -311,7 +305,6 @@ export const userStore  = defineStore("user", {
               });
         },
         async establishCompletedVids(course){
-            console.log('I got here')
             const cstore = coursesStore();
             const compRef = await doc(db, 'users', this.userID)
             const compSnap = await getDoc(compRef)
@@ -324,7 +317,6 @@ export const userStore  = defineStore("user", {
             } 
         },
         async DidBuyCourse(){
-            console.log('here I am i didbuycourse')
             let results = []
             const userDocRef =  await doc(db, 'users', this.userID);
             const paymentsRef =  await collection(userDocRef, 'payments');
@@ -347,7 +339,6 @@ export const userStore  = defineStore("user", {
                                 totalSecs: 0
                             }
                             this.userCourses.push(tempObject)
-                            console.log('user courses: ', this.userCourses)
                             this.establishCompletedVids(tempCourse)
                         }
                        
@@ -445,7 +436,6 @@ export const userStore  = defineStore("user", {
             this.moduleNotes.push(noteObject.value)
         },
         async setTechniques(){
-            console.log('hot here now: ', this.UserTechniques)
             const techsRef = doc(db, 'users', this.userID)
             const techsSnap = await getDoc(techsRef)
             const tempObject = ref({
@@ -454,10 +444,10 @@ export const userStore  = defineStore("user", {
                 currentAnswers: this.UserTechniques
             })
             if (techsSnap.exists()){
-                console.log('here')
                 await updateDoc(techsRef, {theTechs: tempObject.value})
             
             }
+            return true
             
         },
         updateTechs(items){

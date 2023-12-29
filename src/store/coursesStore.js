@@ -114,7 +114,7 @@ export const coursesStore  = defineStore("courses", {
             }
             this.courseAll = results
             this.currentModule = this.courseAll[0]
-            this.currentVideo = this.currentModule.videos[0]
+            this.setCurrentVideo(this.currentModule.videos[0])
             this.addQuestions()
             this.currentCourseTotal = totalVidsSecs.value
         },
@@ -180,6 +180,7 @@ export const coursesStore  = defineStore("courses", {
             this.currentCourse = {}
         },
         async setPercentage(p){
+            console.log('setting percentage: ', p)
             const ustore = userStore()
             const userID = ref(ustore.getUserId)
             if (p>this.currentPercentage) {

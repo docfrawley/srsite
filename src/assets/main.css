@@ -240,6 +240,18 @@ button:disabled {
   flex-direction: row;
 }
 
+.matrix-bottom{
+  display: flex;
+  justify-content: flex-start;
+  align-items: baseline;
+}
+
+.changes-saved{
+  margin-left: 10px;
+  font-size: 14px;
+  color: var(--primepurple);
+}
+
 
 
 .loading-bar {

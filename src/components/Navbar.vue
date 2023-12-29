@@ -293,10 +293,8 @@ export default {
     const matty = ref(localStorage.getItem("displayName"));
     const isChecked = ref(false);
     const courses = ref([])
-    console.log('courses.....: ', courses)
     watchEffect(() =>{
       courses.value = store.userCourses
-      console.log('courses: ', courses)
     })
 
 

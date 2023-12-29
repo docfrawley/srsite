@@ -65,6 +65,7 @@ export default {
     watch(ustore, ()=>{
       motCounter.value++
       goalCounter.value++
+      totalPercentage.value = ustore.getTotalPercentage
     })
     
 
