@@ -7,7 +7,7 @@
             <div class="bolded">Current Email: <span >{{ userEmail }}</span></div>
             
     
-            <div class="bolded">Account Created: <span>{{ createdWhen }}</span></div>
+            <div class="bolded" v-if="createdWhen != 'Invalid Date'">Account Created: <span>{{ createdWhen }}</span></div>
     
             <div v-if="!wasSent&&(!boolName&&!boolEmail)" class="something">
                 <button class="log-button response-gap" @click="boolName=true">Change Display Name</button>
@@ -48,16 +48,22 @@
         </div>
         <div v-else class="grid-col-span-3 fill-up memAccountStuff">
             <div>
-                <p class="step-one">STEP TWO:</p>
-                <p class="sub-one">Thanks for creating your account, {{ displayName }}.</p>
-                <p class="sub-one">Purchase Overcoming Procrastination with Nic Voge:</p>
+                <p class="step-one">Overcoming Procrastination Course</p>
+                <p class="sub-one">Join instructor Nic Voge and learn how procrastination holds</p>
+                <p class="sub-one">you back, where it comes from, and how to overcome it.</p><br/>
+                <p class="sub-one2">Buy now and get access to:</p>
+                <ul>
+                    <li>Over two hours of content</li>
+                    <li>Goals and tools to help you succeed</li>
+                    <li>Techniques you'll use for the rest of your life</li>
+                </ul>
             </div>
             
             <div v-if="!pending">
-                <button class="log-button" @click="purchase('procrastination')">Purchase Course</button>
+                <button class="log-button2" @click="purchase('procrastination')">Purchase Course</button>
             </div>
             <div v-if="pending">
-                <button class="log-button">Loading...</button>
+                <button class="log-button2">Loading...</button>
             </div>
         </div>
     </div>
@@ -82,6 +88,9 @@ export default {
         const displayName = ref(ustore.getDisplayName)
         const userEmail = ref(ustore.getUserEmail)
         const createdWhen = new Date(ustore.getWhenCreatedAt).toLocaleDateString()
+        if (createdWhen.value=="Invalid Date"){
+            createdWhen.value = new Date().toLocaleDateString()
+        }
         const router = useRouter();
         const wasSent = ref(false)
         const boolEmail = ref(false)
@@ -193,9 +202,19 @@ export default {
     padding: 25px;
 }
 
+.sub-one2{
+    font-size: 18px;
+    font-weight: bold;
+}
 .step-one {
   font-size: 22px;
+}
 
+li::before{
+    content: '\2713';
+    margin-right: 2px;
+    color: var(--primegreen);
+    font-size: 20px;
 }
 input {
     margin: 10px 0;
@@ -268,5 +287,26 @@ form {
     flex-wrap: wrap;
     justify-content: space-around;
     align-items: center;
+}
+
+.log-button2 { 
+  background: var(--primegreen);
+  border-radius: .25rem;
+  border: 0;
+  padding: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 15px;
+  pointer-events: auto;
+  color: var(--primeblue);
+  max-width: 220px;
+  max-height: 45px;
+  text-align: center;
+}
+
+.log-button2:hover{
+  color:var(--primegreen);
+  background-color: var(--primeblue);
 }
 </style>

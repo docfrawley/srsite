@@ -2,8 +2,7 @@
   <div class="su-stuff">
     <div class="signup-form">
       <form @submit.prevent="handleSubmit">
-        <p class="step-one">STEP ONE:</p>
-        <p class="sub-one">Thanks so much for your interest. Let's get you signed up with an account after which you can purchase the course.</p>
+        <p class="step-one">Let's set up your free account!</p>
         <input type="text" required placeholder="Display name" v-model="displayName">
         <input type="email" required placeholder="Email" v-model="email">
         <input type="password" required placeholder="Password" v-model="password">
@@ -125,6 +124,8 @@ button{
   width:100%;
   text-align: center;
 }
+
+
 
 .google-button:hover{
   color: var(--primegreen);
