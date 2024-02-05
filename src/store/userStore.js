@@ -85,14 +85,17 @@ export const userStore  = defineStore("user", {
                             await cstore.setCourseAll(courseObject.col_name);
                             const courseTotalSecs = cstore.getCourseSeconds
                             this.courseSecsTotal = courseObject.totalSecs
-                            this.courseTotalPercentage = this.courseSecsTotal/courseTotalSecs*100
+                            this.courseTotalPercentage = (this.courseSecsTotal/courseTotalSecs)*100
                             this.userCourses.push(courseObject)
                         }
                         if (docSnap.data().answers){
                             this.promptAnswers = docSnap.data().answers
                         }
                         if (docSnap.data().theTechs){
-                            this.UserTechniques = docSnap.data().theTechs.currentAnswers
+                            this.UserTechniques = docSnap.data().theTechs
+                        } else {
+                            this.UserTechniques = cstore.originalTechs
+                            console.log('hey this worked')
                         }
                         if (docSnap.data().modNotes){
                             this.moduleNotes = docSnap.data().modNotes
@@ -152,13 +155,15 @@ export const userStore  = defineStore("user", {
                     if (docSnap.data().completedVids.length>0) {
                         const courseTotalSecs = cstore.getCourseSeconds
                         this.courseSecsTotal = docSnap.data().completedVids[0].totalSecs
-                        this.courseTotalPercentage = this.courseSecsTotal/courseTotalSecs*100
+                        this.courseTotalPercentage = (this.courseSecsTotal/courseTotalSecs)*100
                     }
                     if (docSnap.data().answers){
                         this.promptAnswers = docSnap.data().answers
                     }
                     if (docSnap.data().theTechs){
-                        this.UserTechniques = docSnap.data().theTechs.currentAnswers
+                        this.UserTechniques = docSnap.data().theTechs
+                    } else {
+                        this.UserTechniques = cstore.originalTechs
                     }
                     if (docSnap.data().modNotes){
                         this.moduleNotes = docSnap.data().modNotes
@@ -283,10 +288,11 @@ export const userStore  = defineStore("user", {
             const checkoutSessionsCollectionRef = collection(userDocRef, 'checkout_sessions');
             const checkoutSessionRef = await addDoc(checkoutSessionsCollectionRef, {
                 mode: 'payment',
-                price: 'price_1OFeQrKgvg6dyKdRwnkJWIYv',
+                price: 'price_1OUDRPKgvg6dyKdROizOMHBB',
                 course: course,
-                success_url: 'http://localhost:8080/account',
+                success_url: 'https://learn.vogeacademy.com/account',
                 cancel_url: window.location.origin,
+                allow_promotion_codes: true
               });
               
               // Wait for the CheckoutSession to get attached by the extension
@@ -310,7 +316,7 @@ export const userStore  = defineStore("user", {
             const compSnap = await getDoc(compRef)
                 cstore.setCourses();
                 cstore.setCourseAll(course);
-            if (compSnap.data().completedVids.length==0){
+            if (!compSnap.data().completedVids){
                 await updateDoc(compRef, {completedVids: arrayUnion(this.userCourses[0])})
                 await updateDoc(compRef, {theTechs: cstore.originalTechs})
                 this.UserTechniques = cstore.originalTechs
@@ -372,8 +378,12 @@ export const userStore  = defineStore("user", {
             const totalSecs = ref(0)
             const totalPer = ref(0)
             const cstore = coursesStore()
+            const boughtAt = ref('')
+            const price = ref(0)
             if (compSnap.data().completedVids.length>0){
                 let compObject = compSnap.data().completedVids[0]
+                boughtAt.value = compObject.boughtAt
+                price.value=compObject.price
                 totalSecs.value = compObject.totalSecs
                 await updateDoc(compRef, {completedVids: arrayRemove(compObject)})
             } 
@@ -381,8 +391,9 @@ export const userStore  = defineStore("user", {
             totalPer.value = ((totalSecs.value / cstore.getCourseSeconds )*100).toFixed(2)
             const newObject = {
                 col_name: course,
-                totalSecs: totalSecs.value,
-                totalPercentage: totalPer.value
+                boughtAt: boughtAt.value,
+                price: price.value,
+                totalSecs: totalSecs.value
             }
             await updateDoc(compRef, {completedVids: arrayUnion(newObject)})
             this.courseSecsTotal = totalSecs.value

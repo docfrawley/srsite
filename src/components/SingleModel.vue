@@ -62,7 +62,7 @@
         </div>
         <div v-if="showStrategies=='worksheet'">
           <div class="worksheet-vid">
-            <a class="download-stuff2" href="https://storage.cloud.google.com/self-relationality.appspot.com/VA_scenario.pdf?authuser=3" target="_blank" rel="noopener noreferrer">DOWNLOAD WORKSHEET</a>
+            <a class="download-stuff2" :href="theURL" target="_blank" rel="noopener noreferrer">DOWNLOAD WORKSHEET</a>
           </div>
         </div>
       </div>
@@ -105,6 +105,7 @@ export default {
     const numbModules = ref(cstore.courseAll.length);
     const fullCourse = ref(cstore.courseAll);
     const showStrategies = ref('prompts')
+    const theURL = ref(cstore.getDownloadLink);
 
     watch(currentVideo, ()=>{
           currentVideo.value = cstore.currentVideo
@@ -247,7 +248,8 @@ export default {
       moveVideo,
       fullCourse,
       showStrategies,
-      wasNoteAdded
+      wasNoteAdded,
+      theURL
     };
   },
 };
