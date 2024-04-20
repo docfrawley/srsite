@@ -288,7 +288,7 @@ export const userStore  = defineStore("user", {
             const checkoutSessionsCollectionRef = collection(userDocRef, 'checkout_sessions');
             const checkoutSessionRef = await addDoc(checkoutSessionsCollectionRef, {
                 mode: 'payment',
-                price: 'price_1OUDRPKgvg6dyKdROizOMHBB',
+                price: 'price_1P7iakKgvg6dyKdRcK1zgj8p',
                 course: course,
                 success_url: 'https://learn.vogeacademy.com/account',
                 cancel_url: window.location.origin,

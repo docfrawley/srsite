@@ -144,12 +144,12 @@ export default {
     const NowEnded = (e, d, p) => {
      let ElementNum = currentVideo.value.order + 1
       if (currentVideo.value.percentages<e.percent){
-        cstore.setPercentage(e.percent);
+        cstore.setPercentage(1);
       }
       if (ElementNum == currentModule.value.videos.length) {
         ElementNum = 0;
       }
-      currentVideo.value = currentModule.value.videos[ElementNum.value];
+      currentVideo.value = currentModule.value.videos[ElementNum];
     };
 
     const WhenPaused = (e,d,p) => {
