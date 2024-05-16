@@ -71,15 +71,12 @@ export default {
                 whichDim.value = 'Cognitive'
                     break
             case 5:
-                whichDim.value = 'Cognitive'
-                    break
-            case 6:
                 whichDim.value = 'Emotions'
                     break
-            case 7:
+            case 6:
                 whichDim.value = 'Motivations'
                     break
-            case 8:
+            case 7:
                 whichDim.value = 'Beliefs'
                     break
             default:

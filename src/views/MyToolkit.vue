@@ -132,7 +132,7 @@ export default {
     const strategyItems = ref({});
     const theDimension = ref('')
     const matrixChange = ref(false)
-  
+    console.log('toolkit: ', items.value)
     const goalstuff =  {
       prompt:"",
       id:"uwi6QJH5wozGZOF8oVbd"

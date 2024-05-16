@@ -78,7 +78,6 @@ export const userStore  = defineStore("user", {
                         this.email = email;
                         this.userID = res.user.uid
                         cstore.setCourses();
-                        
                         if (docSnap.data().completedVids.length>0) {
                             const courseObject = docSnap.data().completedVids[0]
 
@@ -92,7 +91,8 @@ export const userStore  = defineStore("user", {
                             this.promptAnswers = docSnap.data().answers
                         }
                         if (docSnap.data().theTechs){
-                            this.UserTechniques = docSnap.data().theTechs
+                            this.UserTechniques = docSnap.data().theTechs.currentAnswers
+                            console.log('user techs', this.UserTechniques)
                         } else {
                             this.UserTechniques = cstore.originalTechs
                             console.log('hey this worked')
@@ -162,8 +162,10 @@ export const userStore  = defineStore("user", {
                     }
                     if (docSnap.data().theTechs){
                         this.UserTechniques = docSnap.data().theTechs
+                        console.log('four four')
                     } else {
                         this.UserTechniques = cstore.originalTechs
+                        console.log('five five')
                     }
                     if (docSnap.data().modNotes){
                         this.moduleNotes = docSnap.data().modNotes
