@@ -329,7 +329,7 @@ export const userStore  = defineStore("user", {
             if (paymentsRef){
                 const unsub = await onSnapshot(paymentsRef, snapshot => {
                     snapshot.docs.forEach(doc => {
-                        if (doc.data().items[0].description=='Overcoming Procrastination Course')
+                        if (doc.data().items[0].description=='Overcoming Procrastination Course' || doc.data().items[0].description=='Overcoming Procrastination')
                     results.push({ ...doc.data(), id: doc.id })
                     })
                     if (results.length>0){
