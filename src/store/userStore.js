@@ -92,10 +92,8 @@ export const userStore  = defineStore("user", {
                         }
                         if (docSnap.data().theTechs){
                             this.UserTechniques = docSnap.data().theTechs.currentAnswers
-                            console.log('user techs', this.UserTechniques)
                         } else {
                             this.UserTechniques = cstore.originalTechs
-                            console.log('hey this worked')
                         }
                         if (docSnap.data().modNotes){
                             this.moduleNotes = docSnap.data().modNotes
@@ -161,8 +159,8 @@ export const userStore  = defineStore("user", {
                         this.promptAnswers = docSnap.data().answers
                     }
                     if (docSnap.data().theTechs){
-                        this.UserTechniques = docSnap.data().theTechs
-                        console.log('four four')
+                        this.UserTechniques = docSnap.data().theTechs.currentAnswers
+                        console.log('four four', this.UserTechniques)
                     } else {
                         this.UserTechniques = cstore.originalTechs
                         console.log('five five')

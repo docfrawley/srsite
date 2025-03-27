@@ -20,6 +20,7 @@
 <script>
 import { ref } from 'vue'
 import useCollection from '@/composables/useCollection'
+import { coursesStore } from '@/store/coursesStore'
 
 export default {
     emits: ['courseAdded'],

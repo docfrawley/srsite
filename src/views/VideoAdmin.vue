@@ -7,7 +7,7 @@
 </div>
   
   <div class="course-container">
-<div v-for="course in courses" :key="course.id">
+<div v-for="course in allCourses" :key="course.id">
   <div class="course-listing" @click="goToCourse(course)">{{course.title}} </div>
 </div>
 <button class="course-listing" @click="newCourseForm">ADD COURSE +</button>
@@ -30,15 +30,16 @@
     
 <script>
     import { ref, reactive } from 'vue'
-    import getCollection from '@/composables/getCollection'
     import CourseForm from '@/components/CourseForm.vue'
     import AddCourse from '@/components/AddCourse.vue'
+    import { coursesStore } from '@/store/coursesStore';
     
     export default {
       components: {CourseForm, AddCourse },
      setup() {
       const currentCourse = ref()
-      const { documents: courses} = getCollection('courses')
+      const cstore = coursesStore();
+      const allCourses = ref(cstore.getCourses)
       const componentKey=ref(0)
       const showAddForm = ref(false)
     
@@ -47,6 +48,8 @@
         if (c){
           currentCourse.value = c
           componentKey.value++
+          showAddForm.value = false
+          cstore.setCourseModules(c.col_name)
         }
        
       }
@@ -62,7 +65,7 @@
        }
     
     
-      return { showAddForm, componentKey, goToCourse, courses, currentCourse, newCourseForm, wasItAdded }
+      return { showAddForm, componentKey, goToCourse, allCourses, currentCourse, newCourseForm, wasItAdded }
      }
     }
     </script>

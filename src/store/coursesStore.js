@@ -2,7 +2,7 @@ import {defineStore} from "pinia"
 import {  ref } from 'vue'
 import { db, storage } from '../firebase/config'
 import { userStore } from "./userStore"
-import { collection, onSnapshot, query, where, doc, updateDoc, arrayUnion, getDoc, arrayRemove, getDocs } from 'firebase/firestore'
+import { collection, onSnapshot, query, where, doc, updateDoc, arrayUnion, getDoc, arrayRemove, getDocs, addDoc } from 'firebase/firestore'
 import {getDownloadURL, ref as reff} from 'firebase/storage'
 
 
@@ -20,10 +20,17 @@ export const coursesStore  = defineStore("courses", {
         currentPercentage: 0,
         currentDescription: '',
         currentTimestamp:'',
-        downloadLink:''
+        downloadLink:'',
+        courseModules: [],
         }
     },
     getters: {
+        getCourseModules(){
+            return this.courseModules
+        },
+        getModulesLength(){
+            return this.courseModules.length
+        },
         getCourseSeconds(){
             return this.currentCourseTotal
         },
@@ -53,6 +60,9 @@ export const coursesStore  = defineStore("courses", {
         },
         getDownloadLink(){
             return this.downloadLink
+        },
+        getCourses(){
+            return this.allCourses
         }
     },
     actions: {
@@ -129,6 +139,16 @@ export const coursesStore  = defineStore("courses", {
             qresults.sort((a, b) => (a.vcue > b.vcue) ? 1 : -1)
             this.currentVideo.questions = qresults
         },
+
+        async addModule(modinfo){
+            console.log("here now: ", modinfo)
+            let mresults = []
+            let modRef = collection(db, 'course-modules')
+            const mSnap = await addDoc(modRef, modinfo)
+            if (mSnap){
+                this.courseModules.push(modinfo)
+            }
+        },
         
         async findDescription(dimension, tool){
             if (dimension && tool ){
@@ -148,6 +168,21 @@ export const coursesStore  = defineStore("courses", {
 
                 
             }
+        },
+        async setCourseModules(course){
+            let modresults = []
+            console.log('asdfa: ', course)
+            let colRef = collection(db, 'course-modules')
+            colRef = query(colRef, where("course", "==", course))
+            const colSnap = await getDocs(colRef)
+            colSnap.forEach(doc => {
+                modresults.push({ ...doc.data(), id: doc.id })
+            })
+            modresults.sort((a, b) => (a.modnumb > b.modnumb) ? 1 : -1)
+            this.courseModules = modresults
+                console.log("now: ", this.courseModules)
+                console.log('length: ', this.courseModules.length)
+            
         },
         setCurrentModule(mod){
             this.currentModule = mod;

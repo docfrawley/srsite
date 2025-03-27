@@ -33,6 +33,7 @@
         @dragenter.prevent
         @dragover.prevent
       >
+      
         <div class="drag-el-tk"><p class="grid-dimension">{{ item.dimension }}</p>
           <svg style="fill:white; margin-right:5px;"
           @click="openDimModel(item.dimension)"
@@ -107,7 +108,7 @@
 </template>
 
 <script>
-import { ref, watchEffect } from "@vue/reactivity";
+import { ref, watchEffect } from 'vue'
 import { userStore } from "@/store/userStore";
 import { coursesStore } from "@/store/coursesStore";
 import TechModal from "@/components/TechModal.vue";
@@ -132,6 +133,12 @@ export default {
     const strategyItems = ref({});
     const theDimension = ref('')
     const matrixChange = ref(false)
+
+    // watchEffect(() => {
+    //   console.log('im in here: ', items.value)
+    //         items.value = ustore.getUserTechniques
+    //     })
+
     console.log('toolkit: ', items.value)
     const goalstuff =  {
       prompt:"",
@@ -144,10 +151,13 @@ export default {
     const totalPercentage = ref(ustore.getTotalPercentage)
     totalPercentage.value = parseInt(totalPercentage.value).toFixed(2)
 
+    
+
     const getList = (list) => {
       return items.value.filter((item) => item.list == list);
     };
 
+    
     const startDrag = (evt, item) => {
       const stringObject = JSON.stringify(item);
       evt.dataTransfer.dropEffect = "move";

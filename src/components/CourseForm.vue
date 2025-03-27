@@ -1,7 +1,6 @@
 <template>
-  this is the course form:
-  <div v-if="edCourse">
-    <form @submit.prevent="handleSubmit">
+  <div v-if="edCourse" >
+    <form @submit.prevent="handleSubmit" class="class-form">
       <h4>Edit Course Form</h4>
       <label>Title</label><input type="text" required placeholder="title" v-model="edCourse.title">
       <label>Instructor</label><input type="text" required placeholder="instructor" v-model="edCourse.instructor">
@@ -16,8 +15,8 @@
     </form>
     <div v-if="updated">course updated</div>
   </div>
-  <div v-if="documents" class="module-container">
-    <div v-for="doc in documents" :key="doc.id">
+  <div v-if="allCourses" class="module-container">
+    <div v-for="doc in courseModules" :key="doc.id">
       <div class="module-listing" @click="showModule(doc)">{{doc.title}} </div>
     </div>
     <button @click="newModuleForm">
@@ -31,30 +30,39 @@
   <div v-if="showAddForm">
     <AddModule @moduleAdded="wasItAdded" :modColName="edCourse.col_name" />
   </div>
+ 
 
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, watchEffect } from 'vue'
 import useDocument from '@/composables/useDocument'
 import getOrderDocs from '@/composables/getOrderDocs'
 import ModuleForm from '@/components/ModuleForm.vue'
 import AddModule from '@/components/AddModule.vue'
+import { coursesStore } from '@/store/coursesStore';
 
 
 export default {
   components: { ModuleForm, AddModule },
   props: ['courseInfo'],
   setup(props) {
+    const cstore = coursesStore();
+
     const edCourse = ref(props.courseInfo)
+    const courseModules = ref([])
     const { isPending, error, deleteTheDoc, updateTheDoc } = useDocument('courses', props.courseInfo.id)
     const updated=ref(false)
+    const allCourses = ref(cstore.getCourses)
     const { documents } = getOrderDocs('course-modules', 'course', props.courseInfo.col_name)
     const modToEdit = ref()
     const componentKey=ref(0)
     const showAddForm = ref(false)
 
-    
+    watchEffect(() => {
+            courseModules.value = cstore.getCourseModules
+        })
+
     const handleSubmit = async () =>{
       await updateTheDoc(edCourse.value)
       updated.value=true
@@ -62,12 +70,13 @@ export default {
 
     const showModule =  (theMod) => {
       modToEdit.value = theMod
+      showAddForm.value = false
       componentKey.value++
     }
 
     const newModuleForm = () => {
       showAddForm.value = true
-      modToEdit.value = null
+      modToEdit.value = false
     }
 
     const wasItAdded = (addedYes) => {
@@ -75,7 +84,7 @@ export default {
     }
 
 
-    return { showAddForm, isPending, updated, edCourse, handleSubmit, showModule, documents, modToEdit, componentKey, newModuleForm, wasItAdded }
+    return { courseModules, showAddForm, isPending, updated, edCourse, handleSubmit, documents, showModule, allCourses, modToEdit, componentKey, newModuleForm, wasItAdded }
   }
 
 }
@@ -83,10 +92,24 @@ export default {
 
 <style>
 
+.module-container2 {
+  display:flex;
+  justify-content: space-around;
+  flex-direction: row;
+}
+
 .module-listing {
   padding: 10px;
   background-color: aquamarine;
   cursor: pointer;
   margin: 10px;
+}
+
+.class-form{
+  width: 500px;
+  display: flex;
+  flex-direction: column;
+  margin-left:50px;
+  margin-bottom: 50px;
 }
 </style>

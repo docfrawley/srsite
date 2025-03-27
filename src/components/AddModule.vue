@@ -16,32 +16,37 @@
 import { ref } from 'vue'
 import useCollection from '@/composables/useCollection'
 import getLength from '@/composables/getLength'
+import { coursesStore } from '@/store/coursesStore';
+
 
 export default {
     props: ['modColName'],
     emits: ['moduleAdded'],
     setup(props, context) {
+        const cstore = coursesStore();
         const { error, addTheDocument } = useCollection('course-modules')
         const wasAdded = ref(false)
         const isPending = ref(false)
         const title = ref()
         const course = ref()
-        const { order } = getLength(props.modColName)
+        const  order  = ref(0)
         const description = ref()
         const col_name = ref(props.modColName)
 
 
         const handleSubmit = async () => {
-            const res = await addTheDocument({
+            console.log('component: ',cstore.getModulesLength + 1)
+            let modinfo ={
                 course: col_name.value,
                 title: title.value,
-                modnumb: order.value + 1,
+                modnumb: cstore.getModulesLength + 1,
                 description: description.value
-            })
-            isPending.value = false
-            if (res) {
-                context.emit('moduleAdded', { wasadded: true })
             }
+            isPending.value = false
+            cstore.addModule(modinfo)
+            
+                context.emit('moduleAdded', { wasadded: true })
+            
 
         }
 
