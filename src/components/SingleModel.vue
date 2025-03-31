@@ -5,7 +5,8 @@
         <div v-if="showPause" @click="startPlaying" class="overlay-Pause">
           <div class="inside-pause">Please answer the video prompt highlighted in green and press here when ready to resume video</div>
         </div>
-        <vue-vimeo-player
+        <div v-if="currentVideo.iframe">
+          <vue-vimeo-player
           ref="player"
           class="video-responsive-item"
           :video-id="currentVideo.iframe"
@@ -15,6 +16,8 @@
           @pause="WhenPaused"
           @timeupdate="ShowUpdate"
         />
+        </div>
+        
       </div>
         <div class="module-view2">
           <div class="module-list">
@@ -45,42 +48,46 @@
           </div>
     </div>
   </div>
-    <div class="fill-up grid-col-span-1">
-      <div class="flex flex-col questions-class">
-        <div v-if="showStrategies == 'strategies'">
-          <IndTechRow />
-        </div>
-        <div v-if="showStrategies =='prompts'">
-          <div class="v-prompts">VIDEO #{{ currentVideo.order }} PROMPTS</div>
-          <div v-for="question in currentVideo.questions" :key="'A' + question.id">
-            <ShowPromptForm
-              :prompt="question"
-              :class="{ Active: question.active }"
-              @answerAdded="wasItAdded"
-            />
-          </div> 
-        </div>
-        <div v-if="showStrategies=='worksheet'">
-          <div class="worksheet-vid">
-            <a class="download-stuff2" :href="theURL" target="_blank" rel="noopener noreferrer">DOWNLOAD WORKSHEET</a>
+  
+    <div class="fill-up grid-col-span-1" >
+      <div v-if="showStrategies">
+          <div class="flex flex-col questions-class">
+            <div v-if="showStrategies == 'strategies'">
+              <IndTechRow />
+            </div>
+            <div v-if="showStrategies =='prompts'">
+              <div class="v-prompts">VIDEO #{{ currentVideo.order }} PROMPTS</div>
+              <div v-for="question in currentVideo.questions" :key="'A' + question.id">
+                <ShowPromptForm
+                  :prompt="question"
+                  :class="{ Active: question.active }"
+                  @answerAdded="wasItAdded"
+                />
+              </div> 
+            </div>
+            <div v-if="showStrategies=='worksheet'">
+              <div class="worksheet-vid">
+                <a class="download-stuff2" :href="theURL" target="_blank" rel="noopener noreferrer">DOWNLOAD WORKSHEET</a>
+              </div>
+            </div>
           </div>
-        </div>
       </div>
       <div class="questions-class-bottom">
           <p class="v-prompts">Module # {{ currentModule.modnumb }} General Notes</p>
           <ShowModuleForm @noteAdded="wasNoteAdded"/>
       </div>
           
-        
+    </div>
         
     
     </div>
-    </div>
+    
+  
 </template>
 
 <script>
 import ShowVidDetails from "@/components/ShowVidDetails.vue";
-import { ref, watch  } from "vue";
+import { ref, watchEffect  } from "vue";
 import ShowPromptForm from "./ShowPromptForm.vue";
 import ShowModuleForm from "./ShowModuleForm.vue";
 import IndTechRow from "@/components/IndTechRow.vue";
@@ -94,23 +101,24 @@ export default {
     setup() {
     const cstore = coursesStore();
     const ustore = userStore();
-    const percentVid = ref(cstore.getInitPercentage);
-    const currentModule = ref(cstore.currentModule);
-    const currentVideo =  ref(cstore.currentVideo);
+    const percentVid = ref(ustore.getInitPercentage);
+    const currentModule = ref({});
+    const currentVideo =  ref({});
     const showForm = ref(false);
     const userinput = ref(null);
     const answer = ref();
     const player = ref();
     const showPause = ref(false);
-    const numbModules = ref(cstore.courseAll.length);
-    const fullCourse = ref(cstore.courseAll);
-    const showStrategies = ref('prompts')
+    const fullCourse = ref(ustore.courseAll);
+    const showStrategies = ref('')
     const theURL = ref(cstore.getDownloadLink);
 
-    watch(currentVideo, ()=>{
-          currentVideo.value = cstore.currentVideo
+    watchEffect( ()=>{
+      currentModule.value = ustore.getCurrentModule
+      currentVideo.value = ustore.getCurrentVideo
           percentVid.value = currentVideo.value.percentages
-          if (currentVideo.value.order>1 && currentModule.value.modnumb==3){
+          if (currentModule.value.course=='procrastination'){
+            if (currentVideo.value.order>1 && currentModule.value.modnumb==3){
             showStrategies.value='strategies'
           } else {
             if ((currentVideo.value.order==3 && currentModule.value.modnumb==4 )||(currentVideo.value.order==6 && currentModule.value.modnumb==2 )){
@@ -119,6 +127,8 @@ export default {
               showStrategies.value = 'prompts'
             }
           }
+          }
+          
           
       })
 
@@ -244,7 +254,6 @@ export default {
       userinput,
       answer,
       moveModule,
-      numbModules,
       moveVideo,
       fullCourse,
       showStrategies,

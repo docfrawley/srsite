@@ -38,34 +38,35 @@
             </div>
         </div>
         
-        <div v-if="testPur" class="grid-col-span-3 fill-up memAccountStuff">
-            <div>
-                <p>Thank you for purchasing the Overcoming Procrastination course</p>
-                <p>Amount Paid: ${{(testPur.price/100).toFixed(2)}}</p>
-                <p>Date of Purchase: {{testPur.boughtAt}}</p>
-            </div>
-            <div class="log-button" @click="goToCourse">Go To Course</div>
-        </div>
-        <div v-else class="grid-col-span-3 fill-up memAccountStuff">
-            <div>
-                <p class="step-one">Overcoming Procrastination Course</p>
-                <p class="sub-one">Join instructor Nic Voge and learn how procrastination holds</p>
-                <p class="sub-one">you back, where it comes from, and how to overcome it.</p><br/>
-                <p class="sub-one2">Buy now and get access to:</p>
-                <ul>
-                    <li>Over two hours of content</li>
-                    <li>Goals and tools to help you succeed</li>
-                    <li>Techniques you'll use for the rest of your life</li>
-                </ul>
+            <div v-if="testPur.length!=0">
+                <div v-for="doc in testPur" :key="doc.id">
+                    <div v-if="doc.hasAccess" class="grid-col-span-3 fill-up memAccountStuff">
+                        <div><p>{{ doc.title }}</p></div>
+                        <div class="log-button" @click="goToCourse(doc.col_name)">Go To Course</div>
+                    </div>
+                    <div v-else class="grid-col-span-3 fill-up memAccountStuff">
+                        <div>
+                            <p class="step-one">Overcoming Procrastination Course</p>
+                            <p class="sub-one">Join instructor Nic Voge and learn how procrastination holds</p>
+                            <p class="sub-one">you back, where it comes from, and how to overcome it.</p><br/>
+                            <p class="sub-one2">Buy now and get access to:</p>
+                            <ul>
+                                <li>Over two hours of content</li>
+                                <li>Goals and tools to help you succeed</li>
+                                <li>Techniques you'll use for the rest of your life</li>
+                            </ul>
+                        </div>
+                        
+                        <div v-if="!pending">
+                            <button class="log-button2" @click="purchase('procrastination')">Purchase Course</button>
+                        </div>
+                        <div v-if="pending">
+                            <button class="log-button2">Loading...</button>
+                        </div>
+                    </div>
             </div>
             
-            <div v-if="!pending">
-                <button class="log-button2" @click="purchase('procrastination')">Purchase Course</button>
-            </div>
-            <div v-if="pending">
-                <button class="log-button2">Loading...</button>
-            </div>
-        </div>
+    </div>
     </div>
     </div>
         
@@ -77,7 +78,7 @@
 import { userStore } from '@/store/userStore';
 import { coursesStore } from '@/store/coursesStore';
 import { useRouter } from "vue-router";
-import { ref, watchEffect, onMounted } from 'vue';
+import { ref, watchEffect } from 'vue';
 import ChangeName from '@/components/ChangeName.vue';
 import ChangeEmail from '@/components/ChangeEmail.vue';
 
@@ -85,6 +86,7 @@ export default {
     components: { ChangeName, ChangeEmail },
     setup() {
         const ustore = userStore()
+        const cstore = coursesStore()
         const displayName = ref(ustore.getDisplayName)
         const userEmail = ref(ustore.getUserEmail)
         const createdWhen = new Date(ustore.getWhenCreatedAt).toLocaleDateString()
@@ -99,11 +101,13 @@ export default {
         const nameM = ref(false)
         const passwordM = ref(false)
         const Purchased = ref(false)
-        const testPur = ref(ustore.userCourses[0])
+        const testPur = ref([])
         const blay = ref(ustore.DidBuyCourse())
         const pending = ref(false)
  
-  
+        if (testPur.value.length == 0){
+            testPur.value = ustore.getUserCourses
+        }
 
         const purchase = (course) => {
             pending.value = true
@@ -118,16 +122,9 @@ export default {
         watchEffect(() => {
             displayName.value = ustore.getDisplayName
             userEmail.value = ustore.getUserEmail  
-            testPur.value = ustore.userCourses[0]
+            testPur.value = ustore.getUserCourses
         })
 
-        ustore.$subscribe((login, state) => {
-            testPur.value = ustore.userCourses[0]
-        });
-
-        onMounted(() => {
-            testPur.value = ustore.userCourses[0]
-        });
 
         const changePass=()=>{
             console.log('you have sent an email')
@@ -156,11 +153,14 @@ export default {
             emailM.value = false
         }
 
-        const goToCourse = () => {
-            router.push({
-                name: "CourseView",
-                params: { course: "procrastination" },
+        const goToCourse = (col_name) => {
+            ustore.setCourseAll(col_name)
+            if(ustore.getCurrentCourse){
+                router.push({
+                name: "CourseView"
             });
+            }
+            
         };
 
         

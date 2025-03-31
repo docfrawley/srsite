@@ -40,17 +40,7 @@ export default {
        if (didlogin){
         isPending.value=false
         await ustore.getTechniques();
-        if (ustore.userCourses.length>0){
-          router.push({
-          name: "CourseView",
-          params: { course: "procrastination" },
-       });
-        } else{
-          router.push({
-            name: "home"
-          })
-        }
-      
+        router.push({name: "MemAccount"});
        } else { 
         error.value = "Sorry, could not recognize your email or password"
         isPending.value=false
@@ -64,16 +54,8 @@ export default {
       if (didlogin2){
         isPending.value=false
         await ustore.getTechniques();
-        if (ustore.userCourses.length>0){
-          router.push({
-          name: "CourseView",
-          params: { course: "procrastination" },
-       });
-        } else{
-          router.push({
-            name: "home"
-          })
-        }
+        router.push({name: "MemAccount"});
+        
       } else {
         error.value = "Sorry, could not recognize your email or password"
         isPending.value=false

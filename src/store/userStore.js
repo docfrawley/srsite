@@ -5,7 +5,7 @@ import { auth } from '../firebase/config'
 import { getAuth, onAuthStateChanged,updateEmail, sendEmailVerification, GoogleAuthProvider  } from 'firebase/auth'
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithPopup  } from 'firebase/auth'
 import { db } from '../firebase/config'
-import { collection, onSnapshot, query, where, addDoc, updateDoc, doc, getDoc, setDoc, Timestamp, arrayUnion, arrayRemove } from 'firebase/firestore'
+import { collection, onSnapshot, query, where, addDoc, updateDoc, doc, getDoc, setDoc, Timestamp, arrayUnion, arrayRemove, getDocs } from 'firebase/firestore'
 import { ref } from "vue"
 import { coursesStore } from "./coursesStore"
 
@@ -27,12 +27,22 @@ export const userStore  = defineStore("user", {
         UserTechniques: [],
         positiveMov: {},
         moduleNotes: [],
-        userCourses: []
+        userCourses: [],
+        currentCourse: {},
+        currentModule: {},
+        currentVideo: {},
+        courseAll: [],
+        initialPercentage: 0,
+        currentPercentage: 0,
+        originalTechs: []
         }
     },
     getters: {
+        getCurrentCourse(){
+            return this.currentCourse
+        },
         getTotalPercentage(){
-            return this.courseTotalPercentage
+            return (this.currentCourse.totalSecs/this.currentCourse.totaltime)*100
         },
         getUserId(){
             return this.userID
@@ -57,6 +67,24 @@ export const userStore  = defineStore("user", {
         },
         getWhenCreatedAt(){
             return this.userCreated
+        },
+        getUserCourses(){
+            return this.userCourses
+        },
+        getCurrentVideo(){
+            return this.currentVideo
+        },
+        getCurrentModule(){
+            return this.currentModule
+        },
+        getcurrentVidPercentage(){
+            return this.currentPercentage
+        },
+        getInitPercentage(){
+            return this.initialPercentage
+        },
+        getOriginalTechs(){
+            return this.originalTechs
         }
     },
     actions: {
@@ -68,6 +96,7 @@ export const userStore  = defineStore("user", {
                 return false
                 } else {
                     const cstore = coursesStore();
+                    cstore.setCourses();
                     const docRef = doc(db, "users", res.user.uid);
                     const docSnap = await getDoc(docRef);
                     let whenCreated = res.user.metadata.creationTime
@@ -77,7 +106,7 @@ export const userStore  = defineStore("user", {
                         this.displayName = docSnap.data().DisplayName
                         this.email = email;
                         this.userID = res.user.uid
-                        cstore.setCourses();
+                        
                         if (docSnap.data().completedVids.length>0) {
                             const courseObject = docSnap.data().completedVids[0]
 
@@ -115,15 +144,10 @@ export const userStore  = defineStore("user", {
                     return false
                 } else {
                     result = await this.login(res)
-                }
-
                 if (!result) {
-                    const cstore = coursesStore();
-                    await cstore.setCourses();
                     await setDoc(doc(db, 'users', res.user.uid), {
                         DisplayName: res.user.displayName, admin:false, uid: res.user.uid, completedVids: []
                     })
-                    // await cstore.setCourseAll("procrastination");
                     this.email = res.user.email
                     this.displayName=res.user.displayName
                     this.admin = false
@@ -131,6 +155,7 @@ export const userStore  = defineStore("user", {
                     localStorage.loggedin = true
                     return true
                 }
+            }
             }
             catch(err) {
                 console.log('error message: ', err.message)
@@ -140,6 +165,7 @@ export const userStore  = defineStore("user", {
         async login(credentials) {
             if (typeof credentials === 'object' && credentials !== null) {
                 const cstore = coursesStore();
+                await cstore.setCourses()
                 const docRef = doc(db, "users", credentials.user.uid);
                 const docSnap = await getDoc(docRef);
                 this.userCreated = credentials.user.metadata.creationTime
@@ -148,30 +174,41 @@ export const userStore  = defineStore("user", {
                     this.displayName = docSnap.data().DisplayName
                     this.email = credentials.user.email
                     this.userID = credentials.user.uid
-                    cstore.setCourses();
-                    await cstore.setCourseAll("procrastination");
-                    if (docSnap.data().completedVids.length>0) {
-                        const courseTotalSecs = cstore.getCourseSeconds
-                        this.courseSecsTotal = docSnap.data().completedVids[0].totalSecs
-                        this.courseTotalPercentage = (this.courseSecsTotal/courseTotalSecs)*100
+                     
+                    
+                    let tempCourses = cstore.getCourses
+                    if (tempCourses.length>0){
+                        await tempCourses.forEach(doc=>{
+                            this.DidBuyCourse(doc)
+                        })    
                     }
-                    if (docSnap.data().answers){
-                        this.promptAnswers = docSnap.data().answers
-                    }
-                    if (docSnap.data().theTechs){
-                        this.UserTechniques = docSnap.data().theTechs.currentAnswers
-                        console.log('four four', this.UserTechniques)
-                    } else {
-                        this.UserTechniques = cstore.originalTechs
-                        console.log('five five')
-                    }
-                    if (docSnap.data().modNotes){
-                        this.moduleNotes = docSnap.data().modNotes
-                    }
+                    
+
+                    
+                    // await cstore.setCourseAll("procrastination");
+                    // if (docSnap.data().completedVids.length>0) {
+                    //     const courseTotalSecs = cstore.getCourseSeconds
+                    //     this.courseSecsTotal = docSnap.data().completedVids[0].totalSecs
+                    //     this.courseTotalPercentage = (this.courseSecsTotal/courseTotalSecs)*100
+                    // }
+                    // if (docSnap.data().answers){
+                    //     this.promptAnswers = docSnap.data().answers
+                    // }
+                    // if (docSnap.data().theTechs){
+                    //     this.UserTechniques = docSnap.data().theTechs.currentAnswers
+                    //     console.log('four four', this.UserTechniques)
+                    // } else {
+                    //     this.UserTechniques = cstore.originalTechs
+                    //     console.log('five five')
+                    // }
+                    // if (docSnap.data().modNotes){
+                    //     this.moduleNotes = docSnap.data().modNotes
+                    // }
                     return true
                 } else {
                     return false
                 }
+
             }
         },
         async signup(e, pw, dn){
@@ -191,7 +228,7 @@ export const userStore  = defineStore("user", {
                         this.displayName=dn
                         this.admin = false
                         this.userID = res.user.uid
-                        localStorage.loggedin = true
+                        // localStorage.loggedin = true
                         return true
                         
                         
@@ -311,47 +348,55 @@ export const userStore  = defineStore("user", {
               });
         },
         async establishCompletedVids(course){
-            const cstore = coursesStore();
+            const tempObject = ref({
+                col_name: course,
+                totalSecs: 0
+            })
             const compRef = await doc(db, 'users', this.userID)
             const compSnap = await getDoc(compRef)
-                cstore.setCourses();
-                cstore.setCourseAll(course);
             if (!compSnap.data().completedVids){
-                await updateDoc(compRef, {completedVids: arrayUnion(this.userCourses[0])})
-                await updateDoc(compRef, {theTechs: cstore.originalTechs})
-                this.UserTechniques = cstore.originalTechs
-            } 
+                await updateDoc(compRef, {completedVids: arrayUnion(tempObject.value)})
+                if (course=='procrastination'){
+                    await updateDoc(compRef, {theTechs: cstore.originalTechs})
+                    this.UserTechniques = cstore.originalTechs
+                }
+                return 0
+            } else {
+                let findObject = compSnap.data().completedVids.find((obj) => obj.col_name===course)
+                if(!findObject){
+                    await updateDoc(compRef, {completedVids: arrayUnion(tempObject.value)})
+                    return 0
+                } else {
+                    return findObject.totalSecs
+                }
+                
+            }
         },
-        async DidBuyCourse(){
-            let results = []
-            const userDocRef =  await doc(db, 'users', this.userID);
-            const paymentsRef =  await collection(userDocRef, 'payments');
-            if (paymentsRef){
-                const unsub = await onSnapshot(paymentsRef, snapshot => {
-                    snapshot.docs.forEach(doc => {
-                        if (doc.data().items[0].description=='Overcoming Procrastination Course' || doc.data().items[0].description=='Overcoming Procrastination')
-                    results.push({ ...doc.data(), id: doc.id })
-                    })
-                    if (results.length>0){
-                        let tempCourse = 'procrastination'
-                        let tempstamp = new Date();
-                        let tempDate = tempstamp.toLocaleDateString()
-                        const element = this.userCourses.find(obj => obj.col_name === tempCourse);
-                        if (!element){
-                            let tempObject = {
-                                col_name: tempCourse,
-                                boughtAt: tempDate,
-                                price: results[0].items[0].amount_total,
-                                totalSecs: 0
-                            }
-                            this.userCourses.push(tempObject)
-                            this.establishCompletedVids(tempCourse)
+        async DidBuyCourse(userDoc){
+            const tempCourseObject = ref({...userDoc})
+            if (userDoc){
+                if (userDoc.title != "Creative Problem Solving"){
+                let results = []
+                const userDocRef =  await doc(db, 'users', this.userID);
+                const paymentsRef =  await collection(userDocRef, 'payments');
+                if (paymentsRef){
+                    const unsub = await onSnapshot(paymentsRef, snapshot => {
+                        snapshot.docs.forEach(doc => {
+                            if (doc.data().items[0].description=='Overcoming Procrastination Course' || doc.data().items[0].description=='Overcoming Procrastination')
+                        results.push({ ...doc.data(), id: doc.id })
+                        })
+                        if (results.length>0){
+                            tempCourseObject.value.hasAccess = true
                         }
-                       
-                    }
-                })
-            } 
-            
+                    })
+                } 
+                
+                }
+                tempCourseObject.value.totalSecs = await this.establishCompletedVids(userDoc.col_name)
+            }
+            if (tempCourseObject.value.col_name){
+                this.userCourses.push(tempCourseObject.value)
+            }
             
         },
         async setCoursePercentages(course){
@@ -479,7 +524,49 @@ export const userStore  = defineStore("user", {
         },
         unsetcoursepercentages(){
             this.coursePercentages = []
-        }
+        },
+        async setCourseAll(course){
+            let results = []
+            let vidResults = []
+            this.currentCourse = this.userCourses.find(item => item.col_name == course)
+            if (this.currentCourse){
+                if(course=='procrastination'){
+                    this.originalTechs = this.currentCourse.techniques
+                }
+            }
+            const cstore = coursesStore()
+            let colRef = collection(db, 'course-modules')
+            colRef = query(colRef, where("course", "==", course))
+            const colSnap = await getDocs(colRef)
+            colSnap.forEach(doc => {
+                results.push({ ...doc.data(), id: doc.id })
+            })
+            results.sort((a, b) => (a.modnumb > b.modnumb) ? 1 : -1)
+            let vidRef = collection(db, course)
+            const vidSnap = await getDocs(vidRef)
+            vidSnap.forEach(doc => {
+                vidResults.push({ ...doc.data(), id: doc.id })
+            })
+            for (let i = 0; i < results.length; i++) {
+                let modVids = vidResults.filter(vid => vid.module == results[i].modnumb)
+                modVids.sort((a, b) => (a.order > b.order) ? 1 : -1)
+                modVids.forEach(video => {
+                if (Array.isArray(video.percentages)) {
+                    const percentageVid = video.percentages.filter(doc => doc.uid === this.uID)
+                    if (percentageVid[0]) {
+                        video.percentages = percentageVid[0].percentage
+                        
+                    } else {
+                        video.percentages = null
+                    }
+                }
+                })
+                results[i].videos = modVids
+            }
+            this.courseAll = results
+            this.currentModule = this.courseAll[0]
+            this.currentVideo = this.currentModule.videos[0]
+        },
     },
     persist: true,
 });

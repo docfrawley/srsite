@@ -62,7 +62,7 @@ const routes = [
     component: Signup
   },
   {
-    path: '/course/:course',
+    path: '/course',
     name: 'CourseView',
     component: CourseView,
     beforeEnter: requiresAuth,

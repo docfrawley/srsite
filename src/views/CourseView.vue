@@ -31,8 +31,7 @@ import ShowModule from "@/components/ShowModule.vue";
 import ShowVidDetails from "@/components/ShowVidDetails.vue";
 import Motivations from "@/components/Motivations.vue";
 import TopTools from "@/components/TopTools.vue";
-
-import { ref, watch } from "vue";
+import { ref, watch, watchEffect } from "vue";
 import SingleModel from "@/components/SingleModel.vue";
 import { coursesStore } from "@/store/coursesStore";
 import { userStore } from "@/store/userStore";
@@ -41,8 +40,7 @@ import { userStore } from "@/store/userStore";
 export default {
   name: "Courseview",
   components: { ShowModule, SingleModel, ShowVidDetails, Motivations, TopTools },
-  props: ["course"],
-  setup(props) {
+  setup() {
     // const { error, documents } = getOrderDocs('course-modules', 'course', props.course)
     // const whichVid= reactive({
     //     course:props.course,
@@ -52,20 +50,29 @@ export default {
 
     const cstore = coursesStore();
     const ustore = userStore();
-   
-    const currentCourse = ref(cstore.currentCourse);
-    const currentModule = ref(cstore.currentModule);
-    const currentVideo = ref(cstore.currentVideo);
-    const items = ref(cstore.currentCourse.techniques);
+    const currentCourse = ref({});
+    const currentModule = ref({});
+    const currentVideo = ref({});
+    // const items = ref(ustore.currentCourse.techniques);
     const motCounter = ref(0)
     const goalCounter = ref(0)
-    const totalPercentage = ref(ustore.getTotalPercentage)
-    totalPercentage.value = parseInt(totalPercentage.value).toFixed(2)
-
+    const totalPercentage = ref(0)
+    
     watch(ustore, ()=>{
       motCounter.value++
       goalCounter.value++
+      
+    })
+
+    watchEffect(()=>{
       totalPercentage.value = ustore.getTotalPercentage
+      totalPercentage.value = parseInt(totalPercentage.value).toFixed(2)
+      currentCourse.value = ustore.getCurrentCourse
+      currentModule.value = ustore.getCurrentModule
+      currentVideo.value = ustore.getCurrentVideo
+      console.log('what we got1: ', currentCourse.value)
+      console.log('what we got2: ', currentModule.value )
+      console.log('what we got3: ', currentVideo.value)
     })
     
 
