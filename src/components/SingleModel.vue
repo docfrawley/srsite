@@ -109,24 +109,27 @@ export default {
     const answer = ref();
     const player = ref();
     const showPause = ref(false);
-    const fullCourse = ref(ustore.courseAll);
+    const fullCourse = ref([]);
     const showStrategies = ref('')
     const theURL = ref(cstore.getDownloadLink);
 
     watchEffect( ()=>{
       currentModule.value = ustore.getCurrentModule
+      fullCourse.value = ustore.courseAll
       currentVideo.value = ustore.getCurrentVideo
           percentVid.value = currentVideo.value.percentages
           if (currentModule.value.course=='procrastination'){
             if (currentVideo.value.order>1 && currentModule.value.modnumb==3){
             showStrategies.value='strategies'
+            } else {
+              if ((currentVideo.value.order==3 && currentModule.value.modnumb==4 )||(currentVideo.value.order==6 && currentModule.value.modnumb==2 )){
+                showStrategies.value = 'worksheet'
+              } else{
+                showStrategies.value = 'prompts'
+              }
+           } 
           } else {
-            if ((currentVideo.value.order==3 && currentModule.value.modnumb==4 )||(currentVideo.value.order==6 && currentModule.value.modnumb==2 )){
-              showStrategies.value = 'worksheet'
-            } else{
-              showStrategies.value = 'prompts'
-            }
-          }
+            showStrategies.value =""
           }
           
           
@@ -142,8 +145,8 @@ export default {
       percentVid.value = 0
       
       currentVideo.value = specs;
-      cstore.unsetCurrentVideo();
-      cstore.setCurrentVideo(specs);
+      ustore.unsetCurrentVideo();
+      ustore.setCurrentVideo(specs);
       
      
       // percentVid.value = currentVideo.value.percentages
@@ -199,7 +202,7 @@ export default {
             ElementNum = 0;
           }
           currentVideo.value = currentModule.value.videos[ElementNum];
-        cstore.setCurrentVideo(currentVideo.value);
+        ustore.setCurrentVideo(currentVideo.value);
         }
     };
 
@@ -220,12 +223,12 @@ export default {
       
       let whichElement = theMod - 1;
       percentVid.value = 0
-      currentModule.value = cstore.courseAll[whichElement];
+      currentModule.value = ustore.courseAll[whichElement];
       currentVideo.value = currentModule.value.videos[0];
-      cstore.unsetCurrentVideo()
-      cstore.unsetCurrentModule()
-      cstore.setCurrentVideo(currentVideo.value)
-      cstore.setCurrentModule(currentModule.value)
+      ustore.unsetCurrentVideo()
+      ustore.unsetCurrentModule()
+      ustore.setCurrentVideo(currentVideo.value)
+      ustore.setCurrentModule(currentModule.value)
       
     };
 
@@ -234,7 +237,7 @@ export default {
       let whichElement = order - 1;
 
       currentVideo.value = currentModule.value.videos[whichElement];
-      cstore.setCurrentVideo(currentVideo.value);
+      ustore.setCurrentVideo(currentVideo.value);
     };
 
     return {

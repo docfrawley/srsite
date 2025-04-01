@@ -85,6 +85,9 @@ export const userStore  = defineStore("user", {
         },
         getOriginalTechs(){
             return this.originalTechs
+        },
+        getcourseAll(){
+            return this.courseAll
         }
     },
     actions: {
@@ -566,6 +569,41 @@ export const userStore  = defineStore("user", {
             this.courseAll = results
             this.currentModule = this.courseAll[0]
             this.currentVideo = this.currentModule.videos[0]
+        },
+        setCurrentModule(mod){
+            this.currentModule = mod;
+        },
+        unsetCurrentModule(){
+            this.currentModule = {}
+        },
+        setCurrentVideo(video){
+            this.currentVideo = video;
+            if (!video.questions){
+                this.addQuestions()
+            }
+            if (video.percentages){
+                this.initialPercentage = video.percentages
+                this.currentPercentage = video.percentages
+            } else {
+                this.initialPercentage = 0
+                this.currentVideo.percentages = 0
+                this.currentPercentage = 0
+            }
+        },
+        unsetCurrentVideo(){
+            this.currentVideo = {};
+            this.initialPercentage = null
+        },
+        async addQuestions(){
+            let qresults = []
+            let questionRef = collection(db, 'questions')
+            let qRef = query(questionRef, where("vid", "==", this.currentVideo.id))
+            const qSnap = await getDocs(qRef)
+            qSnap.forEach(doc => {
+                qresults.push({ ...doc.data(), id: doc.id })
+            })
+            qresults.sort((a, b) => (a.vcue > b.vcue) ? 1 : -1)
+            this.currentVideo.questions = qresults
         },
     },
     persist: true,

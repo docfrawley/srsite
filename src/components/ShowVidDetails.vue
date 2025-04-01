@@ -23,6 +23,7 @@
 <script>
 import { ref } from '@vue/reactivity'
 import { coursesStore } from '@/store/coursesStore'
+import { userStore } from "@/store/userStore";
 import { watchEffect, watch } from 'vue'
 import { connectFirestoreEmulator } from 'firebase/firestore'
 
@@ -30,7 +31,8 @@ export default {
     props: ['theMod', 'video', 'percent'],
     setup(props){
       const cstore=coursesStore()
-      const currentVideo = ref(cstore.getcurrentVideo)
+      const ustore = userStore()
+      const currentVideo = ref(ustore.getcurrentVideo)
       const video = ref(props.video)
       let minutes = Math.floor(parseInt(video.value.length)/60).toString()
       let seconds = parseInt(video.value.length) - minutes*60
@@ -56,13 +58,8 @@ export default {
         isComplete.value = true
       }
 
-
-
-
-      
-
       watchEffect(()=>{
-        if (video.value.order == cstore.currentVideo.order){
+        if (video.value.order == ustore.currentVideo.order){
         whatShow.value = "Now Playing"
         if (cstore.getcurrentVidPercentage>cstore.getInitPercentage){
           percentage.value = cstore.getcurrentVidPercentage*100
@@ -79,7 +76,7 @@ export default {
       
 
         const setVideo = () =>{
-          cstore.setCurrentVideo(props.video)
+          ustore.setCurrentVideo(props.video)
           // cstore.setCurrentModule(props.theMod)
           // context.emit('logInfo', {'vidinfo':props.video})
         }

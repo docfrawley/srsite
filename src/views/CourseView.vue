@@ -13,10 +13,13 @@
               </div>
             </div>
         </div>
-        <Motivations title="GOALS FOR THIS COURSE" qprompt="uwi6QJH5wozGZOF8oVbd" :key="goalCounter"/>
-        <TopTools />
-        <Motivations class="bottom-fill" title="MY POSITIVE MOTIVATIONS" qprompt="zEfmgpumIi2gbGCG8eJt" :key="motCounter"/>
-
+        <div v-if="currentCourse.col_name=='procrastination'">
+        
+          <Motivations title="GOALS FOR THIS COURSE" qprompt="uwi6QJH5wozGZOF8oVbd" :key="goalCounter"/>
+          <TopTools />
+          <Motivations class="bottom-fill" title="MY POSITIVE MOTIVATIONS" qprompt="zEfmgpumIi2gbGCG8eJt" :key="motCounter"/>
+        
+      </div>
 
     <div v-if="currentVideo" class="grid-col-span-3">
         <SingleModel/>
@@ -70,9 +73,6 @@ export default {
       currentCourse.value = ustore.getCurrentCourse
       currentModule.value = ustore.getCurrentModule
       currentVideo.value = ustore.getCurrentVideo
-      console.log('what we got1: ', currentCourse.value)
-      console.log('what we got2: ', currentModule.value )
-      console.log('what we got3: ', currentVideo.value)
     })
     
 
@@ -85,10 +85,10 @@ export default {
     const moveModule = (theMod) => {
       let whichElement = theMod - 1;
 
-      currentModule.value = cstore.courseAll[whichElement];
+      currentModule.value = ustore.courseAll[whichElement];
       currentVideo.value = currentModule.value.videos[0];
-      cstore.setCurrentVideo(currentVideo.value);
-      cstore.setCurrentModule(currentModule.value);
+      ustore.setCurrentVideo(currentVideo.value);
+      ustore.setCurrentModule(currentModule.value);
     };
 
     return {
